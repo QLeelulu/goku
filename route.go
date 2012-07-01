@@ -193,7 +193,7 @@ func (rt *RouteTable) AddRoute(route *Route) {
 //  + url:  url pattern
 //  + default: map[string]string, default value for url pattern
 //  + constraint: map[string]string, constraint for url pattern
-func (rt *RouteTable) MapRoute(name string, url string, args ...interface{}) {
+func (rt *RouteTable) Map(name string, url string, args ...interface{}) {
 	var defaultData map[string]string
 	var constraint map[string]string
 	if len(args) > 0 {
