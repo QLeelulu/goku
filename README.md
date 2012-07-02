@@ -1,6 +1,6 @@
 #goku
 
-  goku is a Web Mvc Framework mostly like ASP.NET MVC.
+  goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.
 
 ##Route
     

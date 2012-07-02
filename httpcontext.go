@@ -8,7 +8,7 @@ import (
 // http context
 type HttpContext struct {
 	Request        *http.Request       // http request
-	ResponseWriter http.ResponseWriter // http response
+	responseWriter http.ResponseWriter // http response
 	Method         string              // http method
 
 	//self fields
@@ -19,7 +19,24 @@ type HttpContext struct {
 	Canceled  bool           // cancel continue process the request and return
 
 	// private fileds
-	requestHandler *RequestHandler
+	requestHandler       *RequestHandler
+	responseContentCache *bytes.Buffer // cache response content, will write at end request
+	//responseStatusCode   int           // cache response status code, will write at end request
+	//responseHeaderCache  Header        // cache response header, will write at end request
+}
+
+func (ctx *HttpContext) flushToResponse() {
+	// if ctx.responseStatusCode > 0 {
+	// 	ctx.ResponseWriter.WriteHeader(code)
+	// }
+	// if len(ctx.responseHeaderCache) > 0 {
+	// 	for k, v := range ctx.responseHeaderCache {
+	// 		ctx.responseWriter.Header().Set(key, value)
+	// 	}
+	// }
+	if ctx.responseContentCache.Len() > 0 {
+		ctx.responseContentCache.WriteTo(ctx.responseWriter)
+	}
 }
 
 func (ctx *HttpContext) Get(name string) string {
@@ -30,26 +47,45 @@ func (ctx *HttpContext) Get(name string) string {
 	return ctx.Request.FormValue(name)
 }
 
+func (ctx *HttpContext) Header() http.Header {
+	return ctx.responseWriter.Header()
+}
+
 func (ctx *HttpContext) SetHeader(key string, value string) {
-	ctx.ResponseWriter.Header().Set(key, value)
+	ctx.responseWriter.Header().Set(key, value)
+	//ctx.responseHeaderCache.Set(key, value)
 }
 func (ctx *HttpContext) GetHeader(key string) string {
 	return ctx.Request.Header.Get(key)
 }
 
 func (ctx *HttpContext) ContentType(ctype string) {
-	ctx.ResponseWriter.Header().Set("Content-Type", ctype)
+	ctx.responseWriter.Header().Set("Content-Type", ctype)
+	//ctx.responseHeaderCache["Content-Type"] = ctype
 }
 
 func (ctx *HttpContext) Status(code int) {
-	ctx.ResponseWriter.WriteHeader(code)
+	ctx.responseWriter.WriteHeader(code)
+	//ctx.responseStatusCode = code
 }
 
 func (ctx *HttpContext) Write(b []byte) {
-	ctx.ResponseWriter.Write(b)
+	//ctx.ResponseWriter.Write(b)
+	ctx.responseContentCache.Write(b)
 }
+
+func (ctx *HttpContext) WriteBuffer(bf *bytes.Buffer) {
+	//bf.WriteTo(ctx.ResponseWriter)
+	bf.WriteTo(ctx.responseContentCache)
+}
+
 func (ctx *HttpContext) WriteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+	//ctx.ResponseWriter.Write([]byte(content))
+	ctx.responseContentCache.Write([]byte(content))
+}
+
+func (ctx *HttpContext) WriteHeader(code int) {
+	ctx.responseWriter.WriteHeader(code)
 }
 
 // func (ctx *HttpContext) Redirect(status int, url_ string) {
@@ -103,7 +139,7 @@ func (ctx *HttpContext) NotFound(message string) ActionResulter {
 		message = "Page Not Found!"
 	}
 	return &ActionResult{
-		StatusCode: 404,
+		StatusCode: http.StatusNotFound,
 		Headers:    map[string]string{"Content-Type": "text/html"},
 		Body:       bytes.NewBufferString(message),
 	}
@@ -138,6 +174,14 @@ func (ctx *HttpContext) Raw(data string) ActionResulter {
 	return &ActionResult{
 		StatusCode: 500,
 		Headers:    map[string]string{"Content-Type": "text/plain"},
+		Body:       bytes.NewBufferString(data),
+	}
+}
+
+func (ctx *HttpContext) Html(data string) ActionResulter {
+	return &ActionResult{
+		StatusCode: 500,
+		Headers:    map[string]string{"Content-Type": "text/html"},
 		Body:       bytes.NewBufferString(data),
 	}
 }

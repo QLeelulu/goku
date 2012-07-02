@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"bytes"
 	"io"
+	//"fmt"
 )
 
 type ActionResulter interface {
@@ -28,7 +29,9 @@ func (ar *ActionResult) ExecuteResult(ctx *HttpContext) {
 	}
 	if ar.Body.Len() > 0 {
 		// TODO: which way is the fastest ?
-		ctx.Write(ar.Body.Bytes())
+		//ctx.Write(ar.Body.Bytes())
+		//ar.Body.WriteTo(ctx.responseWriter)
+		ctx.WriteBuffer(ar.Body)
 	}
 }
 
@@ -59,5 +62,5 @@ type ContentResult struct {
 }
 
 func (cr *ContentResult) ExecuteResult(ctx *HttpContext) {
-	http.ServeFile(ctx.ResponseWriter, ctx.Request, cr.FilePath)
+	http.ServeFile(ctx.responseWriter, ctx.Request, cr.FilePath)
 }

@@ -116,11 +116,39 @@ type ControllerBuilder struct {
 	currentAction *ActionInfo
 }
 
+// @param httpMethod: if "all", will match all http method, but Priority is low
 func (cb *ControllerBuilder) Action(httpMethod string, actionName string,
 	handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
 
 	cb.currentAction = cb.controller.RegAction(httpMethod, actionName, handler)
 	return cb
+}
+
+// reg http "get" method action
+func (cb *ControllerBuilder) Get(actionName string,
+	handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
+	return cb.Action("get", actionName, handler)
+}
+
+// reg http "post" method action
+func (cb *ControllerBuilder) Post(actionName string,
+	handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
+
+	return cb.Action("post", actionName, handler)
+}
+
+// reg http "put" method action
+func (cb *ControllerBuilder) Put(httpMethod string, actionName string,
+	handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
+
+	return cb.Action("put", actionName, handler)
+}
+
+// reg http "delete" method action
+func (cb *ControllerBuilder) Delete(httpMethod string, actionName string,
+	handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
+
+	return cb.Action("delete", actionName, handler)
 }
 
 func (cb *ControllerBuilder) Filters(filters ...Filter) *ControllerBuilder {

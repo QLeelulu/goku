@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 	"path"
+	"bytes"
 )
 
 // all the config to the web server
@@ -52,8 +53,12 @@ func (mh *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if ar != nil {
 		ar.ExecuteResult(ctx)
 	}
+	// response content was cached,
+	// flush all the cached content to responsewriter
+	ctx.flushToResponse()
 }
 
+// 你可以通过三种途径取消一个请求： 设置 ctx.Canceled = true , 返回一个ActionResulter或者一个错误
 func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err error) {
 	// being request
 	ar, err = mh.MiddlewareHandler.BeginRequest(ctx)
@@ -75,26 +80,26 @@ func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
 		ar = &ContentResult{
 			FilePath: filePath,
 		}
-		return
+	} else {
+		ctx.RouteData = routeData
+		// parse form data before mvc handle
+		ctx.Request.ParseForm()
+		// begin mvc handle
+		ar, err = mh.MiddlewareHandler.BeginMvcHandle(ctx)
+		if ctx.Canceled || err != nil || ar != nil {
+			return
+		}
+		// handle controller
+		ar, err = mh.executeController(ctx)
+		if ctx.Canceled || err != nil || ar != nil {
+			return
+		}
+		// end mvc handle
+		ar, err = mh.MiddlewareHandler.EndMvcHandle(ctx)
+		if ctx.Canceled || err != nil || ar != nil {
+			return
+		}
 	}
-	ctx.RouteData = routeData
-	// parse form data before mvc handle
-	ctx.Request.ParseForm()
-	// begin mvc handle
-	ar, err = mh.MiddlewareHandler.BeginMvcHandle(ctx)
-	if ctx.Canceled || err != nil || ar != nil {
-		return
-	}
-	// handle controller
-	ar, err = mh.executeController(ctx)
-	if ctx.Canceled || err != nil || ar != nil {
-		return
-	}
-	// // end mvc handle
-	// ar, err = mh.MiddlewareHandler.EndMvcHandle(ctx)
-	// if err != nil || ar != nil {
-	// 	return
-	// }
 	// end request
 	ar, err = mh.MiddlewareHandler.EndRequest(ctx)
 	return
@@ -139,11 +144,12 @@ func (mh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter
 func (mh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *HttpContext {
 	//r.ParseForm()
 	return &HttpContext{
-		Request:        r,
-		ResponseWriter: w,
-		Method:         r.Method,
-		//URL:            r.URL,
-		requestHandler: mh,
+		Request:              r,
+		responseWriter:       w,
+		Method:               r.Method,
+		requestHandler:       mh,
+		responseContentCache: new(bytes.Buffer),
+		//responseHeaderCache: make(map[string]string),
 	}
 }
 
@@ -175,13 +181,6 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
 		ServerConfig:      sc,
 	}
 
-	// server := &Server{
-	// 	Handler:        handler,
-	// 	Addr:           sc.Addr,
-	// 	ReadTimeout:    sc.ReadTimeout,
-	// 	WriteTimeout:   sc.WriteTimeout,
-	// 	MaxHeaderBytes: sc.MaxHeaderBytes,
-	// }
 	server := new(Server)
 	server.Handler = handler
 	server.Addr = sc.Addr
