@@ -3,6 +3,7 @@ package goku
 import (
 	"net/http"
 	"bytes"
+	"encoding/json"
 )
 
 // http context
@@ -21,22 +22,27 @@ type HttpContext struct {
 	// private fileds
 	requestHandler       *RequestHandler
 	responseContentCache *bytes.Buffer // cache response content, will write at end request
-	//responseStatusCode   int           // cache response status code, will write at end request
+	responseStatusCode   int           // cache response status code, will write at end request
 	//responseHeaderCache  Header        // cache response header, will write at end request
 }
 
 func (ctx *HttpContext) flushToResponse() {
-	// if ctx.responseStatusCode > 0 {
-	// 	ctx.ResponseWriter.WriteHeader(code)
-	// }
 	// if len(ctx.responseHeaderCache) > 0 {
 	// 	for k, v := range ctx.responseHeaderCache {
 	// 		ctx.responseWriter.Header().Set(key, value)
 	// 	}
 	// }
+	if ctx.responseStatusCode > 0 {
+		ctx.responseWriter.WriteHeader(ctx.responseStatusCode)
+	}
 	if ctx.responseContentCache.Len() > 0 {
 		ctx.responseContentCache.WriteTo(ctx.responseWriter)
 	}
+}
+
+// Try not to use this unless you know exactly what you are doing
+func (ctx *HttpContext) ResponseWriter() http.ResponseWriter {
+	return ctx.responseWriter
 }
 
 func (ctx *HttpContext) Get(name string) string {
@@ -65,13 +71,13 @@ func (ctx *HttpContext) ContentType(ctype string) {
 }
 
 func (ctx *HttpContext) Status(code int) {
-	ctx.responseWriter.WriteHeader(code)
-	//ctx.responseStatusCode = code
+	//ctx.responseWriter.WriteHeader(code)
+	ctx.responseStatusCode = code
 }
 
-func (ctx *HttpContext) Write(b []byte) {
-	//ctx.ResponseWriter.Write(b)
-	ctx.responseContentCache.Write(b)
+func (ctx *HttpContext) Write(b []byte) (int, error) {
+	//return ctx.ResponseWriter.Write(b)
+	return ctx.responseContentCache.Write(b)
 }
 
 func (ctx *HttpContext) WriteBuffer(bf *bytes.Buffer) {
@@ -85,7 +91,8 @@ func (ctx *HttpContext) WriteString(content string) {
 }
 
 func (ctx *HttpContext) WriteHeader(code int) {
-	ctx.responseWriter.WriteHeader(code)
+	//ctx.responseWriter.WriteHeader(code)
+	ctx.responseStatusCode = code
 }
 
 // func (ctx *HttpContext) Redirect(status int, url_ string) {
@@ -105,21 +112,24 @@ func (ctx *HttpContext) WriteHeader(code int) {
 
 // render the view and return a ActionResulter
 func (ctx *HttpContext) Render(viewName string, viewData interface{}) ActionResulter {
-	return &ViewResult{
+	vr := &ViewResult{
 		ViewEngine: ctx.requestHandler.ViewEnginer,
 		ViewData:   viewData,
 		ViewName:   viewName,
 	}
+	vr.Body = new(bytes.Buffer)
+	vr.Headers = map[string]string{"Content-Type": "text/html"}
+	return vr
 }
 
 // render the view and return a ActionResulter
-func (ctx *HttpContext) View(viewName string, viewData interface{}) ActionResulter {
-	return ctx.Render(viewName, viewData)
+func (ctx *HttpContext) View(viewData interface{}) ActionResulter {
+	return ctx.Render("", viewData)
 }
 
 func (ctx *HttpContext) Redirect(url_ string) ActionResulter {
 	return &ActionResult{
-		StatusCode: 302,
+		StatusCode: http.StatusFound,
 		Headers:    map[string]string{"Content-Type": "text/html", "Location": url_},
 		Body:       bytes.NewBufferString("Redirecting to: " + url_),
 	}
@@ -127,7 +137,7 @@ func (ctx *HttpContext) Redirect(url_ string) ActionResulter {
 
 func (ctx *HttpContext) RedirectPermanent(url_ string) ActionResulter {
 	return &ActionResult{
-		StatusCode: 301,
+		StatusCode: http.StatusMovedPermanently,
 		Headers:    map[string]string{"Content-Type": "text/html", "Location": url_},
 		Body:       bytes.NewBufferString("Redirecting to: " + url_),
 	}
@@ -146,24 +156,24 @@ func (ctx *HttpContext) NotFound(message string) ActionResulter {
 }
 
 // content not modified
-func (ctx *HttpContext) NotModified(viewName string, viewData interface{}) ActionResulter {
+func (ctx *HttpContext) NotModified() ActionResulter {
 	return &ActionResult{
-		StatusCode: 304,
+		StatusCode: http.StatusNotModified,
 	}
 }
 
 func (ctx *HttpContext) Error(err interface{}) ActionResulter {
 	var msg string
 	switch t := err.(type) {
-	case *string:
+	case string:
 		msg = err.(string)
-	case *error:
+	case error:
 		msg = err.(error).Error()
 	default:
 		panic("wrong type: " + t.(string))
 	}
 	return &ActionResult{
-		StatusCode: 500,
+		StatusCode: http.StatusInternalServerError,
 		Headers:    map[string]string{"Content-Type": "text/plain"},
 		Body:       bytes.NewBufferString(msg),
 	}
@@ -172,7 +182,7 @@ func (ctx *HttpContext) Error(err interface{}) ActionResulter {
 
 func (ctx *HttpContext) Raw(data string) ActionResulter {
 	return &ActionResult{
-		StatusCode: 500,
+		StatusCode: http.StatusOK,
 		Headers:    map[string]string{"Content-Type": "text/plain"},
 		Body:       bytes.NewBufferString(data),
 	}
@@ -180,10 +190,29 @@ func (ctx *HttpContext) Raw(data string) ActionResulter {
 
 func (ctx *HttpContext) Html(data string) ActionResulter {
 	return &ActionResult{
-		StatusCode: 500,
+		StatusCode: http.StatusOK,
 		Headers:    map[string]string{"Content-Type": "text/html"},
 		Body:       bytes.NewBufferString(data),
 	}
+}
+
+// return json string result
+// ctx.Json(obj) or ctx.Json(obj, "text/html")
+func (ctx *HttpContext) Json(data interface{}, contentType ...string) ActionResulter {
+	var ct string
+	if len(contentType) == 1 {
+		ct = contentType[0]
+	} else {
+		ct = "text/javascript"
+	}
+	ar := &ActionResult{
+		StatusCode: http.StatusOK,
+		Headers:    map[string]string{"Content-Type": ct},
+		Body:       new(bytes.Buffer),
+	}
+	ec := json.NewEncoder(ar.Body)
+	ec.Encode(data)
+	return ar
 }
 
 // this.raw = function(data, contentType) {

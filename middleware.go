@@ -4,7 +4,7 @@ package goku
 // execute order: OnBeginRequest -> OnBeginMvcHandle -> {controller} -> OnEndMvcHandle -> OnEndRequest
 // notice:
 //		OnBeginRequest & OnEndRequest: All requests will be through these
-//		OnBeginMvcHandle & OnEndMvcHandle: static file are not through these
+//		OnBeginMvcHandle & OnEndMvcHandle: not matched route & static file are not through these
 type Middlewarer interface {
 	OnBeginRequest(ctx *HttpContext) (ActionResulter, error)
 	OnBeginMvcHandle(ctx *HttpContext) (ActionResulter, error)

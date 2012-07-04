@@ -3,6 +3,7 @@ package utils
 import (
 	"regexp"
 	"fmt"
+	"os"
 )
 
 func NamedRegexpGroup(str string, reg *regexp.Regexp) (ng map[string]string, matched bool) {
@@ -27,4 +28,15 @@ func NamedRegexpGroup(str string, reg *regexp.Regexp) (ng map[string]string, mat
 	}
 	matched = true
 	return
+}
+
+func FileExists(path_ string) (bool, error) {
+	_, err := os.Stat(path_)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
