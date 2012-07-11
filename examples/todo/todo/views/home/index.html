@@ -1,0 +1,37 @@
+<div class="box">
+
+  <div class="box todos">
+    <h2 class="box">待办事项</h2>
+    <ul>
+       for (var i = 0, len = todos.length; i < len; i++) {
+        var todo = todos[i];
+        var status = todo.finished ? 'class="finished"' : '';
+      
+        <li  status >
+          <% if (!todo.finished) { %>
+            <%= todo.title %>
+            &nbsp;
+            <a href="/todo/<%- todo._id%>/finish?status=yes">完成</a>,
+          <% } else { %>
+            <del><%= todo.title %></del>
+            &nbsp;
+            <a href="/todo/<%- todo._id%>/finish?status=no">恢复</a>,
+          <% } %>
+          <a href="/todo/<%- todo._id%>/edit">修改</a>,
+          <a href="/todo/<%- todo._id%>/delete" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+
+  <div class="box post">
+    <h2>新增</h2>
+    <form action="/todo/new" method="post" id="post_new">
+      <input type="hidden" name="_csrf" value="<%- _csrf %>" />
+      <p><input type="text" name="title" class="long_txt" /></p>
+      <p><input type="submit" class="submit" value="添加" /></p>
+    </form>
+  </div>
+
+</div>
+

@@ -9,6 +9,7 @@ import (
     "time"
     "path"
     "bytes"
+    "errors"
     //"log"
     //"runtime/debug"
 )
@@ -73,9 +74,18 @@ func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
             return
         }
 
+        var err2 error
+        switch t := err_.(type) {
+        case string:
+            err2 = errors.New(err_.(string))
+        case error:
+            err2 = err_.(error)
+        default:
+            panic("wrong type: " + t.(string))
+        }
         ar = &devErrorResult{
             StatusCode: 500,
-            Err:        err_.(error),
+            Err:        err2,
             ShowDetail: true,
         }
 
@@ -132,7 +142,7 @@ func (mh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter
     var ai *ActionInfo
     ai = defaultControllerFactory.GetAction(ctx.Method, ctx.RouteData.Controller, ctx.RouteData.Action)
     if ai == nil {
-        ar = ctx.NotFound(fmt.Sprintf("No Action for Controlle:%s, Action:%s.",
+        ar = ctx.NotFound(fmt.Sprintf("No Action for {Controlle:%s, Action:%s}.",
             ctx.RouteData.Controller, ctx.RouteData.Action))
         return
     }
