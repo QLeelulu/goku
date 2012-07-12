@@ -23,37 +23,10 @@ type SqlQueryInfo struct {
     Order  string
 }
 
+// base db
 type DB struct {
     sql.DB
-
-    // Insert(table string, vals map[string]interface{}) (insertId int)
-    // Update(table string, vals map[string]interface{}, where map[string]interface{}) (effectRow int)
-    // Delete(table string, where map[string]interface{}) (effectRow int)
-    // Select(table string, where map[string]interface{})
 }
-
-// // reture sql where query string
-// //   where(map[string]interface{}{ "name":"lulu", "age": 23 }, " OR ")
-// //   => "WHERE `name`=? OR `age`=?", []interface{}{ "lulu", 23 }
-// func (db *DB) where(vars map[string]interface{}, grouping string) (sql string, params []interface{}) {
-//     if vars == nil || len(vars) < 1 {
-//         return
-//     }
-//     sqls = make([]string, 0, len(vars))
-//     params = make([]interface{}, 0, len(vars))
-//     for k, v := range vars {
-//         sqls = append(sqls, fmt.Sprintf("`%s`=?", k))
-//         params = append(params, v)
-//     }
-//     if grouping == "" {
-//         grouping = " AND "
-//     }
-//     sql = strings.Join(sqls, grouping)
-//     if sql {
-//         sql = " WHERE " + sql
-//     }
-//     return
-// }
 
 func (db *DB) whereSql(where string) string {
     if where == "" {
@@ -84,6 +57,18 @@ func (db *DB) limitSql(limit int, offset int) string {
     return r
 }
 
+// select from db.table with qi
+// Example:
+//      qi := &SqlQueryInfo{
+//              Fields: "*",
+//              Where: "id > ?",
+//              Params: []interface{}{ 3 }
+//              Limit: 10,
+//              Offset: 0,
+//              Group: "age",
+//              Order: "id desc",
+//      }
+//      rows, err := db.Select("blog", qi)
 func (db *DB) Select(table string, qi SqlQueryInfo) (*sql.Rows, error) {
     if qi.Fields == "" {
         qi.Fields = "*"
@@ -99,6 +84,14 @@ func (db *DB) Select(table string, qi SqlQueryInfo) (*sql.Rows, error) {
     return db.Query(query, qi.Params...)
 }
 
+// insert into table with values from vals
+// Example:
+//      data := map[string]interface{}{
+//          "title": "hello golang",
+//          "content": "just wonderful",
+//      }
+//      rerult, err := db.Insert("blog", data)
+//      id, err := result.LastInsertId()
 func (db *DB) Insert(table string, vals map[string]interface{}) (result sql.Result, err error) {
     l := len(vals)
     if vals == nil || l < 1 {
@@ -124,6 +117,48 @@ func (db *DB) Insert(table string, vals map[string]interface{}) (result sql.Resu
 
     result, err = db.Exec(query, params...)
     return
+}
+
+// insert struct to database
+// if i is pointer to struct and has a int type field named "Id"
+// the field "Id" will set to the last insert id if has LastInsertId
+// 
+// field mapping rule is: HelloWorld => hello_world
+// mean that struct's field "HelloWorld" in database table's field is "hello_world"
+// table name mapping use the same rule as field
+func (db *DB) InsertStruct(i interface{}) (sql.Result, error) {
+    m := utils.StructToSnakeKeyMap(i)
+    table := utils.SnakeCasedName(utils.StructName(i))
+    r, err := db.Insert(table, m)
+
+    if err == nil {
+        insertId, err2 := r.LastInsertId()
+        if err2 == nil && insertId > 0 {
+            ps := reflect.ValueOf(i)
+            if ps.Kind() == reflect.Ptr {
+                // struct
+                s := ps.Elem()
+                if s.Kind() == reflect.Struct {
+                    // exported field
+                    f := s.FieldByName("Id")
+                    if f.IsValid() {
+                        // A Value can be changed only if it is 
+                        // addressable and was not obtained by 
+                        // the use of unexported struct fields.
+                        if f.CanSet() {
+                            // change value of N
+                            if f.Kind() == reflect.Int {
+                                if !f.OverflowInt(insertId) {
+                                    f.SetInt(insertId)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return r, err
 }
 
 func (db *DB) Update(table string, vals map[string]interface{}, where string, whereParams ...interface{}) (result sql.Result, err error) {
@@ -176,7 +211,7 @@ func (db *DB) rawSelectByStruct(structType reflect.Type, qi SqlQueryInfo) (rows 
     // sql select columns, it's Snake Cased
     columns := make([]string, 0, lf)
 
-    // get fields in s,
+    // get fields in structType,
     // and convert to sql query column name
     for i := 0; i < lf; i++ {
         structField := structType.Field(i)
@@ -194,6 +229,10 @@ func (db *DB) rawSelectByStruct(structType reflect.Type, qi SqlQueryInfo) (rows 
     return
 }
 
+// query by s and set the result value to s
+// field mapping rule is: HelloWorld => hello_world
+// mean that struct's field "HelloWorld" in database table's field is "hello_world"
+// table name mapping use the same rule as field
 func (db *DB) GetStruct(s interface{}, where string, params ...interface{}) error {
 
     structType := reflect.TypeOf(s)
@@ -219,8 +258,6 @@ func (db *DB) GetStruct(s interface{}, where string, params ...interface{}) erro
     defer rows.Close()
 
     if rows.Next() {
-        v := reflect.ValueOf(s)
-
         err = rawScanStruct(v, fields, rows)
         if err != nil {
             return err
@@ -233,6 +270,9 @@ func (db *DB) GetStruct(s interface{}, where string, params ...interface{}) erro
 }
 
 // query by s and return a slice by type s
+// field mapping rule is: HelloWorld => hello_world
+// mean that struct's field "HelloWorld" in database table's field is "hello_world"
+// table name mapping use the same rule as field
 // @param s: just for reflect
 // @return: notice that slice's item is pointer, like []*Blog
 func (db *DB) GetStructs(s interface{}, qi SqlQueryInfo) ([]interface{}, error) {
@@ -240,27 +280,6 @@ func (db *DB) GetStructs(s interface{}, qi SqlQueryInfo) ([]interface{}, error) 
     if structType.Kind() == reflect.Ptr {
         structType = structType.Elem()
     }
-    // // nums of struct's fields
-    // lf := structType.NumField()
-    // // type's fields
-    // fields := make([]string, 0, lf)
-    // // sql select columns, it's Snake Cased
-    // columns := make([]string, 0, lf)
-
-    // // get fields in s,
-    // // and convert to sql query column name
-    // for i := 0; i < lf; i++ {
-    //     structField := structType.Field(i)
-    //     fieldName := structField.Name
-    //     fields = append(fields, fieldName)
-    //     columns = append(columns, utils.SnakeCasedName(fieldName))
-    // }
-
-    // tableName := utils.SnakeCasedName(utils.StructName(s))
-    // // TODO: check the fileds has specified ?
-    // qi.Fields = strings.Join(columns, ", ")
-    // // run query from db
-    // rows, err := db.Select(tableName, qi)
 
     rows, fields, err := db.rawSelectByStruct(structType, qi)
     if err != nil {
@@ -269,27 +288,9 @@ func (db *DB) GetStructs(s interface{}, qi SqlQueryInfo) ([]interface{}, error) 
     defer rows.Close()
 
     list := make([]interface{}, 0)
-    //lf := len(fields)
+
     for rows.Next() {
         v := reflect.New(structType)
-        // dest := make([]interface{}, lf)
-
-        // // Loop over column names and find field in s to bind to
-        // // based on column name. all returned columns must match
-        // // a field in the s struct
-        // for x, fieldName := range fields {
-        //     f := v.Elem().FieldByName(fieldName)
-        //     if f == zeroVal {
-        //         e := fmt.Sprintf("db: No field %s in type %s (query: select %s)",
-        //             fieldName, structType.Name(), utils.SnakeCasedName(structType.Name()))
-        //         return nil, errors.New(e)
-        //     } else {
-        //         dest[x] = f.Addr().Interface()
-        //     }
-        // }
-
-        // err = rows.Scan(dest...)
-
         err = rawScanStruct(v, fields, rows)
         if err != nil {
             return nil, err
@@ -310,7 +311,7 @@ type rowScaner interface {
 // scan the value by fields, and set to v
 func rawScanStruct(v reflect.Value, fields []string, scanner rowScaner) (err error) {
     if v.IsNil() {
-        e := fmt.Sprintf("value for %s can not be nil", v.Type())
+        e := fmt.Sprintf("struct can not be nil, but got %#v", v.Interface())
         return errors.New(e)
     }
     dest := make([]interface{}, len(fields))

@@ -8,59 +8,159 @@ import (
     _ "github.com/ziutek/mymysql/godrv"
 )
 
-type Todo struct {
+type TestBlog struct {
     Id       int
     Title    string
-    Finished bool
-    PostDate time.Time
+    Content  string
+    CreateAt time.Time
 }
 
 var db *MysqlDB
 
-func TestOpenDB(t *testing.T) {
+/**
+CREATE TABLE `test_blog` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL DEFAULT '',
+  `content` text NOT NULL,
+  `create_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
+
+func TestOpenMysqlDB(t *testing.T) {
     var err error
-    db, err = OpenMysql("mymysql", "tcp:localhost:3306*todo/lulu/123456")
+    db, err = OpenMysql("mymysql", "tcp:localhost:3306*test_db/lulu/123456")
     if err != nil {
         t.Error("can not open db")
+    }
+    _, err = db.Query("select 1")
+    if err != nil {
+        t.Error(err.Error())
     }
 }
 
 func TestMysqlDB(t *testing.T) {
-    r, err := db.Select("todo", SqlQueryInfo{})
-    assert.Equals(t, err, nil)
-
-    var id, finished int
-    var title string
-    var post_date time.Time
-    for r.Next() {
-        err2 := r.Scan(&id, &title, &finished, &post_date)
-        // fmt.Printf("a => %s => %s\n", id, err2)
-        assert.Equals(t, err2, nil)
-        assert.Equals(t, id > 0, true)
+    r, err := db.Select("test_blog", SqlQueryInfo{
+        Fields: "1",
+    })
+    if err != nil {
+        t.Fatalf("select got err: ", err.Error())
     }
+
+    var id int
+    for r.Next() {
+        err2 := r.Scan(&id)
+        assert.Equals(t, err2, nil)
+        assert.Equals(t, id, 1)
+    }
+}
+
+func TestMysqlDBInsert(t *testing.T) {
+    vals := map[string]interface{}{
+        "title": "golang",
+        "content": "Go is an open source programming environment that " +
+            "makes it easy to build simple, reliable, and efficient software.",
+        "create_at": time.Now(),
+    }
+
+    r, err := db.Insert("test_blog", vals)
     assert.Equals(t, err, nil)
+    if r == nil {
+        t.Fatalf("insert result must not be nil")
+    }
+    var i int64
+    i, err = r.RowsAffected()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, i, int64(1))
+    i, err = r.LastInsertId()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, i > 0, true)
+
+    blog := TestBlog{
+        Title:    "goku",
+        Content:  "a mvc framework",
+        CreateAt: time.Now(),
+    }
+    r, err = db.InsertStruct(&blog)
+    assert.Equals(t, err, nil)
+    if r == nil {
+        t.Fatalf("insert result must not be nil")
+    }
+
+    i, err = r.RowsAffected()
+    i, err = r.RowsAffected()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, i, int64(1))
+    i, err = r.LastInsertId()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, blog.Id > 0, true)
 }
 
 func TestGetStruct(t *testing.T) {
-    var todo *Todo
-    err := db.GetStruct(todo, "id=?", 5)
-    assert.StringContains(t, err.Error(), "struct can not be nil")
+    var blog *TestBlog
+    var err error
+    err = db.GetStruct(blog, "id=?", 1)
+    // assert.Equals(t, todo, nil)
+    assert.NotEquals(t, err, nil)
+    if err != nil {
+        assert.StringContains(t, err.Error(), "struct can not be nil")
+    }
 
-    err = db.GetStruct(Todo{}, "id=?", 5)
+    err = db.GetStruct(TestBlog{}, "id=?", 1)
     assert.StringContains(t, err.Error(), "struct must be a pointer")
 
-    todo = &Todo{}
-    err = db.GetStruct(todo, "id=?", 5)
+    blog = &TestBlog{}
+    err = db.GetStruct(blog, "id>0")
     assert.Equals(t, err, nil)
+    assert.Equals(t, blog.Id > 0, true)
 }
 
 func TestGetStructs(t *testing.T) {
     qi := SqlQueryInfo{}
-    todos, err := db.GetStructs(&Todo{}, qi)
+    blogs, err := db.GetStructs(TestBlog{}, qi)
     assert.Equals(t, err, nil)
 
-    for _, todo_ := range todos {
-        todo := todo_.(*Todo)
-        assert.Equals(t, todo.Id > 0, true)
+    for _, blog_ := range blogs {
+        blog := blog_.(*TestBlog)
+        assert.Equals(t, blog.Id > 0, true)
     }
+}
+
+func TestMysqlUpdate(t *testing.T) {
+    var blog *TestBlog
+    var err error
+
+    blog = &TestBlog{}
+    err = db.GetStruct(blog, "id>0")
+    assert.Equals(t, err, nil)
+
+    vals := map[string]interface{}{
+        "title": "js",
+    }
+    r, err2 := db.Update("test_blog", vals, "id=?", blog.Id)
+    if err2 != nil {
+        t.Fatalf("update got err: ", err2.Error())
+    }
+    assert.Equals(t, err2, nil)
+    var i int64
+    i, err = r.RowsAffected()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, i, int64(1))
+
+    err = db.GetStruct(blog, "id=?", blog.Id)
+    assert.Equals(t, err, nil)
+    assert.Equals(t, blog.Title, "js")
+}
+
+func TestMysqlDBDelete(t *testing.T) {
+    r, err := db.Delete("test_blog", "0=0")
+    assert.Equals(t, err, nil)
+    if r == nil {
+        t.Fatalf("delete result must not be nil")
+    }
+
+    var i int64
+    i, err = r.RowsAffected()
+    assert.Equals(t, err, nil)
+    assert.Equals(t, i > 0, true)
 }

@@ -3,7 +3,7 @@ package utils
 import (
     "regexp"
     "reflect"
-    // "fmt"
+    "fmt"
     "os"
 )
 
@@ -81,18 +81,39 @@ func MapToStruct(m map[string]interface{}, s interface{}) {
 }
 
 // convert struct to map
-func StructToMap(s interface{}) map[string]interface{} {
-    m := make(map[string]interface{})
-
+// s must to be struct, can not be a pointer
+func rawStructToMap(s interface{}, snakeCasedKey bool) map[string]interface{} {
     v := reflect.ValueOf(s)
+    for v.Kind() == reflect.Ptr {
+        v = v.Elem()
+    }
+    if v.Kind() != reflect.Struct {
+        panic(fmt.Sprintf("param s must be struct, but got %s", s))
+    }
+
+    m := make(map[string]interface{})
 
     for i := 0; i < v.NumField(); i++ {
         key := v.Type().Field(i).Name
+        if snakeCasedKey {
+            key = SnakeCasedName(key)
+        }
         val := v.Field(i).Interface()
 
         m[key] = val
     }
     return m
+}
+
+// convert struct to map
+func StructToMap(s interface{}) map[string]interface{} {
+    return rawStructToMap(s, false)
+}
+
+// convert struct to map
+// but struct's field name to snake cased map key
+func StructToSnakeKeyMap(s interface{}) map[string]interface{} {
+    return rawStructToMap(s, true)
 }
 
 // get the Struct's name
