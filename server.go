@@ -4,14 +4,14 @@
 package goku
 
 import (
-    "net/http"
-    "fmt"
-    "time"
-    "path"
     "bytes"
-    "errors"
+    // "errors"
+    "fmt"
+    "net/http"
+    "path"
+    "time"
     //"log"
-    //"runtime/debug"
+    "runtime/debug"
 )
 
 // all the config to the web server
@@ -76,24 +76,22 @@ func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
             return
         }
 
-        var err2 error
-        switch t := err_.(type) {
-        case string:
-            err2 = errors.New(err_.(string))
-        case error:
-            err2 = err_.(error)
-        default:
-            panic("wrong type: " + t.(string))
-        }
-        ar = &devErrorResult{
+        der := &devErrorResult{
             StatusCode: 500,
-            Err:        err2,
+            Err:        fmt.Sprintf("%v", err_),
             ShowDetail: true,
+        }
+        if der.ShowDetail {
+            var buf bytes.Buffer
+            buf.Write(debug.Stack())
+            der.Stack = buf.String()
         }
 
         err = nil
+        ar = der
         return
     }()
+
     // being request
     ar, err = rh.MiddlewareHandler.BeginRequest(ctx)
     if ctx.Canceled || err != nil || ar != nil {

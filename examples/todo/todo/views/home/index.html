@@ -3,24 +3,24 @@
   <div class="box todos">
     <h2 class="box">待办事项</h2>
     <ul>
-       for (var i = 0, len = todos.length; i < len; i++) {
-        var todo = todos[i];
-        var status = todo.finished ? 'class="finished"' : '';
+      {{range .}}
+      {{ $class := "" }}
+      {{if .Finished}} {{ $class := "class=\"finshed\"" }} {{end}}
       
         <li  status >
-          <% if (!todo.finished) { %>
-            <%= todo.title %>
+          {{if .Finished }}
+            {{ .Title }}
             &nbsp;
-            <a href="/todo/<%- todo._id%>/finish?status=yes">完成</a>,
-          <% } else { %>
-            <del><%= todo.title %></del>
+            <a href="/todo/{{ .Id }}/finish?status=yes">完成</a>,
+          {{else}}
+            <del>{{ .Title }}</del>
             &nbsp;
-            <a href="/todo/<%- todo._id%>/finish?status=no">恢复</a>,
-          <% } %>
-          <a href="/todo/<%- todo._id%>/edit">修改</a>,
-          <a href="/todo/<%- todo._id%>/delete" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
+            <a href="/todo/{{ .Id }}/finish?status=no">恢复</a>,
+          {{end}}
+          <a href="/todo/{{ .Id }}/edit">修改</a>,
+          <a href="/todo/{{ .Id }}/delete" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
         </li>
-      <% } %>
+      {{end}}
     </ul>
   </div>
 

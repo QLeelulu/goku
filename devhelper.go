@@ -1,20 +1,18 @@
 package goku
 
 import (
-    "bytes"
     //"fmt"
+    "html/template"
     "net/http"
     "os"
     "path"
     "runtime"
-    "runtime/debug"
-    "html/template"
 )
 
 type devErrorContext struct {
     ShowDetail bool
     Request    *http.Request
-    Err        error
+    Err        string
     StatusCode int
     Stack      string
 
@@ -29,7 +27,7 @@ type devErrorHanller struct {
     TemplateEnginer TemplateEnginer
 }
 
-func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err error, statusCode int, showDetail bool) {
+func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err string, statusCode int, showDetail bool, stack string) {
     ec := &devErrorContext{
         ShowDetail: showDetail,
         Request:    ctx.Request,
@@ -38,9 +36,7 @@ func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err error, statusCode
         GoVersion:  runtime.Version(),
     }
     if showDetail {
-        var buf bytes.Buffer
-        buf.Write(debug.Stack())
-        ec.Stack = buf.String()
+        ec.Stack = stack
         ec.OsEnviron = os.Environ()
         ec.GoRoot = runtime.GOROOT()
         ec.GoNumGoroutine = runtime.NumGoroutine()
@@ -67,12 +63,13 @@ var devErrorHanlle *devErrorHanller = createDevErrorHandler()
 
 type devErrorResult struct {
     StatusCode int
-    Err        error
+    Err        string
     ShowDetail bool
+    Stack      string
 }
 
 func (er *devErrorResult) ExecuteResult(ctx *HttpContext) {
     ctx.responseContentCache.Reset()
     ctx.Status(er.StatusCode)
-    devErrorHanlle.showErrorInfo(ctx, er.Err, er.StatusCode, er.ShowDetail)
+    devErrorHanlle.showErrorInfo(ctx, er.Err, er.StatusCode, er.ShowDetail, er.Stack)
 }

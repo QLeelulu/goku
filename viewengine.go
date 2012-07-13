@@ -7,7 +7,7 @@ import (
     "bytes"
     "strings"
     "fmt"
-    "./utils"
+    "github.com/qleelulu/goku/utils"
 )
 
 // TemplateEnginer interface

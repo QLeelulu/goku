@@ -6,7 +6,7 @@ import (
     "strings"
     "errors"
     "reflect"
-    "./utils"
+    "github.com/qleelulu/goku/utils"
 )
 
 var zeroVal reflect.Value
