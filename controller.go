@@ -16,6 +16,7 @@ import (
 // 	HEAD       HttpMethod = 16
 // )
 
+// info about the action
 type ActionInfo struct {
     Name       string
     Controller *ControllerInfo
@@ -23,6 +24,7 @@ type ActionInfo struct {
     Filters    []Filter
 }
 
+// add filters to the action
 func (ai *ActionInfo) AddFilters(filters ...Filter) {
     for _, ft := range filters {
         if ft != nil {
@@ -31,6 +33,7 @@ func (ai *ActionInfo) AddFilters(filters ...Filter) {
     }
 }
 
+// hold the info about controller's actions and filters
 type ControllerInfo struct {
     Name    string
     Actions map[string]*ActionInfo
@@ -55,6 +58,7 @@ func (ci *ControllerInfo) GetAction(method string, name string) *ActionInfo {
     return ai
 }
 
+// register a action to the controller
 func (ci *ControllerInfo) RegAction(httpMethod string, actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ActionInfo {
     httpMethod = strings.ToLower(httpMethod)
@@ -160,6 +164,8 @@ func (cb *ControllerBuilder) Filters(filters ...Filter) *ControllerBuilder {
     return cb
 }
 
+// get a controller builder that the controller named "name"
+// for reg actions and filters
 func Controller(name string) *ControllerBuilder {
     name = strings.ToLower(name)
     c, ok := defaultControllerFactory.Controllers[name]

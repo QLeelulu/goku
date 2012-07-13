@@ -95,21 +95,6 @@ func (ctx *HttpContext) WriteHeader(code int) {
     ctx.responseStatusCode = code
 }
 
-// func (ctx *HttpContext) Redirect(status int, url_ string) {
-// 	ctx.ResponseWriter.Header().Set("Location", url_)
-// 	ctx.ResponseWriter.WriteHeader(status)
-// 	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url_))
-// }
-
-// func (ctx *HttpContext) NotModified() {
-// 	ctx.ResponseWriter.WriteHeader(304)
-// }
-
-// func (ctx *HttpContext) NotFound(message string) {
-// 	ctx.ResponseWriter.WriteHeader(404)
-// 	ctx.ResponseWriter.Write([]byte(message))
-// }
-
 // render the view and return a ActionResulter
 func (ctx *HttpContext) Render(viewName string, viewData interface{}) ActionResulter {
     vr := &ViewResult{
@@ -214,14 +199,6 @@ func (ctx *HttpContext) Json(data interface{}, contentType ...string) ActionResu
     ec.Encode(data)
     return ar
 }
-
-// this.raw = function(data, contentType) {
-//   return new ActionResult(data, {'Content-Type': contentType || 'text/plain'});
-// };
-
-// this.json = function(data) {
-//   return new ActionResult(JSON.stringify(data), {'Content-Type': 'application/json'});
-// };
 
 // this.content = function(filename) {
 //   return new ContentResult(filename);

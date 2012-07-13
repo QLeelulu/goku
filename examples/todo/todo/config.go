@@ -7,6 +7,12 @@ import (
     "path"
 )
 
+var (
+    DATABASE_Driver string = "mysql"
+    // "user:password@/dbname?charset=utf8"
+    DATABASE_DSN string = "lulu:123456@/todo?charset=utf8&keepalive=1"
+)
+
 var Config *goku.ServerConfig = &goku.ServerConfig{
     Addr:           ":8080",
     ReadTimeout:    10 * time.Second,

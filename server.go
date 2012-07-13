@@ -46,14 +46,15 @@ type RequestHandler struct {
 }
 
 // implement the http.Handler interface
-func (mh *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// the main entrance of the request handler
+func (rh *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     var ctx *HttpContext
-    ctx = mh.buildContext(w, r)
+    ctx = rh.buildContext(w, r)
     var (
         ar  ActionResulter
         err error
     )
-    ar, err = mh.execute(ctx)
+    ar, err = rh.execute(ctx)
     if err != nil {
         ar = ctx.Error(err)
     }
@@ -63,10 +64,11 @@ func (mh *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     // response content was cached,
     // flush all the cached content to responsewriter
     ctx.flushToResponse()
+    logRequestInfo(ctx)
 }
 
 // 你可以通过三种途径取消一个请求： 设置 ctx.Canceled = true , 返回一个ActionResulter或者一个错误
-func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err error) {
+func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err error) {
     defer func() {
         // handle all the error
         err_ := recover()
@@ -93,16 +95,17 @@ func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
         return
     }()
     // being request
-    ar, err = mh.MiddlewareHandler.BeginRequest(ctx)
+    ar, err = rh.MiddlewareHandler.BeginRequest(ctx)
     if ctx.Canceled || err != nil || ar != nil {
         return
     }
     // match route
-    routeData, ok := mh.RouteTable.Match(ctx.Request.URL.Path)
+    routeData, ok := rh.RouteTable.Match(ctx.Request.URL.Path)
     if !ok {
         ar = ctx.NotFound("Page Not Found! No Route For The URL: " + ctx.Request.URL.Path)
         return
     }
+    ctx.RouteData = routeData
     // static file route
     // return ContentResult
     if routeData.Route.IsStatic {
@@ -114,31 +117,31 @@ func (mh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
         }
         ar.ExecuteResult(ctx)
     } else {
-        ctx.RouteData = routeData
         // parse form data before mvc handle
         ctx.Request.ParseForm()
         // begin mvc handle
-        ar, err = mh.MiddlewareHandler.BeginMvcHandle(ctx)
+        ar, err = rh.MiddlewareHandler.BeginMvcHandle(ctx)
         if ctx.Canceled || err != nil || ar != nil {
             return
         }
         // handle controller
-        ar, err = mh.executeController(ctx)
+        ar, err = rh.executeController(ctx)
         if ctx.Canceled || err != nil || ar != nil {
             return
         }
         // end mvc handle
-        ar, err = mh.MiddlewareHandler.EndMvcHandle(ctx)
+        ar, err = rh.MiddlewareHandler.EndMvcHandle(ctx)
         if ctx.Canceled || err != nil || ar != nil {
             return
         }
     }
     // end request
-    ar, err = mh.MiddlewareHandler.EndRequest(ctx)
+    ar, err = rh.MiddlewareHandler.EndRequest(ctx)
     return
 }
 
-func (mh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter, err error) {
+// execute controller,action,and filter
+func (rh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter, err error) {
     var ai *ActionInfo
     ai = defaultControllerFactory.GetAction(ctx.Method, ctx.RouteData.Controller, ctx.RouteData.Action)
     if ai == nil {
@@ -174,26 +177,52 @@ func (mh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter
     return
 }
 
-func (mh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *HttpContext {
+func (rh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *HttpContext {
     //r.ParseForm()
     return &HttpContext{
         Request:              r,
         responseWriter:       w,
         Method:               r.Method,
-        requestHandler:       mh,
+        requestHandler:       rh,
         responseContentCache: new(bytes.Buffer),
         //responseHeaderCache: make(map[string]string),
     }
 }
 
-func (mh *RequestHandler) checkError(ctx *HttpContext, ar ActionResulter, err error) ActionResulter {
-    if err != nil {
-        return ctx.Error(err)
+func logRequestInfo(ctx *HttpContext) {
+    if Logger().LogLevel() < LOG_LEVEL_LOG {
+        return
     }
-    return ar
+    status := 200
+    if ctx.responseStatusCode > 0 {
+        status = ctx.responseStatusCode
+    }
+    routeInfo := ""
+    // N: Unknown
+    // D: Dynamic request
+    // S: Static file
+    handleType := "N"
+    if ctx.RouteData != nil {
+        handleType = "D"
+        if ctx.RouteData.Route.IsStatic {
+            handleType = "S"
+        }
+        //routeInfo = fmt.Sprintf(" >>[n:%v, p:%v]", ctx.RouteData.Route.Name, ctx.RouteData.Route.Pattern)
+    }
+    Logger().Logln(handleType, status, ctx.Request.Method, ctx.Request.RequestURI, routeInfo)
 }
 
+// func (rh *RequestHandler) checkError(ctx *HttpContext, ar ActionResulter, err error) ActionResulter {
+//     if err != nil {
+//         return ctx.Error(err)
+//     }
+//     return ar
+// }
+
 // create a server to handle the request
+// routeTable is about the rule map a url to a controller action
+// middlewares are the way you can process request during handle request
+// sc is the config how the server work
 func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerConfig) *Server {
     if sc.RootDir == "" {
         panic("gokuServer: Root Dir must set")
