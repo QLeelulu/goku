@@ -3,7 +3,7 @@ package goku
 import (
     "bytes"
     "fmt"
-    "github.com/qleelulu/goku/utils"
+    "github.com/QLeelulu/goku/utils"
     "html/template"
     "io"
     "path"

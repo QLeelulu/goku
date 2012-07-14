@@ -2,9 +2,9 @@ package controllers
 
 import (
     // "fmt"
-    "github.com/qleelulu/goku"
-    "github.com/qleelulu/goku/examples/todo/todo/models"
-    "github.com/qleelulu/goku/form"
+    "github.com/QLeelulu/goku"
+    "github.com/QLeelulu/goku/examples/todo/todo/models"
+    "github.com/QLeelulu/goku/form"
     "strconv"
     "time"
 )

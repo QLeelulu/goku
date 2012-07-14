@@ -1,9 +1,9 @@
 package main
 
 import (
-    "github.com/qleelulu/goku"
-    "github.com/qleelulu/goku/examples/todo/todo"
-    _ "github.com/qleelulu/goku/examples/todo/todo/controllers" // notice this!! import controllers
+    "github.com/QLeelulu/goku"
+    "github.com/QLeelulu/goku/examples/todo/todo"
+    _ "github.com/QLeelulu/goku/examples/todo/todo/controllers" // notice this!! import controllers
     "log"
 )
 

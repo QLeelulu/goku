@@ -2,13 +2,15 @@
 
   goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.
 
+  [doc & api](http://go.pkgdoc.org/github.com/QLeelulu/goku)
+
 ##Installation
 
-To install goku, simply run `go get github.com/qleelulu/goku`. To use it in a program, use `import "github.com/qleelulu/goku`
+To install goku, simply run `go get github.com/QLeelulu/goku`. To use it in a program, use `import "github.com/QLeelulu/goku"`
 
 To run example "todo" app, just:
     
-    $ cd $GOROOT/src/pkg/github.com/qleelulu/goku/examples/todo/
+    $ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
     $ go run app.go
 
 maybe you need run todo.sql first.
@@ -19,7 +21,7 @@ maybe you need run todo.sql first.
     package main
 
     import (
-        "github.com/qleelulu/goku"
+        "github.com/QLeelulu/goku"
         "log"
         "path"
         "runtime"
@@ -295,7 +297,7 @@ https://github.com/jander/mustache - mustache?!
 you can create a form, to valid the user's input, and get the clean value.
 
 ```go
-    import "github.com/qleelulu/goku/form"
+    import "github.com/QLeelulu/goku/form"
 
     func CreateCommentForm() *goku.Form {
         name := NewCharField("name", "Name", true).Range(3, 10).Field()
@@ -312,6 +314,8 @@ and then you can use this form like this:
 
 ```go
     f := CreateCommentForm()
+    f.FillByRequest(ctx.Request)
+
     if f.Valid() {
         // after valid, we can get the clean values
         m := f.CleanValues()

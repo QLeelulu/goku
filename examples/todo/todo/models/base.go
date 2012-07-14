@@ -2,8 +2,8 @@ package models
 
 import (
     // _ "code.google.com/p/go-mysql-driver/mysql"
-    "github.com/qleelulu/goku"
-    "github.com/qleelulu/goku/examples/todo/todo"
+    "github.com/QLeelulu/goku"
+    "github.com/QLeelulu/goku/examples/todo/todo"
     _ "github.com/ziutek/mymysql/godrv"
 )
 

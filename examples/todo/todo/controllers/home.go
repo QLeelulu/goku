@@ -1,7 +1,7 @@
 package controllers
 
 import (
-    "github.com/qleelulu/goku"
+    "github.com/QLeelulu/goku"
 )
 
 var _ = goku.Controller("home").

@@ -2,7 +2,7 @@ package main
 
 import (
     //"os"
-    "github.com/qleelulu/goku"
+    "github.com/QLeelulu/goku"
     "log"
     "path"
     "runtime"

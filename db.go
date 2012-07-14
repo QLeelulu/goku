@@ -4,7 +4,7 @@ import (
     "database/sql"
     "errors"
     "fmt"
-    "github.com/qleelulu/goku/utils"
+    "github.com/QLeelulu/goku/utils"
     "reflect"
     "strings"
 )

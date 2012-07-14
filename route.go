@@ -6,7 +6,7 @@ import (
     "fmt"
     "regexp"
     //"path"
-    "github.com/qleelulu/goku/utils"
+    "github.com/QLeelulu/goku/utils"
 )
 
 var (

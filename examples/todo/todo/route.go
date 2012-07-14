@@ -1,7 +1,7 @@
 package todo
 
 import (
-    "github.com/qleelulu/goku"
+    "github.com/QLeelulu/goku"
 )
 
 // routes
