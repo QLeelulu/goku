@@ -73,6 +73,7 @@
 
 ##Route
     
+```go
     var Routes []*goku.Route = []*goku.Route{
         &goku.Route{
             Name:     "static",
@@ -95,9 +96,11 @@
     rt := &goku.RouteTable{Routes: todo.Routes}
     s := goku.CreateServer(rt, nil, nil)
     log.Fatal(s.ListenAndServe())
+```
 
 or
 
+```go
     rt := new(goku.RouteTable)
     rt.Static("staticFile", "/static/(.*)")
     rt.Map(
@@ -111,9 +114,11 @@ or
         "/{controller}/{action}", // pattern
         map[string]string{"controller": "home", "action": "index"}, // default
     )
+```
 
 ##Controller And Action
 
+```go
     // add a controller named "home"
     goku.Controller("home").
         Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
@@ -127,6 +132,7 @@ or
         Post("about", func(ctx *goku.HttpContext) goku.ActionResulter {
         return ctx.Raw("About")
     })
+```
 
 + get  `/home/index` will return `Hello World`
 + post `/home/index` will return 404
@@ -137,6 +143,7 @@ or
 `ActionResulter` is type interface. all the action must return ActionResulter.
 you can return an ActionResulter in the action like this:
 
+```go
     // ctx is *goku.HttpContext
     ctx.Raw("hi")
     ctx.NotFound("oh no! ):")
@@ -145,14 +152,17 @@ you can return an ActionResulter in the action like this:
     // will render a template
     ctx.View(viewModel)
     ctx.Render("viewName", viewModel)
+```
 
 or you can return a ActionResulter by this
 
+```go
     return &ActionResult{
         StatusCode: http.StatusNotFound,
         Headers:    map[string]string{"Content-Type": "text/html"},
         Body:       "Page Not Found",
     }
+```
 
 for more info, check the code.
 
@@ -163,6 +173,7 @@ for more info, check the code.
 To render a view, you can just return a `ViewResut` which implement the `ActionResulter` interface.
 just like this:
 
+```go
     goku.Controller("blog").
         Get("page", func(ctx *goku.HttpContext) goku.ActionResulter {
         blog := GetBlogByid(10)
@@ -178,6 +189,7 @@ just like this:
         // that same as blog.Title
         return ctx.View(blog)
     })
+```
 
 `ctx.View()` will find the view in these rules:
   
@@ -194,14 +206,16 @@ it will find the view file in this rule:
 if you want to return a view that specified view name,
 you can use ctx.Render:
 
+```go
     // it will find the view in these rules:
     //      1. /{ViewPath}/{Controller}/{viewName}
     //      2. /{ViewPath}/shared/{viewName}
     ctx.Render("viewName", ViewModel)
-
+```
 
 ##ViewEngine & Template
 
+```go
     // you can add any val to ViewData
     // then you can use it in template
     // like this: {{ .Data.SiteName }}
@@ -212,9 +226,11 @@ you can use ctx.Render:
     // then you can use it in template
     // like this: {{range .Model}} {{ .Title }} {{end}}
     return ctx.View(blogs)
+```
 
 default template engine is golang's template.
 
+```html
     <div class="box todos">
         <h2 class="box">{{ .Data.SiteName }}</h2>
         <ul>
@@ -225,6 +241,7 @@ default template engine is golang's template.
           {{end}}
         </ul>
     </div>
+```
 
 HtmlHelper?
 
@@ -233,6 +250,7 @@ https://github.com/jander/mustache - mustache?!
 
 ##HttpContext
 
+```go
     type HttpContext struct {
         Request        *http.Request       // http request
         responseWriter http.ResponseWriter // http response
@@ -246,13 +264,14 @@ https://github.com/jander/mustache - mustache?!
         User      string                 // user name
         Canceled  bool                   // cancel continue process the request and return
     }
-
+```
 
 
 #Form Validation
 
 you can create a form, to valid the user's input, and get the clean value.
 
+```go
     import "github.com/qleelulu/goku/form"
 
     func CreateCommentForm() *goku.Form {
@@ -264,9 +283,11 @@ you can create a form, to valid the user's input, and get the clean value.
         form := NewForm(name, nickName, age, content)
         return form
     }
+```
 
 and then you can use this form like this:
 
+```go
     f := CreateCommentForm()
     if f.Valid() {
         // after valid, we can get the clean values
@@ -277,6 +298,7 @@ and then you can use this form like this:
         // we can get the valid errors
         errs := f.Errors()
     }
+```
 
 checkout [form_test.go](https://github.com/QLeelulu/goku/blob/master/form/form_test.go)
 
@@ -285,6 +307,7 @@ checkout [form_test.go](https://github.com/QLeelulu/goku/blob/master/form/form_t
 
 simple database api.
 
+```go
     db, err := OpenMysql("mymysql", "tcp:localhost:3306*test_db/lulu/123456")
 
     // you can use all the api in golang's database/sql
@@ -328,11 +351,14 @@ simple database api.
     r, err2 := db.Update("test_blog", vals, "id=?", blog.Id)
 
     r, err := db.Delete("test_blog", "id=?", 8)
+```
 
 checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
 
+
 ##Action Filter
 
+```go
     type TestActionFilter struct {
     }
 
@@ -354,7 +380,8 @@ checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
         ctx.WriteString("    OnResultExecuted - TestActionFilter \n")
         return
     }
-  
+```
+
   Order of the filters execution is:
     1. OnActionExecuting
     2. -> Execute Action -> return ActionResulter
@@ -367,6 +394,7 @@ checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
 
 ##Middleware
 
+```go
     type TestMiddleware struct {
     }
 
@@ -388,13 +416,15 @@ checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
         ctx.WriteString("OnEndRequest - TestMiddleware \n")
         return nil, nil
     }
+```
 
 Order of the middleware event execution is:
-    1. `OnBeginRequest`
-    2. `OnBeginMvcHandle`(if not the static file request)
-    3.    {controller} (if not the static file request)
-    4. `OnEndMvcHandle`(if not the static file request)
-    5. `OnEndRequest`
+
+   1. `OnBeginRequest`
+   2. `OnBeginMvcHandle`(if not the static file request)
+   3.    {controller} (if not the static file request)
+   4. `OnEndMvcHandle`(if not the static file request)
+   5. `OnEndRequest`
 
   
 ## Authors
