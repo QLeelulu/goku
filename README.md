@@ -382,13 +382,14 @@ checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
     }
 ```
 
-  Order of the filters execution is:
-    1. OnActionExecuting
-    2. -> Execute Action -> return ActionResulter
-    3. OnActionExecuted
-    4. OnResultExecuting
-    5. -> ActionResulter.ExecuteResult
-    6. OnResultExecuted
+Order of the filters execution is:
+
+   1. OnActionExecuting
+   2. -> Execute Action -> return ActionResulter
+   3. OnActionExecuted
+   4. OnResultExecuting
+   5. -> ActionResulter.ExecuteResult
+   6. OnResultExecuted
 
 
 
