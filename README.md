@@ -55,7 +55,6 @@
          * Controller & Action
          */
         goku.Controller("home").
-            //Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
             Get("index", func(ctx *goku.HttpContext) goku.ActionResulter {
             return ctx.Html("Hello World")
         })
@@ -136,7 +135,7 @@ or
 
 + get  `/home/index` will return `Hello World`
 + post `/home/index` will return 404
-+ post `/home/about` will call `About`
++ post `/home/about` will return `About`
 
 ##ActionResult
 
@@ -423,7 +422,7 @@ Order of the middleware event execution is:
 
    1. `OnBeginRequest`
    2. `OnBeginMvcHandle`(if not the static file request)
-   3.    {controller} (if not the static file request)
+   3.  => run controller action (if not the static file request)
    4. `OnEndMvcHandle`(if not the static file request)
    5. `OnEndRequest`
 
