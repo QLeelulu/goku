@@ -450,7 +450,19 @@ Order of the middleware event execution is:
    4. `OnEndMvcHandle`(if not the static file request)
    5. `OnEndRequest`
 
-  
+
+##Log
+
+To use logger in goku, just:
+
+    goku.Logger().Logln("i", "am", "log")
+    goku.Logger().Errorln("oh", "no!", "Server Down!")
+
+this will log like this:
+
+    2012/07/14 20:07:46 i am log
+    2012/07/14 20:07:46 [ERROR] oh no! Server Down!
+
 ## Authors
 
  - [@QLeelulu](http://weibo.com/qleelulu)
