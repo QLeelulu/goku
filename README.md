@@ -253,6 +253,19 @@ default template engine is golang's template.
     </div>
 ```
 
+layout
+
+```html
+    <!DOCTYPE html>
+    <html>
+    <head>
+    </head>
+    <body>
+      {{.Body}}
+    </body>
+    </html>
+```
+
 HtmlHelper?
 
 https://github.com/jander/mustache - mustache?!
