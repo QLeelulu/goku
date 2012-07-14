@@ -2,6 +2,17 @@
 
   goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.
 
+##Installation
+
+To install goku, simply run `go get github.com/qleelulu/goku`. To use it in a program, use `import "github.com/qleelulu/goku`
+
+To run example "todo" app, just:
+    
+    $ cd $GOROOT/src/pkg/github.com/qleelulu/goku/examples/todo/
+    $ go run app.go
+
+maybe you need run todo.sql first.
+
 ##Usage
 
 ```go
