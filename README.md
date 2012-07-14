@@ -270,7 +270,8 @@ layout
 
 HtmlHelper?
 
-https://github.com/jander/mustache - mustache?!
+if you want to use [mustache](https://github.com/hoisie/mustache) template, 
+check [mustache.goku](https://github.com/QLeelulu/mustache.goku)
 
 
 ##HttpContext
