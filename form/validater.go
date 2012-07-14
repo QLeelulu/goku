@@ -1,9 +1,9 @@
 package form
 
 import (
-    "strings"
-    "strconv"
     "regexp"
+    "strconv"
+    "strings"
 )
 
 const (
@@ -54,10 +54,27 @@ func (nv *baseValidater) Valid(source string, opt *FieldOption) (string, *ValidR
     if !opt.NotTrim {
         source = strings.TrimSpace(source)
     }
-    if opt.Required && source == "" {
-        vr.ErrorMsg = MSG_REQUIRED
+    if source == "" {
+        if opt.Required {
+            if msg, ok := opt.ErrorMsgs["required"]; ok {
+                vr.ErrorMsg = msg
+            } else {
+                vr.ErrorMsg = MSG_REQUIRED
+            }
+        } else {
+            vr.IsValid = true
+        }
     }
     return source, vr
+}
+
+// if key in m, return m[key], else return defaultVal
+func getOrDefault(m map[string]string, key, defaultVal string) string {
+    msg, ok := m[key]
+    if ok && msg != "" {
+        return msg
+    }
+    return defaultVal
 }
 
 // only check if the source value is number format
@@ -80,11 +97,7 @@ func (nv *numberValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
                 dotCount++
                 continue
             }
-            if opt.ErrorMsg != "" {
-                vr.ErrorMsg = opt.ErrorMsg
-            } else {
-                vr.ErrorMsg = "not a valid number"
-            }
+            vr.ErrorMsg = getOrDefault(opt.ErrorMsgs, "invalid", "not a valid number")
             return vr
         }
     }
@@ -94,6 +107,9 @@ func (nv *numberValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
 }
 
 // check if the source value is match the givent regexp
+// error msg keys:
+//      required
+//      invalid
 type regexpValidater struct {
     baseValidater
 
@@ -102,7 +118,7 @@ type regexpValidater struct {
 
 func (rv *regexpValidater) Valid(source string, opt *FieldOption) (vr *ValidResult) {
     source, vr = rv.baseValidater.Valid(source, opt)
-    if vr.ErrorMsg != "" {
+    if vr.IsValid && vr.ErrorMsg != "" {
         return vr
     }
     ok := rv.Regexp.MatchString(source)
@@ -110,11 +126,7 @@ func (rv *regexpValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
         vr.IsValid = true
         vr.CleanValue = source
     } else {
-        if opt.ErrorMsg != "" {
-            vr.ErrorMsg = opt.ErrorMsg
-        } else {
-            vr.ErrorMsg = "not match"
-        }
+        vr.ErrorMsg = getOrDefault(opt.ErrorMsgs, "invalid", "not match")
     }
     return vr
 }
@@ -126,7 +138,10 @@ type intValidater struct {
 
 func (nv *intValidater) Valid(source string, opt *FieldOption) (vr *ValidResult) {
     source, vr = nv.baseValidater.Valid(source, opt)
-    if vr.ErrorMsg != "" {
+    if vr.IsValid || vr.ErrorMsg != "" {
+        if vr.IsValid {
+            vr.CleanValue = 0
+        }
         return vr
     }
     val, err := strconv.Atoi(source)
@@ -134,39 +149,45 @@ func (nv *intValidater) Valid(source string, opt *FieldOption) (vr *ValidResult)
     if err == nil {
         vr.IsValid = true
     } else {
-        if opt.ErrorMsg != "" {
-            vr.ErrorMsg = opt.ErrorMsg
-        } else {
-            vr.ErrorMsg = "not a int value"
-        }
+        vr.ErrorMsg = getOrDefault(opt.ErrorMsgs, "invalid", "not a int valid")
     }
     return vr
 }
 
+// error msg keys:
+//      required
+//      range
+//      min-length
+//      max-length
 type stringValidater struct {
     baseValidater
 }
 
 func (nv *stringValidater) Valid(source string, opt *FieldOption) (vr *ValidResult) {
     source, vr = nv.baseValidater.Valid(source, opt)
-    if vr.ErrorMsg != "" {
+    if vr.IsValid || vr.ErrorMsg != "" {
         return vr
     }
     if opt.Range[0] > 0 && len(source) < opt.Range[0] {
         if opt.Range[1] > 0 {
-            vr.ErrorMsg = strings.Replace(MSG_RANGE, "{0}", strconv.Itoa(opt.Range[0]), -1)
+            vr.ErrorMsg = strings.Replace(
+                getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE),
+                "{0}", strconv.Itoa(opt.Range[0]), -1)
             vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
         } else {
-            vr.ErrorMsg = strings.Replace(MSG_MIN_LENGTH, "{0}", strconv.Itoa(opt.Range[0]), -1)
+            vr.ErrorMsg = strings.Replace(
+                getOrDefault(opt.ErrorMsgs, "min-length", MSG_MIN_LENGTH), "{0}", strconv.Itoa(opt.Range[0]), -1)
         }
         return vr
     }
     if opt.Range[1] > 0 && len(source) > opt.Range[1] {
         if opt.Range[0] > 0 {
-            vr.ErrorMsg = strings.Replace(MSG_RANGE, "{0}", strconv.Itoa(opt.Range[0]), -1)
+            vr.ErrorMsg = strings.Replace(
+                getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE), "{0}", strconv.Itoa(opt.Range[0]), -1)
             vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
         } else {
-            vr.ErrorMsg = strings.Replace(MSG_MAX_LENGTH, "{0}", strconv.Itoa(opt.Range[1]), -1)
+            vr.ErrorMsg = strings.Replace(
+                getOrDefault(opt.ErrorMsgs, "range", MSG_MAX_LENGTH), "{0}", strconv.Itoa(opt.Range[1]), -1)
         }
         return vr
     }

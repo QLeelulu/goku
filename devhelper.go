@@ -42,7 +42,9 @@ func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err string, statusCod
         ec.GoNumGoroutine = runtime.NumGoroutine()
     }
 
-    eh.TemplateEnginer.Render(eh.view, "", ec, ctx.responseContentCache)
+    vd := &ViewData{Model: ec}
+
+    eh.TemplateEnginer.Render(eh.view, "", vd, ctx.responseContentCache)
 }
 
 func createDevErrorHandler() *devErrorHanller {

@@ -19,31 +19,31 @@
 </head> 
 <body>
     <div id="header">
-        <h2>{{.Err}}</h2>
+        <h2>{{.Model.Err}}</h2>
     </div>
     <div id="content">
         <table>
             <tr>
-                <td class="t">Request Method: </td><td>{{.Request.Method}}</td>
+                <td class="t">Request Method: </td><td>{{.Model.Request.Method}}</td>
             </tr>
             <tr>
-                <td class="t">Request URL: </td><td>{{.Request.URL.Path}}</td>
+                <td class="t">Request URL: </td><td>{{.Model.Request.URL.Path}}</td>
             </tr>
             <tr>
-                <td class="t">Status Code: </td><td>{{.StatusCode}}</td>
+                <td class="t">Status Code: </td><td>{{.Model.StatusCode}}</td>
             </tr>
         </table>
 
-        {{if .ShowDetail}}
+        {{if .Model.ShowDetail}}
         <div class="stack">
             <b>Stack</b>
-            <pre>{{.Stack}}</pre>
+            <pre>{{.Model.Stack}}</pre>
         </div>
         {{end}}
     </div>
     <div id="footer">
         <p>goku 1.0 (golang web mvc framework)</p>
-        <p>golang version: {{.GoVersion}}</p>
+        <p>golang version: {{.Model.GoVersion}}</p>
     </div>
 </body>
 </html>        

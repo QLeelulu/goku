@@ -3,19 +3,19 @@
   <div class="box todos">
     <h2 class="box">待办事项</h2>
     <ul>
-      {{range .}}
+      {{range .Model}}
       {{ $class := "" }}
       {{if .Finished}} {{ $class := "class=\"finshed\"" }} {{end}}
       
-        <li  status >
+        <li id="status">
           {{if .Finished }}
-            {{ .Title }}
-            &nbsp;
-            <a href="/todo/{{ .Id }}/finish?status=yes">完成</a>,
-          {{else}}
             <del>{{ .Title }}</del>
             &nbsp;
             <a href="/todo/{{ .Id }}/finish?status=no">恢复</a>,
+          {{else}}
+            {{ .Title }}
+            &nbsp;
+            <a href="/todo/{{ .Id }}/finish?status=yes">完成</a>,
           {{end}}
           <a href="/todo/{{ .Id }}/edit">修改</a>,
           <a href="/todo/{{ .Id }}/delete" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>

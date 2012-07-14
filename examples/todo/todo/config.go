@@ -1,7 +1,6 @@
 package todo
 
 import (
-    // "../../../../goku"
     "github.com/qleelulu/goku"
     "path"
     "runtime"
@@ -30,4 +29,6 @@ func init() {
     // WTF, i just want to set the RootDir as current dir.
     _, filename, _, _ := runtime.Caller(1)
     Config.RootDir = path.Dir(filename)
+
+    goku.SddGlobalViewData("SiteName", "Todo - by {goku}")
 }

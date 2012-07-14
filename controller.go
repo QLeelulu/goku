@@ -1,8 +1,8 @@
 package goku
 
 import (
-    "strings"
     "fmt"
+    "strings"
 )
 
 // type HttpMethod int8
@@ -47,7 +47,8 @@ func (ci *ControllerInfo) Init() *ControllerInfo {
 
 // get a action
 // e.g. ci.GetAction("get", "index"), 
-// will found the registered action "index" for http method "get",
+// will found the registered action "index" for 
+// http method "get" in this controller,
 // if not found, will found the action "index" for all the http method
 func (ci *ControllerInfo) GetAction(method string, name string) *ActionInfo {
     ai, ok := ci.Actions[strings.ToLower(method)+"_"+strings.ToLower(name)]
@@ -69,7 +70,8 @@ func (ci *ControllerInfo) RegAction(httpMethod string, actionName string,
     // check whether the action has registered
     _, ok := ci.Actions[index]
     if ok {
-        panic(fmt.Sprintf("%s %s.%s has registered.", strings.ToUpper(httpMethod), ci.Name, actionName))
+        panic(fmt.Sprintf("%s %s.%s has registered.",
+            strings.ToUpper(httpMethod), ci.Name, actionName))
     }
     ai := &ActionInfo{
         Name:       strings.ToLower(actionName),
@@ -99,6 +101,7 @@ func (ci *ControllerInfo) AddActionFilters(httpMethod string, actionName string,
     ai.AddFilters(filters...)
 }
 
+// for get action in the registered controllers
 type ControllerFactory struct {
     Controllers map[string]*ControllerInfo
 }
@@ -115,12 +118,14 @@ var defaultControllerFactory *ControllerFactory = &ControllerFactory{
     Controllers: make(map[string]*ControllerInfo),
 }
 
+// for build controller and action
 type ControllerBuilder struct {
     controller    *ControllerInfo
     currentAction *ActionInfo
 }
 
 // @param httpMethod: if "all", will match all http method, but Priority is low
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Action(httpMethod string, actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
 
@@ -129,12 +134,14 @@ func (cb *ControllerBuilder) Action(httpMethod string, actionName string,
 }
 
 // reg http "get" method action
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Get(actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
     return cb.Action("get", actionName, handler)
 }
 
 // reg http "post" method action
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Post(actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
 
@@ -142,6 +149,7 @@ func (cb *ControllerBuilder) Post(actionName string,
 }
 
 // reg http "put" method action
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Put(httpMethod string, actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
 
@@ -149,12 +157,14 @@ func (cb *ControllerBuilder) Put(httpMethod string, actionName string,
 }
 
 // reg http "delete" method action
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Delete(httpMethod string, actionName string,
     handler func(ctx *HttpContext) ActionResulter) *ControllerBuilder {
 
     return cb.Action("delete", actionName, handler)
 }
 
+// The return value is the ControllerBuilder, so calls can be chained
 func (cb *ControllerBuilder) Filters(filters ...Filter) *ControllerBuilder {
     if cb.currentAction != nil {
         cb.currentAction.AddFilters(filters...)

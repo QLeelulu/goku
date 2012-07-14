@@ -2,6 +2,7 @@ package form
 
 import (
     //"math"
+    "net/http"
     "regexp"
 )
 
@@ -53,11 +54,11 @@ func (fm *Form) CleanValues() map[string]interface{} {
     return r
 }
 
-func (fm *Form) Errors() map[string]string {
-    r := make(map[string]string)
+func (fm *Form) Errors() map[string][]string {
+    r := make(map[string][]string)
     for name, field := range fm.Fields {
         if !field.IsValid() {
-            r[name] = field.NickName() + ": " + field.ErrorMsg()
+            r[name] = []string{field.NickName(), field.ErrorMsg()}
         }
     }
     return r
@@ -71,6 +72,12 @@ func (fm *Form) FillByMap(m map[string]string) {
         if field, ok := fm.Fields[k]; ok {
             field.SetValue(v)
         }
+    }
+}
+
+func (fm *Form) FillByRequest(req *http.Request) {
+    for k, f := range fm.Fields {
+        f.SetValue(req.FormValue(k))
     }
 }
 
@@ -98,10 +105,10 @@ type Field interface {
 }
 
 type FieldOption struct {
-    Required bool
-    NotTrim  bool // not trim the Whitespace
-    Range    [2]int
-    ErrorMsg string
+    Required  bool
+    NotTrim   bool // not trim the Whitespace
+    Range     [2]int
+    ErrorMsgs map[string]string
 }
 
 // type Fieldd struct {
@@ -131,6 +138,7 @@ func (bf *BaseField) init(name string, nickname string, required bool) {
     bf.option = &FieldOption{Required: required}
 }
 
+// convert to Field interface
 func (bf *BaseField) Field() Field {
     return bf
 }
@@ -171,33 +179,48 @@ func (bf *BaseField) Valid() *ValidResult {
     return vr
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) Required(r bool) *BaseField {
     bf.option.Required = r
     return bf
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) Max(max int) *BaseField {
     bf.option.Range[1] = max
     return bf
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) Min(min int) *BaseField {
     bf.option.Range[0] = min
     return bf
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) MaxLength(max int) *BaseField {
     bf.option.Range[1] = max
     return bf
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) MinLength(min int) *BaseField {
     bf.option.Range[0] = min
     return bf
 }
 
+// The return value is the BaseField, so calls can be chained
 func (bf *BaseField) Range(min int, max int) *BaseField {
     bf.option.Range = [2]int{min, max}
+    return bf
+}
+
+// The return value is the BaseField, so calls can be chained
+func (bf *BaseField) Error(errorType string, errorMsg string) *BaseField {
+    if bf.option.ErrorMsgs == nil {
+        bf.option.ErrorMsgs = make(map[string]string)
+    }
+    bf.option.ErrorMsgs[errorType] = errorMsg
     return bf
 }
 

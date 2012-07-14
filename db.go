@@ -1,12 +1,12 @@
 package goku
 
 import (
-    "fmt"
     "database/sql"
-    "strings"
     "errors"
-    "reflect"
+    "fmt"
     "github.com/qleelulu/goku/utils"
+    "reflect"
+    "strings"
 )
 
 var zeroVal reflect.Value

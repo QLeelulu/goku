@@ -60,21 +60,21 @@ func (l *defaultLogger) Logf(format string, args ...interface{}) {
 
 func (l *defaultLogger) Notice(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_NOTICE {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[NOTICE]"
-        // v = append(v, args...)
-        l.logger.Print("[NOTICE]")
-        l.logger.Print(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[NOTICE]"
+        v = append(v, args...)
+        // l.logger.Print("[NOTICE]")
+        l.logger.Print(v...)
     }
 }
 
 func (l *defaultLogger) Noticeln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_NOTICE {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[NOTICE]"
-        // v = append(v, args...)
-        l.logger.Print("[NOTICE] ")
-        l.logger.Println(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[NOTICE]"
+        v = append(v, args...)
+        // l.logger.Print("[NOTICE] ")
+        l.logger.Println(v...)
     }
 }
 
@@ -86,21 +86,21 @@ func (l *defaultLogger) Noticef(format string, args ...interface{}) {
 
 func (l *defaultLogger) Warn(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_WARN {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[WARN]"
-        // v = append(v, args...)
-        l.logger.Print("[WARN] ")
-        l.logger.Print(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[WARN]"
+        v = append(v, args...)
+        // l.logger.Print("[WARN] ")
+        l.logger.Print(v...)
     }
 }
 
 func (l *defaultLogger) Warnln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_WARN {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[WARN]"
-        // v = append(v, args...)
-        l.logger.Print("[WARN] ")
-        l.logger.Println(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[WARN]"
+        v = append(v, args...)
+        // l.logger.Print("[WARN] ")
+        l.logger.Println(v...)
     }
 }
 
@@ -112,21 +112,21 @@ func (l *defaultLogger) Warnf(format string, args ...interface{}) {
 
 func (l *defaultLogger) Error(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_ERROR {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[ERROR]"
-        // v = append(v, args...)
-        l.logger.Print("[ERROR] ")
-        l.logger.Print(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[ERROR]"
+        v = append(v, args...)
+        // l.logger.Print("[ERROR] ")
+        l.logger.Print(v...)
     }
 }
 
 func (l *defaultLogger) Errorln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_ERROR {
-        // v := make([]interface{}, 1, len(args)+1)
-        // v[0] = "[ERROR]"
-        // v = append(v, args...)
-        l.logger.Print("[ERROR] ")
-        l.logger.Println(args...)
+        v := make([]interface{}, 1, len(args)+1)
+        v[0] = "[ERROR]"
+        v = append(v, args...)
+        // l.logger.Print("[ERROR] ")
+        l.logger.Println(v...)
     }
 }
 

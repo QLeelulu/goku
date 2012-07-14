@@ -1,9 +1,9 @@
 package goku
 
 import (
-    "net/http"
     "bytes"
     "io"
+    "net/http"
     //"fmt"
 )
 
@@ -39,7 +39,8 @@ type ViewResult struct {
     ActionResult
 
     ViewEngine ViewEnginer
-    ViewData   interface{}
+    ViewData   map[string]interface{}
+    ViewModel  interface{}
     ViewName   string
 }
 
@@ -53,7 +54,12 @@ func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
         View:       vr.ViewName,
         Layout:     "",
     }
-    vr.ViewEngine.Render(vi, vr.ViewData, wr)
+    viewData := &ViewData{
+        Data:    vr.ViewData,
+        Model:   vr.ViewModel,
+        Globals: globalViewData,
+    }
+    vr.ViewEngine.Render(vi, viewData, wr)
 }
 
 func (vr *ViewResult) ExecuteResult(ctx *HttpContext) {

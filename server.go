@@ -79,12 +79,15 @@ func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
         der := &devErrorResult{
             StatusCode: 500,
             Err:        fmt.Sprintf("%v", err_),
-            ShowDetail: true,
+            ShowDetail: rh.ServerConfig.Debug, // if debug enable, show detail
         }
-        if der.ShowDetail {
+        if Logger().LogLevel() >= LOG_LEVEL_ERROR || der.ShowDetail {
             var buf bytes.Buffer
             buf.Write(debug.Stack())
-            der.Stack = buf.String()
+            if der.ShowDetail {
+                der.Stack = buf.String()
+            }
+            Logger().Errorln(der.Err, "\n", buf.String())
         }
 
         err = nil
@@ -123,7 +126,7 @@ func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
             return
         }
         // handle controller
-        ar, err = rh.executeController(ctx)
+        ar, err = rh.executeController(ctx, ctx.RouteData.Controller, ctx.RouteData.Action)
         if ctx.Canceled || err != nil || ar != nil {
             return
         }
@@ -139,12 +142,12 @@ func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err erro
 }
 
 // execute controller,action,and filter
-func (rh *RequestHandler) executeController(ctx *HttpContext) (ar ActionResulter, err error) {
+func (rh *RequestHandler) executeController(ctx *HttpContext, controller, action string) (ar ActionResulter, err error) {
     var ai *ActionInfo
-    ai = defaultControllerFactory.GetAction(ctx.Method, ctx.RouteData.Controller, ctx.RouteData.Action)
+    ai = defaultControllerFactory.GetAction(ctx.Method, controller, action)
     if ai == nil {
-        ar = ctx.NotFound(fmt.Sprintf("No Action for {Controlle:%s, Action:%s}.",
-            ctx.RouteData.Controller, ctx.RouteData.Action))
+        ar = ctx.NotFound(fmt.Sprintf("No [%v] Action For {Controlle:%s, Action:%s}.",
+            ctx.Method, controller, action))
         return
     }
     // ing & ed filter's order is not the same
@@ -182,6 +185,7 @@ func (rh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *
         responseWriter:       w,
         Method:               r.Method,
         requestHandler:       rh,
+        ViewData:             make(map[string]interface{}),
         responseContentCache: new(bytes.Buffer),
         //responseHeaderCache: make(map[string]string),
     }

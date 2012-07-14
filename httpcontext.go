@@ -1,9 +1,9 @@
 package goku
 
 import (
-    "net/http"
     "bytes"
     "encoding/json"
+    "net/http"
 )
 
 // http context
@@ -13,11 +13,12 @@ type HttpContext struct {
     Method         string              // http method
 
     //self fields
-    RouteData *RouteData     // route data
-    Result    ActionResulter // action result
-    Err       error          // process error
-    User      string         // user name
-    Canceled  bool           // cancel continue process the request and return
+    RouteData *RouteData             // route data
+    ViewData  map[string]interface{} // view data for template
+    Result    ActionResulter         // action result
+    Err       error                  // process error
+    User      string                 // user name
+    Canceled  bool                   // cancel continue process the request and return
 
     // private fileds
     requestHandler       *RequestHandler
@@ -96,10 +97,14 @@ func (ctx *HttpContext) WriteHeader(code int) {
 }
 
 // render the view and return a ActionResulter
-func (ctx *HttpContext) Render(viewName string, viewData interface{}) ActionResulter {
+// it will find the view in these rules:
+//      1. /{ViewPath}/{Controller}/{viewName}
+//      2. /{ViewPath}/shared/{viewName}
+func (ctx *HttpContext) Render(viewName string, viewModel interface{}) ActionResulter {
     vr := &ViewResult{
         ViewEngine: ctx.requestHandler.ViewEnginer,
-        ViewData:   viewData,
+        ViewData:   ctx.ViewData,
+        ViewModel:  viewModel,
         ViewName:   viewName,
     }
     vr.Body = new(bytes.Buffer)

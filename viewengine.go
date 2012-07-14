@@ -1,19 +1,26 @@
 package goku
 
 import (
+    "bytes"
+    "fmt"
+    "github.com/qleelulu/goku/utils"
     "html/template"
     "io"
     "path"
-    "bytes"
     "strings"
-    "fmt"
-    "github.com/qleelulu/goku/utils"
 )
+
+type ViewData struct {
+    Data    map[string]interface{}
+    Model   interface{}
+    Globals map[string]interface{}
+    Body    interface{} // if in layout template, this will set
+}
 
 // TemplateEnginer interface
 type TemplateEnginer interface {
     // render the view with viewData and write to w
-    Render(viewpath string, layoutPath string, viewData interface{}, w io.Writer)
+    Render(viewpath string, layoutPath string, viewData *ViewData, w io.Writer)
     // return whether the tempalte support layout
     SupportLayout() bool
     // template file ext name, default is ".html"
@@ -40,11 +47,12 @@ func (te *DefaultTemplateEngine) SupportLayout() bool {
     return true
 }
 
-func (te *DefaultTemplateEngine) Render(filepath string, layoutPath string, viewData interface{}, wr io.Writer) {
+func (te *DefaultTemplateEngine) Render(filepath string, layoutPath string, viewData *ViewData, wr io.Writer) {
     if layoutPath != "" {
         buf := new(bytes.Buffer)
         te.render(filepath, viewData, buf)
-        te.render(layoutPath, map[string]template.HTML{"Content": template.HTML(buf.String())}, wr)
+        viewData.Body = template.HTML(buf.String())
+        te.render(layoutPath, viewData, wr)
     } else {
         te.render(filepath, viewData, wr)
     }
@@ -80,7 +88,7 @@ type ViewInfo struct {
 // Render need a template engine
 // so it may take a TemplateEnginer
 type ViewEnginer interface {
-    Render(vi *ViewInfo, viewData interface{}, wr io.Writer)
+    Render(vi *ViewInfo, viewData *ViewData, wr io.Writer)
     // find the view and layout
     // if template engine not suppot layout, just return empty string
     Lookup(vi *ViewInfo) (viewPath string, layoutPath string)
@@ -152,7 +160,7 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
     return ""
 }
 
-func (ve *DefaultViewEngine) Render(vi *ViewInfo, viewData interface{}, wr io.Writer) {
+func (ve *DefaultViewEngine) Render(vi *ViewInfo, viewData *ViewData, wr io.Writer) {
     viewFile, layoutFile := ve.Lookup(vi)
     ve.TemplateEngine.Render(viewFile, layoutFile, viewData, wr)
 }
@@ -194,4 +202,13 @@ func CreateDefaultViewEngine(viewDir string, te TemplateEnginer, layout string, 
         }
     }
     return dve
+}
+
+var globalViewData map[string]interface{} = make(map[string]interface{})
+
+// add a view data to the global,
+// that all the view can use it
+// by {{.Global.key}}
+func SddGlobalViewData(key string, val interface{}) {
+    globalViewData[key] = val
 }
