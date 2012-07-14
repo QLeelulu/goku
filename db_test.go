@@ -3,9 +3,9 @@ package goku
 import (
     "testing"
     // "fmt"
-    "time"
     "github.com/sdegutis/go.assert"
     _ "github.com/ziutek/mymysql/godrv"
+    "time"
 )
 
 type TestBlog struct {
@@ -41,7 +41,13 @@ func TestOpenMysqlDB(t *testing.T) {
 
 func TestMysqlDB(t *testing.T) {
     r, err := db.Select("test_blog", SqlQueryInfo{
-        Fields: "1",
+        Fields: "id, title, content",
+        Where:  "id>?",
+        Params: []interface{}{0},
+        Limit:  10,
+        Offset: 0,
+        Group:  "",
+        Order:  "id desc",
     })
     if err != nil {
         t.Fatalf("select got err: ", err.Error())

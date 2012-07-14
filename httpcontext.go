@@ -113,6 +113,9 @@ func (ctx *HttpContext) Render(viewName string, viewModel interface{}) ActionRes
 }
 
 // render the view and return a ActionResulter
+// it will find the view in these rules:
+//      1. /{ViewPath}/{Controller}/{action}
+//      2. /{ViewPath}/shared/{action}
 func (ctx *HttpContext) View(viewData interface{}) ActionResulter {
     return ctx.Render("", viewData)
 }
