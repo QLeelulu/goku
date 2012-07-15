@@ -48,7 +48,7 @@ func (te *DefaultTemplateEngine) SupportLayout() bool {
 }
 
 func (te *DefaultTemplateEngine) Render(filepath string, layoutPath string, viewData *ViewData, wr io.Writer) {
-    if layoutPath != "" {
+    if te.SupportLayout() && layoutPath != "" {
         buf := new(bytes.Buffer)
         te.render(filepath, viewData, buf)
         viewData.Body = template.HTML(buf.String())
