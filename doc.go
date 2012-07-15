@@ -54,3 +54,7 @@
 // }
 //
 package goku
+
+func GetVersion() string {
+    return "0.1"
+}

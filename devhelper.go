@@ -20,6 +20,7 @@ type devErrorContext struct {
     GoRoot         string
     GoNumGoroutine int
     GoVersion      string
+    GokuVersion    string
 }
 
 type devErrorHanller struct {
@@ -29,11 +30,12 @@ type devErrorHanller struct {
 
 func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err string, statusCode int, showDetail bool, stack string) {
     ec := &devErrorContext{
-        ShowDetail: showDetail,
-        Request:    ctx.Request,
-        Err:        err,
-        StatusCode: statusCode,
-        GoVersion:  runtime.Version(),
+        ShowDetail:  showDetail,
+        Request:     ctx.Request,
+        Err:         err,
+        StatusCode:  statusCode,
+        GoVersion:   runtime.Version(),
+        GokuVersion: GetVersion(),
     }
     if showDetail {
         ec.Stack = stack
