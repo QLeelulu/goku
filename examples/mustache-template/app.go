@@ -12,7 +12,7 @@ import (
  * Controller & Action
  */
 var _ = goku.Controller("home").
-    //Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
+    // home.index action
     Get("index", func(ctx *goku.HttpContext) goku.ActionResulter {
     return ctx.View(nil)
 })

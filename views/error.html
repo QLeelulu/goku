@@ -34,7 +34,7 @@
             </tr>
         </table>
 
-        {{if .Model.ShowDetail}}
+        {{if and .Model.ShowDetail .Model.Stack}}
         <div class="stack">
             <b>Stack</b>
             <pre>{{.Model.Stack}}</pre>

@@ -15,6 +15,8 @@ type ActionResult struct {
     StatusCode int
     Headers    map[string]string
     Body       *bytes.Buffer
+
+    notShowDevError bool // just for devhelper
 }
 
 func (ar *ActionResult) ExecuteResult(ctx *HttpContext) {
@@ -26,12 +28,21 @@ func (ar *ActionResult) ExecuteResult(ctx *HttpContext) {
     // if ar.StatusCode == 0 {
     // 	ar.StatusCode = 200
     // }
-    ctx.Status(ar.StatusCode)
-    if ar.Body != nil && ar.Body.Len() > 0 {
-        // TODO: which way is the fastest ?
-        //ctx.Write(ar.Body.Bytes())
-        //ar.Body.WriteTo(ctx.responseWriter)
-        ctx.WriteBuffer(ar.Body)
+    if !ar.notShowDevError && ar.StatusCode >= 400 && ctx.requestHandler.ServerConfig.Debug {
+        der := &devErrorResult{
+            StatusCode: ar.StatusCode,
+            Err:        ar.Body.String(),
+            ShowDetail: true,
+        }
+        der.ExecuteResult(ctx)
+    } else {
+        ctx.Status(ar.StatusCode)
+        if ar.Body != nil && ar.Body.Len() > 0 {
+            // TODO: which way is the fastest ?
+            //ctx.Write(ar.Body.Bytes())
+            //ar.Body.WriteTo(ctx.responseWriter)
+            ctx.WriteBuffer(ar.Body)
+        }
     }
 }
 
@@ -63,6 +74,7 @@ func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
 }
 
 func (vr *ViewResult) ExecuteResult(ctx *HttpContext) {
+    vr.notShowDevError = true
     vr.Render(ctx, vr.Body)
     vr.ActionResult.ExecuteResult(ctx)
 }

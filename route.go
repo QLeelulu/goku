@@ -1,6 +1,7 @@
+package goku
+
 // all the thing about route
 // may be change route to interface ?
-package goku
 
 import (
     "fmt"
