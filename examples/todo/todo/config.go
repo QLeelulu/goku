@@ -30,5 +30,5 @@ func init() {
     _, filename, _, _ := runtime.Caller(1)
     Config.RootDir = path.Dir(filename)
 
-    goku.SddGlobalViewData("SiteName", "Todo - by {goku}")
+    goku.SetGlobalViewData("SiteName", "Todo - by {goku}")
 }

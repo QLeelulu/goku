@@ -209,6 +209,6 @@ var globalViewData map[string]interface{} = make(map[string]interface{})
 // add a view data to the global,
 // that all the view can use it
 // by {{.Global.key}}
-func SddGlobalViewData(key string, val interface{}) {
+func SetGlobalViewData(key string, val interface{}) {
     globalViewData[key] = val
 }
