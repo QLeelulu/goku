@@ -246,6 +246,9 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
         ServerConfig:      sc,
         ViewEnginer:       sc.ViewEnginer,
     }
+    if sc.ViewPath == "" {
+        sc.ViewPath = "views"
+    }
     // default view engine
     if handler.ViewEnginer == nil {
         handler.ViewEnginer = CreateDefaultViewEngine(
