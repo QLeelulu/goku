@@ -45,7 +45,7 @@ func (eh *devErrorHanller) showErrorInfo(ctx *HttpContext, err string, statusCod
     }
 
     vd := &ViewData{Model: ec}
-
+    ctx.SetHeader("Content-Type", "text/html")
     eh.TemplateEnginer.Render(eh.view, "", vd, ctx.responseContentCache)
 }
 
