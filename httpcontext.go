@@ -3,6 +3,7 @@ package goku
 import (
     "bytes"
     "encoding/json"
+    "fmt"
     "net/http"
 )
 
@@ -15,6 +16,7 @@ type HttpContext struct {
     //self fields
     RouteData *RouteData             // route data
     ViewData  map[string]interface{} // view data for template
+    Data      map[string]interface{} // data for httpcontex
     Result    ActionResulter         // action result
     Err       error                  // process error
     User      string                 // user name
@@ -156,15 +158,7 @@ func (ctx *HttpContext) NotModified() ActionResulter {
 }
 
 func (ctx *HttpContext) Error(err interface{}) ActionResulter {
-    var msg string
-    switch t := err.(type) {
-    case string:
-        msg = err.(string)
-    case error:
-        msg = err.(error).Error()
-    default:
-        panic("wrong type: " + t.(string))
-    }
+    msg := fmt.Sprintf("%v", err)
     return &ActionResult{
         StatusCode: http.StatusInternalServerError,
         Headers:    map[string]string{"Content-Type": "text/plain"},

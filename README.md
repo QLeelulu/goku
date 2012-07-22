@@ -285,6 +285,7 @@ check [mustache.goku](https://github.com/QLeelulu/mustache.goku)
         //self fields
         RouteData *RouteData             // route data
         ViewData  map[string]interface{} // view data for template
+        Data      map[string]interface{} // data for httpcontex
         Result    ActionResulter         // action result
         Err       error                  // process error
         User      string                 // user name
