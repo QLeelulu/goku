@@ -241,6 +241,10 @@ type RegexpField struct {
     regexp *regexp.Regexp
 }
 
+type EmailField struct {
+    RegexpField
+}
+
 func NewCharField(name string, nickname string, required bool) *CharField {
     tf := &CharField{}
     tf.init(name, nickname, required)
@@ -270,4 +274,15 @@ func NewIntegerField(name string, nickname string, required bool) *IntegerField 
     tf.init(name, nickname, required)
     tf.validater = &intValidater{}
     return tf
+}
+
+func NewEmailField(name string, nickname string, required bool) *EmailField {
+    ef := &EmailField{}
+    ef.init(name, nickname, required)
+    ef.regexp = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,4}$`)
+    ef.validater = &regexpValidater{
+        Regexp: ef.regexp,
+    }
+    ef.Error("invalid", "not a valid email address")
+    return ef
 }
