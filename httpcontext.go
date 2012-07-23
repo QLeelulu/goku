@@ -56,14 +56,27 @@ func (ctx *HttpContext) Get(name string) string {
     return ctx.Request.FormValue(name)
 }
 
+// get the response header
 func (ctx *HttpContext) Header() http.Header {
     return ctx.responseWriter.Header()
 }
 
+// set the response header
 func (ctx *HttpContext) SetHeader(key string, value string) {
     ctx.responseWriter.Header().Set(key, value)
     //ctx.responseHeaderCache.Set(key, value)
 }
+
+// add response header
+func (ctx *HttpContext) AddHeader(key string, value string) {
+    ctx.responseWriter.Header().Add(key, value)
+}
+
+// set response cookie header
+func (ctx *HttpContext) SetCookie(cookie *http.Cookie) {
+    ctx.responseWriter.Header().Add("Set-Cookie", cookie.String())
+}
+
 func (ctx *HttpContext) GetHeader(key string) string {
     return ctx.Request.Header.Get(key)
 }
