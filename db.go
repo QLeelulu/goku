@@ -147,7 +147,8 @@ func (db *DB) InsertStruct(i interface{}) (sql.Result, error) {
                         // the use of unexported struct fields.
                         if f.CanSet() {
                             // change value of N
-                            if f.Kind() == reflect.Int {
+                            k := f.Kind()
+                            if k == reflect.Int || k == reflect.Int32 || k == reflect.Int64 {
                                 if !f.OverflowInt(insertId) {
                                     f.SetInt(insertId)
                                 }
@@ -215,9 +216,11 @@ func (db *DB) rawSelectByStruct(structType reflect.Type, qi SqlQueryInfo) (rows 
     // and convert to sql query column name
     for i := 0; i < lf; i++ {
         structField := structType.Field(i)
-        fieldName := structField.Name
-        fields = append(fields, fieldName)
-        columns = append(columns, utils.SnakeCasedName(fieldName))
+        if structField.Type.Kind() != reflect.Func && structField.Tag.Get("db") != "exclude" {
+            fieldName := structField.Name
+            fields = append(fields, fieldName)
+            columns = append(columns, utils.SnakeCasedName(fieldName))
+        }
     }
 
     // tableName := utils.SnakeCasedName(utils.StructName(s))

@@ -118,7 +118,7 @@ type regexpValidater struct {
 
 func (rv *regexpValidater) Valid(source string, opt *FieldOption) (vr *ValidResult) {
     source, vr = rv.baseValidater.Valid(source, opt)
-    if vr.IsValid && vr.ErrorMsg != "" {
+    if vr.IsValid || vr.ErrorMsg != "" {
         return vr
     }
     ok := rv.Regexp.MatchString(source)
