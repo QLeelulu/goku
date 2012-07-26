@@ -111,6 +111,11 @@ func (ctx *HttpContext) WriteHeader(code int) {
     ctx.responseStatusCode = code
 }
 
+// get whether the request is by ajax
+func (ctx *HttpContext) IsAjax() bool {
+    return ctx.GetHeader("X-Requested-With") == "XmlHttpRequest"
+}
+
 // render the view and return a ActionResulter
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
