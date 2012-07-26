@@ -113,7 +113,7 @@ func (ctx *HttpContext) WriteHeader(code int) {
 
 // get whether the request is by ajax
 func (ctx *HttpContext) IsAjax() bool {
-    return ctx.GetHeader("X-Requested-With") == "XmlHttpRequest"
+    return ctx.GetHeader("X-Requested-With") == "XMLHttpRequest"
 }
 
 // render the view and return a ActionResulter
