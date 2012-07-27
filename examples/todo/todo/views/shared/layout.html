@@ -5,6 +5,7 @@
   <title>{{ .Globals.SiteName }}</title>
   <link href="/public/styles/reset.css" rel="stylesheet" type="text/css" />
   <link href="/public/styles/index/style.css" rel="stylesheet" type="text/css" />
+  {{template "head"}}
 </head>
 <body>
 <div class="page">
@@ -13,7 +14,7 @@
   </div>
 
   <div class="main box">
-  {{.Body}}
+  {{template "body" .}}
   </div>
   
   <div class="foot">

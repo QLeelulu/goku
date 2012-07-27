@@ -1,7 +1,6 @@
 package goku
 
 import (
-    "bytes"
     "fmt"
     "github.com/QLeelulu/goku/utils"
     "html/template"
@@ -49,28 +48,26 @@ func (te *DefaultTemplateEngine) SupportLayout() bool {
 
 func (te *DefaultTemplateEngine) Render(filepath string, layoutPath string, viewData *ViewData, wr io.Writer) {
     if te.SupportLayout() && layoutPath != "" {
-        buf := new(bytes.Buffer)
-        te.render(filepath, viewData, buf)
-        viewData.Body = template.HTML(buf.String())
-        te.render(layoutPath, viewData, wr)
+        te.render([]string{layoutPath, filepath}, viewData, wr)
     } else {
-        te.render(filepath, viewData, wr)
+        te.render([]string{filepath}, viewData, wr)
     }
 }
 
-func (te *DefaultTemplateEngine) render(filepath string, viewData interface{}, wr io.Writer) {
+func (te *DefaultTemplateEngine) render(filepaths []string, viewData interface{}, wr io.Writer) {
     var tmpl *template.Template
     var err error
+    cacheKey := strings.Join(filepaths, "_")
     if te.UseCache {
-        tmpl = te.TemplateCache[filepath]
+        tmpl = te.TemplateCache[cacheKey]
     }
     if tmpl == nil {
-        tmpl, err = template.ParseFiles(filepath)
+        tmpl, err = template.ParseFiles(filepaths...)
         if err != nil {
-            panic("DefaultTemplateEngine.Render: parse template \"" + filepath + "\" error, " + err.Error())
+            panic("DefaultTemplateEngine.Render: parse template \"" + strings.Join(filepaths, ", ") + "\" error, " + err.Error())
         }
         if te.UseCache {
-            te.TemplateCache[filepath] = tmpl
+            te.TemplateCache[cacheKey] = tmpl
         }
     }
 

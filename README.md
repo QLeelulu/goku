@@ -255,18 +255,33 @@ default template engine is golang's template.
     </div>
 ```
 
-layout
+*layout*
 
+layout.html
 ```html
     <!DOCTYPE html>
     <html>
     <head>
+        <title>Goku</title>
+        {{template "head"}}
     </head>
     <body>
-      {{.Body}}
+      {{template "body" .}}
     </body>
     </html>
 ```
+
+body.html
+```html
+    {{define "head"}}
+        <!-- add css or js here -->
+    {{end}}
+
+    {{define "body"}}
+        I'm main content.
+    {{end}}
+```
+note the dot in `{{template "body" .}}` , it will pass the ViewData to the sub template.
 
 HtmlHelper?
 
