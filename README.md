@@ -255,7 +255,7 @@ default template engine is golang's template.
     </div>
 ```
 
-*layout*
+#####layout
 
 layout.html
 ```html
@@ -284,6 +284,8 @@ body.html
 note the dot in `{{template "body" .}}` , it will pass the ViewData to the sub template.
 
 HtmlHelper?
+
+##### More Template Engine Support
 
 if you want to use [mustache](https://github.com/hoisie/mustache) template, 
 check [mustache.goku](https://github.com/QLeelulu/mustache.goku)
