@@ -4,12 +4,13 @@ import (
     "bytes"
     // "errors"
     "fmt"
+    "log"
     "net/http"
     "net/http/pprof"
+    "os"
     "path"
-    "time"
-    //"log"
     "runtime/debug"
+    "time"
 )
 
 // all the config to the web server
@@ -26,6 +27,9 @@ type ServerConfig struct {
 
     ViewEnginer     ViewEnginer
     TemplateEnginer TemplateEnginer
+
+    Logger   *log.Logger
+    LogLevel int
 
     Debug bool
 }
@@ -268,6 +272,17 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
     if routeTable.Routes == nil || len(routeTable.Routes) < 1 {
         panic("gokuServer: No Route in the RouteTable")
     }
+
+    // log
+    _log := &DefaultLogger{
+        LOG_LEVEL: sc.LogLevel,
+    }
+    if sc.Logger != nil {
+        _log.Logger = sc.Logger
+    } else {
+        _log.Logger = log.New(os.Stdout, "", log.LstdFlags)
+    }
+    SetLogger(_log)
 
     mh := &DefaultMiddlewareHandle{
         Middlewares: middlewares,

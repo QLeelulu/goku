@@ -1,6 +1,7 @@
 package goku
 
 import (
+    "fmt"
     "log"
     "os"
 )
@@ -31,116 +32,114 @@ type logger interface {
     Errorf(format string, args ...interface{})
 }
 
-type defaultLogger struct {
-    logger    *log.Logger
+type DefaultLogger struct {
+    Logger    *log.Logger
     LOG_LEVEL int
 }
 
-func (l *defaultLogger) LogLevel() int {
+func (l *DefaultLogger) LogLevel() int {
     return l.LOG_LEVEL
 }
 
-func (l *defaultLogger) Log(args ...interface{}) {
+func (l *DefaultLogger) Log(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_LOG {
-        l.logger.Print(args...)
+        l.Logger.Output(3, fmt.Sprint(args...))
     }
 }
 
-func (l *defaultLogger) Logln(args ...interface{}) {
+func (l *DefaultLogger) Logln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_LOG {
-        l.logger.Println(args...)
+        l.Logger.Output(3, fmt.Sprintln(args...))
     }
 }
 
-func (l *defaultLogger) Logf(format string, args ...interface{}) {
+func (l *DefaultLogger) Logf(format string, args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_LOG {
-        l.logger.Printf(format, args...)
+        l.Logger.Output(3, fmt.Sprintf(format, args...))
     }
 }
 
-func (l *defaultLogger) Notice(args ...interface{}) {
+func (l *DefaultLogger) Notice(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_NOTICE {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[NOTICE]"
         v = append(v, args...)
-        // l.logger.Print("[NOTICE]")
-        l.logger.Print(v...)
+        l.Logger.Output(3, fmt.Sprint(v...))
     }
 }
 
-func (l *defaultLogger) Noticeln(args ...interface{}) {
+func (l *DefaultLogger) Noticeln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_NOTICE {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[NOTICE]"
         v = append(v, args...)
-        // l.logger.Print("[NOTICE] ")
-        l.logger.Println(v...)
+        l.Logger.Output(3, fmt.Sprintln(v...))
     }
 }
 
-func (l *defaultLogger) Noticef(format string, args ...interface{}) {
+func (l *DefaultLogger) Noticef(format string, args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_NOTICE {
-        l.logger.Printf("[NOTICE] "+format, args...)
+        l.Logger.Output(3, fmt.Sprintf("[NOTICE] "+format, args...))
     }
 }
 
-func (l *defaultLogger) Warn(args ...interface{}) {
+func (l *DefaultLogger) Warn(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_WARN {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[WARN]"
         v = append(v, args...)
-        // l.logger.Print("[WARN] ")
-        l.logger.Print(v...)
+        l.Logger.Output(3, fmt.Sprint(v...))
     }
 }
 
-func (l *defaultLogger) Warnln(args ...interface{}) {
+func (l *DefaultLogger) Warnln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_WARN {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[WARN]"
         v = append(v, args...)
-        // l.logger.Print("[WARN] ")
-        l.logger.Println(v...)
+        l.Logger.Output(3, fmt.Sprintln(v...))
     }
 }
 
-func (l *defaultLogger) Warnf(format string, args ...interface{}) {
+func (l *DefaultLogger) Warnf(format string, args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_WARN {
-        l.logger.Printf("[WARN] "+format, args...)
+        l.Logger.Output(3, fmt.Sprintf("[WARN] "+format, args...))
     }
 }
 
-func (l *defaultLogger) Error(args ...interface{}) {
+func (l *DefaultLogger) Error(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_ERROR {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[ERROR]"
         v = append(v, args...)
-        // l.logger.Print("[ERROR] ")
-        l.logger.Print(v...)
+        l.Logger.Output(3, fmt.Sprint(v...))
     }
 }
 
-func (l *defaultLogger) Errorln(args ...interface{}) {
+func (l *DefaultLogger) Errorln(args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_ERROR {
         v := make([]interface{}, 1, len(args)+1)
         v[0] = "[ERROR]"
         v = append(v, args...)
-        // l.logger.Print("[ERROR] ")
-        l.logger.Println(v...)
+        l.Logger.Output(3, fmt.Sprintln(v...))
     }
 }
 
-func (l *defaultLogger) Errorf(format string, args ...interface{}) {
+func (l *DefaultLogger) Errorf(format string, args ...interface{}) {
     if l.LOG_LEVEL >= LOG_LEVEL_ERROR {
-        l.logger.Printf("[ERROR] "+format, args...)
+        l.Logger.Output(3, fmt.Sprintf("[ERROR] "+format, args...))
     }
 }
 
-var dlogger logger = &defaultLogger{
-    logger:    log.New(os.Stdout, "", log.LstdFlags),
+var __logger logger = &DefaultLogger{
+    Logger:    log.New(os.Stdout, "", log.LstdFlags),
     LOG_LEVEL: LOG_LEVEL_LOG,
 }
 
 func Logger() logger {
-    return dlogger
+    return __logger
+}
+
+func SetLogger(l logger) {
+    __logger = l
 }
