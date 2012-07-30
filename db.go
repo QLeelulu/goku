@@ -15,6 +15,7 @@ type SQLLiteral string
 
 type SqlQueryInfo struct {
     Fields string
+    Join   string
     Where  string
     Params []interface{}
     Limit  int
@@ -26,8 +27,38 @@ type SqlQueryInfo struct {
 // base db
 type DB struct {
     sql.DB
+    // if Debug set to true,
+    // will print the sql
+    Debug bool
 }
 
+func (db *DB) showDebugInfo(query string, args ...interface{}) {
+    if db.Debug {
+        Logger().Logf("SQL: %v\nPARAMS: %v\n", query, args)
+    }
+}
+
+func (db *DB) Exec(query string, args ...interface{}) (sql.Result, error) {
+    db.showDebugInfo(query, args)
+    return db.DB.Exec(query, args...)
+}
+
+func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
+    db.showDebugInfo(query, args)
+    return db.DB.Query(query, args...)
+}
+
+func (db *DB) QueryRow(query string, args ...interface{}) *sql.Row {
+    db.showDebugInfo(query, args)
+    return db.DB.QueryRow(query, args...)
+}
+
+/*
+func (db *DB) Exec(query string, args ...interface{}) (Result, error)
+    func (db *DB) Prepare(query string) (*Stmt, error)
+    func (db *DB) Query(query string, args ...interface{}) (*Rows, error)
+    func (db *DB) QueryRow(query string, args ...interface{}) *Row
+*/
 func (db *DB) whereSql(where string) string {
     if where == "" {
         return ""
@@ -73,9 +104,10 @@ func (db *DB) Select(table string, qi SqlQueryInfo) (*sql.Rows, error) {
     if qi.Fields == "" {
         qi.Fields = "*"
     }
-    query := fmt.Sprintf("SELECT %s FROM `%s` %s %s %s %s;",
+    query := fmt.Sprintf("SELECT %s FROM `%s` %s %s %s %s %s;",
         qi.Fields,
         table,
+        qi.Join,
         db.whereSql(qi.Where),
         db.groupSql(qi.Group),
         db.orderSql(qi.Order),
@@ -223,8 +255,8 @@ func (db *DB) rawSelectByStruct(structType reflect.Type, qi SqlQueryInfo) (rows 
         }
     }
 
-    // tableName := utils.SnakeCasedName(utils.StructName(s))
     tableName := utils.SnakeCasedName(structType.Name())
+
     // TODO: check the fileds has specified ?
     qi.Fields = strings.Join(columns, ", ")
     // run query from db
