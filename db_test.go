@@ -55,7 +55,7 @@ func TestMysqlDB(t *testing.T) {
 
     var id int
     for r.Next() {
-        err2 := r.Scan(&id)
+        err2 := r.Scan(&id, nil, nil)
         assert.Equals(t, err2, nil)
         assert.Equals(t, id, 1)
     }
@@ -123,11 +123,12 @@ func TestGetStruct(t *testing.T) {
 
 func TestGetStructs(t *testing.T) {
     qi := SqlQueryInfo{}
-    blogs, err := db.GetStructs(TestBlog{}, qi)
+    var blogs []TestBlog
+    err := db.GetStructs(&blogs, qi)
     assert.Equals(t, err, nil)
 
     for _, blog_ := range blogs {
-        blog := blog_.(*TestBlog)
+        blog := blog_
         assert.Equals(t, blog.Id > 0, true)
     }
 }

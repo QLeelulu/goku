@@ -276,33 +276,38 @@ func (db *DB) GetStruct(s interface{}, where string, params ...interface{}) erro
 // field mapping rule is: HelloWorld => hello_world
 // mean that struct's field "HelloWorld" in database table's field is "hello_world"
 // table name mapping use the same rule as field
-// @param s: just for reflect
-// @return: notice that slice's item is pointer, like []*Blog
-func (db *DB) GetStructs(s interface{}, qi SqlQueryInfo) ([]interface{}, error) {
-    structType := reflect.TypeOf(s)
-    if structType.Kind() == reflect.Ptr {
-        structType = structType.Elem()
+// @param slicePtr: a pointer to a slice
+//     var blogs []Blog
+//     err := db.GetStructs(&blogs, SqlQueryInfo{})
+func (db *DB) GetStructs(slicePtr interface{}, qi SqlQueryInfo) error {
+    ptr := reflect.ValueOf(slicePtr)
+    if ptr.Kind() != reflect.Ptr {
+        return errors.New("db.GetStructs: needs a pointer to a slice")
     }
+    sliceValue := reflect.Indirect(ptr)
+    if sliceValue.Kind() != reflect.Slice {
+        return errors.New("db.GetStructs: needs a pointer to a slice")
+    }
+
+    structType := sliceValue.Type().Elem()
 
     rows, fields, err := db.rawSelectByStruct(structType, qi)
     if err != nil {
-        return nil, err
+        return err
     }
     defer rows.Close()
-
-    list := make([]interface{}, 0)
 
     for rows.Next() {
         v := reflect.New(structType)
         err = rawScanStruct(v, fields, rows)
         if err != nil {
-            return nil, err
+            return err
         }
 
-        list = append(list, v.Interface())
+        sliceValue.Set(reflect.Append(sliceValue, reflect.Indirect(reflect.ValueOf(v.Interface()))))
     }
 
-    return list, nil
+    return nil
 }
 
 // row scaner interface

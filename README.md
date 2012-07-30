@@ -370,6 +370,7 @@ simple database api.
         Order:  "id desc",
     })
 
+    // insert map
     vals := map[string]interface{}{
         "title": "golang",
         "content": "Go is an open source programming environment that " +
@@ -378,6 +379,7 @@ simple database api.
     }
     r, err := db.Insert("test_blog", vals)
 
+    // insert struct
     blog := TestBlog{
         Title:    "goku",
         Content:  "a mvc framework",
@@ -385,17 +387,22 @@ simple database api.
     }
     r, err = db.InsertStruct(&blog)
 
+    // get struct
     blog := &TestBlog{}
     err = db.GetStruct(blog, "id=?", 3)
 
+    // get struct list
     qi := SqlQueryInfo{}
-    blogs, err := db.GetStructs(TestBlog{}, qi)
+    var blogs []Blog
+    err := db.GetStructs(&blogs, qi)
 
+    // update by map
     vals := map[string]interface{}{
         "title": "js",
     }
     r, err2 := db.Update("test_blog", vals, "id=?", blog.Id)
 
+    // delete
     r, err := db.Delete("test_blog", "id=?", 8)
 ```
 
