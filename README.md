@@ -408,6 +408,21 @@ simple database api.
 
 checkout [db_test.go](https://github.com/QLeelulu/goku/blob/master/db_test.go)
 
+####DataBase SQL Debug
+
+if you want to debug what the sql query is, set db.Debug to `true`
+
+```go
+    db, err := OpenMysql("mymysql", "tcp:localhost:3306*test_db/username/pwd")
+    db.Debug = true
+```
+
+after you set db.Debug to true, while you run a db command, it will print the sql query to the log,
+juse like this:
+
+    2012/07/30 20:58:03 SQL: UPDATE `user` SET friends=friends+? WHERE id=?;
+                        PARAMS: [[1 2]]
+
 
 ##Action Filter
 
