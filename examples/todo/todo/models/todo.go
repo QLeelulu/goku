@@ -13,17 +13,14 @@ type Todo struct {
     PostDate time.Time
 }
 
-func GetTodoLists() ([]*Todo, error) {
+func GetTodoLists() (*[]Todo, error) {
     var db *goku.MysqlDB = GetDB()
     defer db.Close()
     qi := goku.SqlQueryInfo{}
     qi.Order = "finished asc, id desc"
-    list, err := db.GetStructs(Todo{}, qi)
-    todos := make([]*Todo, len(list))
-    for i, todo := range list {
-        todos[i] = todo.(*Todo)
-    }
-    return todos, err
+    var todos []Todo
+    err := db.GetStructs(&todos, qi)
+    return &todos, err
 }
 
 func GetTodo(id int) (Todo, error) {

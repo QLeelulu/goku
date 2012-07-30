@@ -22,7 +22,9 @@ var Config *goku.ServerConfig = &goku.ServerConfig{
     //RootDir:        _, filename, _, _ := runtime.Caller(1),
     StaticPath: "static", // static content 
     ViewPath:   "views",
-    Debug:      true,
+
+    LogLevel: goku.LOG_LEVEL_LOG,
+    Debug:    true,
 }
 
 func init() {

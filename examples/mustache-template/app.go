@@ -42,6 +42,8 @@ func main() {
      */
     config.TemplateEnginer = mustache.NewMustacheTemplateEngine()
 
+    config.LogLevel = goku.LOG_LEVEL_LOG
+
     rt := &goku.RouteTable{Routes: routes}
     s := goku.CreateServer(rt, nil, config)
 

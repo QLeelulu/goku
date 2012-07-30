@@ -35,6 +35,7 @@ var config *goku.ServerConfig = &goku.ServerConfig{
     //RootDir:        os.Getwd(),
     StaticPath: "static",
     ViewPath:   "views",
+    LogLevel:   goku.LOG_LEVEL_LOG,
     Debug:      true,
 }
 
