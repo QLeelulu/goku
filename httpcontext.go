@@ -48,6 +48,9 @@ func (ctx *HttpContext) ResponseWriter() http.ResponseWriter {
     return ctx.responseWriter
 }
 
+// get the requert param, 
+// get from RouteData first, 
+// if no, get from Requet.FormValue
 func (ctx *HttpContext) Get(name string) string {
     v, ok := ctx.RouteData.Get(name)
     if ok {
