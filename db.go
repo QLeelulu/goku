@@ -251,7 +251,7 @@ func (db *DB) rawSelectByStruct(structType reflect.Type, qi SqlQueryInfo) (rows 
         if structField.Type.Kind() != reflect.Func && structField.Tag.Get("db") != "exclude" {
             fieldName := structField.Name
             fields = append(fields, fieldName)
-            columns = append(columns, utils.SnakeCasedName(fieldName))
+            columns = append(columns, "`"+utils.SnakeCasedName(fieldName)+"`")
         }
     }
 
