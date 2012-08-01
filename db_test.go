@@ -30,7 +30,8 @@ CREATE TABLE `test_blog` (
 func TestOpenMysqlDB(t *testing.T) {
     var err error
     db, err = OpenMysql("mymysql", "tcp:localhost:3306*test_db/lulu/123456")
-    db.Debug = true
+    // db.Debug = true
+
     if err != nil {
         t.Error("can not open db")
     }

@@ -3,7 +3,10 @@ package goku
 import (
     "bytes"
     // "errors"
+    "encoding/json"
+    "flag"
     "fmt"
+    "io/ioutil"
     "log"
     "net/http"
     "net/http/pprof"
@@ -273,6 +276,9 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
         panic("gokuServer: No Route in the RouteTable")
     }
 
+    // load conf file
+    loadCmdLineConfFile(sc, routeTable)
+
     // log
     _log := &DefaultLogger{
         LOG_LEVEL: sc.LogLevel,
@@ -314,4 +320,104 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
     server.WriteTimeout = sc.WriteTimeout
     server.MaxHeaderBytes = sc.MaxHeaderBytes
     return server
+}
+
+// load the server conf. 
+// config file is json format. 
+// like this: 
+// {
+//     "ServerConfig": {
+//         "Addr": ":8888",
+//         "ReadTimeout": "20ms",
+//         "WriteTimeout": "20ms",
+//         "MaxHeaderBytes": 110,
+//         "StaticPath": "mystatic",
+//         "ViewPath": "myview",
+//         "Layout": "mylayout",
+//         "LogLevel": 3,
+//         "Debug": true
+//     }
+// }
+func loadCmdLineConfFile(sc *ServerConfig, rt *RouteTable) {
+    var confFile string
+    flag.StringVar(&confFile, "conf", "", "Specified the json format config file path")
+    flag.Parse()
+    if confFile == "" {
+        return
+    }
+    fi, err := os.Stat(confFile)
+    if err != nil {
+        log.Fatalln("conf file error:", confFile)
+    } else if fi.IsDir() {
+        log.Fatalln(confFile, "is not a file.")
+    }
+
+    var b []byte
+    b, err = ioutil.ReadFile(confFile)
+    if err != nil {
+        log.Fatalln("read conf file error:", confFile)
+    }
+    var conf map[string]interface{}
+    err = json.Unmarshal(b, &conf)
+    if err != nil {
+        log.Fatalln("conf file is bad json ", err)
+    }
+    if fsc, ok := conf["ServerConfig"]; ok {
+        msc, ok := fsc.(map[string]interface{})
+        if !ok {
+            log.Fatalln("conf file error: wrong ServerConfig format.")
+        }
+        if v, ok := msc["Addr"]; ok {
+            sc.Addr = v.(string)
+        }
+        // such as "300ms", "-1.5h" or "2h45m". Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h"
+        if v, ok := msc["ReadTimeout"]; ok {
+            sc.ReadTimeout, err = time.ParseDuration(v.(string))
+            if err != nil {
+                log.Fatalln("conf file error: wrong ReadTimeout format.")
+            }
+        }
+        if v, ok := msc["WriteTimeout"]; ok {
+            sc.WriteTimeout, err = time.ParseDuration(v.(string))
+            if err != nil {
+                log.Fatalln("conf file error: wrong WriteTimeout format.")
+            }
+        }
+        if v, ok := msc["MaxHeaderBytes"]; ok {
+            sc.MaxHeaderBytes = int(v.(float64))
+        }
+        if v, ok := msc["StaticPath"]; ok {
+            sc.StaticPath = v.(string)
+        }
+        if v, ok := msc["ViewPath"]; ok {
+            sc.ViewPath = v.(string)
+        }
+        if v, ok := msc["Layout"]; ok {
+            sc.Layout = v.(string)
+        }
+        if v, ok := msc["LogLevel"]; ok {
+            sc.LogLevel = int(v.(float64))
+        }
+        if v, ok := msc["Debug"]; ok {
+            sc.Debug = v.(bool)
+        }
+    }
+    if mroutes, ok := conf["Routes"]; ok {
+        routes, ok := mroutes.(map[string]interface{})
+        if !ok {
+            log.Fatalln("conf file error: wrong Routes format.")
+        }
+        for _, froute := range routes {
+            sroute, err := json.Marshal(froute)
+            if err != nil {
+                log.Fatalln("conf file error", err)
+            }
+            var route Route
+            err = json.Unmarshal(sroute, &route)
+            if err != nil {
+                log.Fatalln("conf file error", err)
+            }
+            rt.AddRoute(&route)
+        }
+    }
 }
