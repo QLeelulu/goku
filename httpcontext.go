@@ -5,6 +5,7 @@ import (
     "encoding/json"
     "fmt"
     "net/http"
+    "path"
 )
 
 // http context
@@ -46,6 +47,18 @@ func (ctx *HttpContext) flushToResponse() {
 // Try not to use this unless you know exactly what you are doing
 func (ctx *HttpContext) ResponseWriter() http.ResponseWriter {
     return ctx.responseWriter
+}
+
+func (ctx *HttpContext) RootDir() string {
+    return ctx.requestHandler.ServerConfig.RootDir
+}
+
+func (ctx *HttpContext) StaticPath() string {
+    return path.Join(ctx.RootDir(), ctx.requestHandler.ServerConfig.StaticPath)
+}
+
+func (ctx *HttpContext) ViewPath() string {
+    return path.Join(ctx.RootDir(), ctx.requestHandler.ServerConfig.ViewPath)
 }
 
 // get the requert param, 
