@@ -340,8 +340,11 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
 // }
 func loadCmdLineConfFile(sc *ServerConfig, rt *RouteTable) {
     var confFile string
-    flag.StringVar(&confFile, "conf", "", "Specified the json format config file path")
-    flag.Parse()
+    // flag.StringVar(&confFile, "conf", "", "Specified the json format config file path")
+    // flag.Parse()
+    flags := flag.NewFlagSet("goku-conf", flag.ContinueOnError)
+    flags.StringVar(&confFile, "conf", "", "Specified the json format config file path for goku")
+    flags.Parse(os.Args[1:])
     if confFile == "" {
         return
     }
