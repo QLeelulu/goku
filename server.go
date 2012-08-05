@@ -6,7 +6,7 @@ import (
     "encoding/json"
     "flag"
     "fmt"
-    "io/ioutil"
+    "github.com/QLeelulu/goku/utils"
     "log"
     "net/http"
     "net/http/pprof"
@@ -345,23 +345,12 @@ func loadCmdLineConfFile(sc *ServerConfig, rt *RouteTable) {
     if confFile == "" {
         return
     }
-    fi, err := os.Stat(confFile)
+
+    conf, err := utils.LoadJsonFile(confFile)
     if err != nil {
-        log.Fatalln("conf file error:", confFile)
-    } else if fi.IsDir() {
-        log.Fatalln(confFile, "is not a file.")
+        log.Fatalln("conf file ", confFile, "has error:", err)
     }
 
-    var b []byte
-    b, err = ioutil.ReadFile(confFile)
-    if err != nil {
-        log.Fatalln("read conf file error:", confFile)
-    }
-    var conf map[string]interface{}
-    err = json.Unmarshal(b, &conf)
-    if err != nil {
-        log.Fatalln("conf file is bad json ", err)
-    }
     if fsc, ok := conf["ServerConfig"]; ok {
         msc, ok := fsc.(map[string]interface{})
         if !ok {

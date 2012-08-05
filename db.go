@@ -136,7 +136,7 @@ func (db *DB) Insert(table string, vals map[string]interface{}) (result sql.Resu
         fields = append(fields, k)
         switch v.(type) {
         case SQLLiteral:
-            values = append(values, fmt.Sprintf("%s", v))
+            values = append(values, fmt.Sprintf("%v", v))
         default:
             values = append(values, "?")
             params = append(params, v)
@@ -208,7 +208,7 @@ func (db *DB) Update(table string, vals map[string]interface{}, where string, wh
     for k, v := range vals {
         switch v.(type) {
         case SQLLiteral:
-            fields = append(fields, fmt.Sprintf("%s=%s", k, v))
+            fields = append(fields, fmt.Sprintf("%v=%v", k, v))
         default:
             fields = append(fields, k+"=?")
             params = append(params, v)

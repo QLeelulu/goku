@@ -1,10 +1,13 @@
 package utils
 
 import (
-    "regexp"
-    "reflect"
+    "encoding/json"
+    "errors"
     "fmt"
+    "io/ioutil"
     "os"
+    "reflect"
+    "regexp"
 )
 
 // match regexp with string, and return a named group map
@@ -123,4 +126,26 @@ func StructName(s interface{}) string {
         v = v.Elem()
     }
     return v.Name()
+}
+
+// load json file to a map
+func LoadJsonFile(filePath string) (map[string]interface{}, error) {
+    fi, err := os.Stat(filePath)
+    if err != nil {
+        return nil, err
+    } else if fi.IsDir() {
+        return nil, errors.New(filePath + " is not a file.")
+    }
+
+    var b []byte
+    b, err = ioutil.ReadFile(filePath)
+    if err != nil {
+        return nil, err
+    }
+    var conf map[string]interface{}
+    err = json.Unmarshal(b, &conf)
+    if err != nil {
+        return nil, err
+    }
+    return conf, nil
 }
