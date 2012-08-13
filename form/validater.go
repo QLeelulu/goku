@@ -26,8 +26,8 @@ type ValidResult struct {
 type ValidOption struct {
     Required bool
     NotTrim  bool // not trim the Whitespace
-    Max      int
-    Min      int
+    // Max      int
+    // Min      int
     Range    [2]int
     ErrorMsg string
 }
@@ -144,9 +144,32 @@ func (nv *intValidater) Valid(source string, opt *FieldOption) (vr *ValidResult)
         }
         return vr
     }
-    val, err := strconv.Atoi(source)
+    val, err := strconv.ParseInt(source, 10, 64)
     vr.CleanValue = val
     if err == nil {
+        if opt.Range[0] > 0 && val < int64(opt.Range[0]) {
+            if opt.Range[1] > 0 {
+                vr.ErrorMsg = strings.Replace(
+                    getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE),
+                    "{0}", strconv.Itoa(opt.Range[0]), -1)
+                vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
+            } else {
+                vr.ErrorMsg = strings.Replace(
+                    getOrDefault(opt.ErrorMsgs, "min", MSG_MIN), "{0}", strconv.Itoa(opt.Range[0]), -1)
+            }
+            return vr
+        }
+        if opt.Range[1] > 0 && val > int64(opt.Range[1]) {
+            if opt.Range[0] > 0 {
+                vr.ErrorMsg = strings.Replace(
+                    getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE), "{0}", strconv.Itoa(opt.Range[0]), -1)
+                vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
+            } else {
+                vr.ErrorMsg = strings.Replace(
+                    getOrDefault(opt.ErrorMsgs, "max", MSG_MAX), "{0}", strconv.Itoa(opt.Range[1]), -1)
+            }
+            return vr
+        }
         vr.IsValid = true
     } else {
         vr.ErrorMsg = getOrDefault(opt.ErrorMsgs, "invalid", "not a int valid")
@@ -157,8 +180,8 @@ func (nv *intValidater) Valid(source string, opt *FieldOption) (vr *ValidResult)
 // error msg keys:
 //      required
 //      range
-//      min-length
-//      max-length
+//      min
+//      max
 type stringValidater struct {
     baseValidater
 }
@@ -171,23 +194,23 @@ func (nv *stringValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
     if opt.Range[0] > 0 && len(source) < opt.Range[0] {
         if opt.Range[1] > 0 {
             vr.ErrorMsg = strings.Replace(
-                getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE),
+                getOrDefault(opt.ErrorMsgs, "range", MST_RANGE_LENGTH),
                 "{0}", strconv.Itoa(opt.Range[0]), -1)
             vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
         } else {
             vr.ErrorMsg = strings.Replace(
-                getOrDefault(opt.ErrorMsgs, "min-length", MSG_MIN_LENGTH), "{0}", strconv.Itoa(opt.Range[0]), -1)
+                getOrDefault(opt.ErrorMsgs, "min", MSG_MIN_LENGTH), "{0}", strconv.Itoa(opt.Range[0]), -1)
         }
         return vr
     }
     if opt.Range[1] > 0 && len(source) > opt.Range[1] {
         if opt.Range[0] > 0 {
             vr.ErrorMsg = strings.Replace(
-                getOrDefault(opt.ErrorMsgs, "range", MSG_RANGE), "{0}", strconv.Itoa(opt.Range[0]), -1)
+                getOrDefault(opt.ErrorMsgs, "range", MST_RANGE_LENGTH), "{0}", strconv.Itoa(opt.Range[0]), -1)
             vr.ErrorMsg = strings.Replace(vr.ErrorMsg, "{1}", strconv.Itoa(opt.Range[1]), -1)
         } else {
             vr.ErrorMsg = strings.Replace(
-                getOrDefault(opt.ErrorMsgs, "range", MSG_MAX_LENGTH), "{0}", strconv.Itoa(opt.Range[1]), -1)
+                getOrDefault(opt.ErrorMsgs, "max", MSG_MAX_LENGTH), "{0}", strconv.Itoa(opt.Range[1]), -1)
         }
         return vr
     }
