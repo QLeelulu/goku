@@ -53,6 +53,8 @@ type ViewResult struct {
     ViewData   map[string]interface{}
     ViewModel  interface{}
     ViewName   string
+    Layout     string
+    IsPartial  bool // if is Partial, not use layout
 }
 
 func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
@@ -63,7 +65,8 @@ func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
         Controller: ctx.RouteData.Controller,
         Action:     ctx.RouteData.Action,
         View:       vr.ViewName,
-        Layout:     "",
+        Layout:     vr.Layout,
+        IsPartial:  vr.IsPartial,
     }
     viewData := &ViewData{
         Data:    vr.ViewData,

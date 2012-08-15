@@ -137,11 +137,34 @@ func (ctx *HttpContext) IsAjax() bool {
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
 func (ctx *HttpContext) Render(viewName string, viewModel interface{}) ActionResulter {
+    return ctx.rederView(viewName, "", viewModel, false)
+}
+
+// render the view and return a ActionResulter
+// it will find the view in these rules:
+//      1. /{ViewPath}/{Controller}/{viewName}
+//      2. /{ViewPath}/shared/{viewName}
+func (ctx *HttpContext) RenderWithLayout(viewName, layout string, viewModel interface{}) ActionResulter {
+    return ctx.rederView(viewName, layout, viewModel, false)
+}
+
+// render a Partial view and return a ActionResulter.
+// this is not use layout.
+// it will find the view in these rules:
+//      1. /{ViewPath}/{Controller}/{viewName}
+//      2. /{ViewPath}/shared/{viewName}
+func (ctx *HttpContext) RenderPartial(viewName string, viewModel interface{}) ActionResulter {
+    return ctx.rederView(viewName, "", viewModel, true)
+}
+
+func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}, isPartial bool) ActionResulter {
     vr := &ViewResult{
         ViewEngine: ctx.requestHandler.ViewEnginer,
         ViewData:   ctx.ViewData,
         ViewModel:  viewModel,
         ViewName:   viewName,
+        Layout:     layout,
+        IsPartial:  isPartial,
     }
     vr.Body = new(bytes.Buffer)
     vr.Headers = map[string]string{"Content-Type": "text/html"}

@@ -79,6 +79,7 @@ func (te *DefaultTemplateEngine) render(filepaths []string, viewData interface{}
 
 type ViewInfo struct {
     Controller, Action, View, Layout string
+    IsPartial                        bool
 }
 
 // ViewEnginer interface
@@ -104,7 +105,7 @@ type DefaultViewEngine struct {
 
 func (ve *DefaultViewEngine) Lookup(vi *ViewInfo) (viewPath string, layoutPath string) {
     viewPath = ve.lookup(vi, false)
-    if ve.TemplateEngine.SupportLayout() {
+    if !vi.IsPartial && ve.TemplateEngine.SupportLayout() {
         layoutPath = ve.lookup(vi, true)
     }
     return
@@ -113,7 +114,7 @@ func (ve *DefaultViewEngine) Lookup(vi *ViewInfo) (viewPath string, layoutPath s
 func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
     var viewName, cacheKey string
     var locas []string
-    if isLayout {
+    if !vi.IsPartial && isLayout {
         viewName = vi.Layout
         if vi.Layout == "" {
             viewName = ve.Layout // default layout
