@@ -222,6 +222,9 @@ you can use ctx.Render:
     // it will find the view in these rules:
     //      1. /{ViewPath}/{Controller}/{viewName}
     //      2. /{ViewPath}/shared/{viewName}
+    // if viewName start with '/',
+    // it will find the view direct by viewpath:
+    //      1. /{ViewPath}/{viewName}
     ctx.Render("viewName", ViewModel)
 ```
 

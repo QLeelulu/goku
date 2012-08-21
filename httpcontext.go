@@ -132,10 +132,13 @@ func (ctx *HttpContext) IsAjax() bool {
     return ctx.GetHeader("X-Requested-With") == "XMLHttpRequest"
 }
 
-// render the view and return a ActionResulter
+// render the view and return a ActionResulter.
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
+// if viewName start with '/',
+// it will find the view direct by viewpath:
+//      1. /{ViewPath}/{viewName}
 func (ctx *HttpContext) Render(viewName string, viewModel interface{}) ActionResulter {
     return ctx.rederView(viewName, "", viewModel, false)
 }

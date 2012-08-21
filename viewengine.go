@@ -141,15 +141,26 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
         }
     }
     lookPaths := make([]string, 0, 3)
-    for _, format := range locas {
-        viewPath := strings.Replace(format, "{1}", vi.Controller, 1)
-        viewPath = strings.Replace(viewPath, "{0}", viewName, 1)
-        viewPath = path.Join(ve.RootDir, viewPath)
+    // Absolute path, 
+    // direct use viewpath
+    if viewName[0] == '/' {
+        viewPath := path.Join(ve.RootDir, viewName)
         if ok, _ := utils.FileExists(viewPath); ok {
             ve.Caches[cacheKey] = viewPath
             return viewPath
         }
         lookPaths = append(lookPaths, viewPath)
+    } else {
+        for _, format := range locas {
+            viewPath := strings.Replace(format, "{1}", vi.Controller, 1)
+            viewPath = strings.Replace(viewPath, "{0}", viewName, 1)
+            viewPath = path.Join(ve.RootDir, viewPath)
+            if ok, _ := utils.FileExists(viewPath); ok {
+                ve.Caches[cacheKey] = viewPath
+                return viewPath
+            }
+            lookPaths = append(lookPaths, viewPath)
+        }
     }
     if !isLayout {
         panic(fmt.Sprintf("DefaultViewEngine: can't find the view for {controller: %s, action: %s, view: %s}, look up paths: %s",
