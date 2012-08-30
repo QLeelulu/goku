@@ -83,6 +83,9 @@ func (router *Route) Init() {
         //(?P<name>re)
         return fmt.Sprintf("%s(?P<%s>%s)%s", slash, name, reg, need)
     })
+    if r != "" && r[len(r)-1] == '/' {
+        r = r + "?"
+    }
     router.rePath = regexp.MustCompile("^" + r + "$")
     router.inited = true
 }
