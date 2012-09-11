@@ -66,11 +66,12 @@ func (router *Route) Init() {
         if v, ok := router.Constraint[name]; ok {
             reg = v
         } else {
-            if name == "controller" || name == "action" {
-                reg = "[^\\.\\?#/]+"
-            } else {
-                reg = "[^\\?#/]+"
-            }
+            // if name == "controller" || name == "action" {
+            //     reg = "[^\\.\\?#/]+"
+            // } else {
+            //     reg = "[^\\?#/]+"
+            // }
+            reg = "[^\\.\\?#/]+"
         }
         // if default value exist, it's options
         if _, ok := router.Default[name]; ok {
