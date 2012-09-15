@@ -132,35 +132,35 @@ func (ctx *HttpContext) IsAjax() bool {
     return ctx.GetHeader("X-Requested-With") == "XMLHttpRequest"
 }
 
-// render the view and return a ActionResulter.
+// render the view and return a *ViewResult.
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
 // if viewName start with '/',
 // it will find the view direct by viewpath:
 //      1. /{ViewPath}/{viewName}
-func (ctx *HttpContext) Render(viewName string, viewModel interface{}) ActionResulter {
+func (ctx *HttpContext) Render(viewName string, viewModel interface{}) *ViewResult {
     return ctx.rederView(viewName, "", viewModel, false)
 }
 
-// render the view and return a ActionResulter
+// render the view and return a *ViewResult
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
-func (ctx *HttpContext) RenderWithLayout(viewName, layout string, viewModel interface{}) ActionResulter {
+func (ctx *HttpContext) RenderWithLayout(viewName, layout string, viewModel interface{}) *ViewResult {
     return ctx.rederView(viewName, layout, viewModel, false)
 }
 
-// render a Partial view and return a ActionResulter.
+// render a Partial view and return a *ViewResult.
 // this is not use layout.
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
-func (ctx *HttpContext) RenderPartial(viewName string, viewModel interface{}) ActionResulter {
+func (ctx *HttpContext) RenderPartial(viewName string, viewModel interface{}) *ViewResult {
     return ctx.rederView(viewName, "", viewModel, true)
 }
 
-func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}, isPartial bool) ActionResulter {
+func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}, isPartial bool) *ViewResult {
     vr := &ViewResult{
         ViewEngine: ctx.requestHandler.ViewEnginer,
         ViewData:   ctx.ViewData,
@@ -174,11 +174,11 @@ func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}
     return vr
 }
 
-// render the view and return a ActionResulter
+// render the view and return a *ViewResult
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{action}
 //      2. /{ViewPath}/shared/{action}
-func (ctx *HttpContext) View(viewData interface{}) ActionResulter {
+func (ctx *HttpContext) View(viewData interface{}) *ViewResult {
     return ctx.Render("", viewData)
 }
 
