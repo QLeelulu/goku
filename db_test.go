@@ -161,6 +161,12 @@ func TestMysqlUpdate(t *testing.T) {
     assert.Equals(t, blog.Title, "js")
 }
 
+func TestMysqlDBCount(t *testing.T) {
+    r, err := db.Count("test_blog", "")
+    assert.Equals(t, err, nil)
+    assert.Equals(t, r, int64(2))
+}
+
 func TestMysqlDBDelete(t *testing.T) {
     r, err := db.Delete("test_blog", "0=0")
     assert.Equals(t, err, nil)

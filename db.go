@@ -116,6 +116,16 @@ func (db *DB) Select(table string, qi SqlQueryInfo) (*sql.Rows, error) {
     return db.Query(query, qi.Params...)
 }
 
+func (db *DB) Count(table string, where string, whereParams ...interface{}) (count int64, err error) {
+    if where != "" {
+        where = " WHERE " + where
+    }
+    query := "SELECT COUNT(*) FROM " + table + where
+    row := db.QueryRow(query, whereParams...)
+    err = row.Scan(&count)
+    return
+}
+
 // insert into table with values from vals
 // Example:
 //      data := map[string]interface{}{

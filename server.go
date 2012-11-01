@@ -185,7 +185,7 @@ func (rh *RequestHandler) executeController(ctx *HttpContext, controller, action
     var ai *ActionInfo
     ai = defaultControllerFactory.GetAction(ctx.Method, controller, action)
     if ai == nil {
-        ar = ctx.NotFound(fmt.Sprintf("No [%v] Action For {Controlle:%s, Action:%s}.",
+        ar = ctx.NotFound(fmt.Sprintf("No [%v] Action For {Controller:%s, Action:%s}.",
             ctx.Method, controller, action))
         return
     }
