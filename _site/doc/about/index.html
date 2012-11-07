@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>About</title>
+    
+    <meta name="author" content="QLeelulu">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Goku - golang mvc</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>About <small>Supporting tagline</small></h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <h1 id='goku'>goku</h1>
+
+<p>goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.</p>
+
+<p><a href='http://go.pkgdoc.org/github.com/QLeelulu/goku'>doc &amp; api</a></p>
+
+<h2 id='installation'>Installation</h2>
+
+<p>To install goku, simply run <code>go get github.com/QLeelulu/goku</code>. To use it in a program, use <code>import &quot;github.com/QLeelulu/goku&quot;</code></p>
+
+<p>To run example &#8220;todo&#8221; app, just:</p>
+
+<pre><code>$ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
+$ go run app.go</code></pre>
+
+<p>maybe you need run todo.sql first.</p>
+
+<h2 id='usage'>Usage</h2>
+
+<pre><code>package main
+
+import (
+    &quot;github.com/QLeelulu/goku&quot;
+    &quot;log&quot;
+    &quot;path&quot;
+    &quot;runtime&quot;
+    &quot;time&quot;
+)
+
+// routes
+var routes []*goku.Route = []*goku.Route{
+    // static file route
+    &amp;goku.Route{
+        Name:     &quot;static&quot;,
+        IsStatic: true,
+        Pattern:  &quot;/static/(.*)&quot;,
+    },
+    // default controller and action route
+    &amp;goku.Route{
+        Name:       &quot;default&quot;,
+        Pattern:    &quot;/{controller}/{action}/{id}&quot;,
+        Default:    map[string]string{&quot;controller&quot;: &quot;home&quot;, &quot;action&quot;: &quot;index&quot;, &quot;id&quot;: &quot;0&quot;},
+        Constraint: map[string]string{&quot;id&quot;: &quot;\\d+&quot;},
+    },
+}
+
+// server config
+var config *goku.ServerConfig = &amp;goku.ServerConfig{
+    Addr:           &quot;:8888&quot;,
+    ReadTimeout:    10 * time.Second,
+    WriteTimeout:   10 * time.Second,
+    MaxHeaderBytes: 1 &lt;&lt; 20,
+    //RootDir:        os.Getwd(),
+    StaticPath: &quot;static&quot;,
+    ViewPath:   &quot;views&quot;,
+    Debug:      true,
+}
+
+func init() {
+    /**
+     * project root dir
+     */
+    _, filename, _, _ := runtime.Caller(1)
+    config.RootDir = path.Dir(filename)
+
+    /**
+     * Controller &amp; Action
+     */
+    goku.Controller(&quot;home&quot;).
+        Get(&quot;index&quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
+        return ctx.Html(&quot;Hello World&quot;)
+    })
+
+}
+
+func main() {
+    rt := &amp;goku.RouteTable{Routes: routes}
+    s := goku.CreateServer(rt, nil, config)
+    goku.Logger().Logln(&quot;Server start on&quot;, s.Addr)
+    log.Fatal(s.ListenAndServe())
+}</code></pre>
+
+<h2 id='route'>Route</h2>
+
+<pre><code>var Routes []*goku.Route = []*goku.Route{
+    &amp;goku.Route{
+        Name:     &quot;static&quot;,
+        IsStatic: true,
+        Pattern:  &quot;/public/(.*)&quot;,
+    },
+    &amp;goku.Route{
+        Name:       &quot;edit&quot;,
+        Pattern:    &quot;/{controller}/{id}/{action}&quot;,
+        Default:    map[string]string{&quot;action&quot;: &quot;edit&quot;},
+        Constraint: map[string]string{&quot;id&quot;: &quot;\\d+&quot;},
+    },
+    &amp;goku.Route{
+        Name:    &quot;default&quot;,
+        Pattern: &quot;/{controller}/{action}&quot;,
+        Default: map[string]string{&quot;controller&quot;: &quot;todo&quot;, &quot;action&quot;: &quot;index&quot;},
+    },
+}
+// create server with the rules
+rt := &amp;goku.RouteTable{Routes: todo.Routes}
+s := goku.CreateServer(rt, nil, nil)
+log.Fatal(s.ListenAndServe())</code></pre>
+
+<p>or</p>
+
+<pre><code>rt := new(goku.RouteTable)
+rt.Static(&quot;staticFile&quot;, &quot;/static/(.*)&quot;)
+rt.Map(
+    &quot;blog-page&quot;, // route name
+    &quot;/blog/p/{page}&quot;, // pattern
+    map[string]string{&quot;controller&quot;: &quot;blog&quot;, &quot;action&quot;: &quot;page&quot;, &quot;page&quot;: &quot;0&quot;}, // default
+    map[string]string{&quot;page&quot;: &quot;\\d+&quot;} // constraint
+)
+rt.Map(
+    &quot;default&quot;, // route name
+    &quot;/{controller}/{action}&quot;, // pattern
+    map[string]string{&quot;controller&quot;: &quot;home&quot;, &quot;action&quot;: &quot;index&quot;}, // default
+)</code></pre>
+
+<h2 id='controller_and_action'>Controller And Action</h2>
+
+<pre><code>// add a controller named &quot;home&quot;
+goku.Controller(&quot;home&quot;).
+    Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
+    // home controller&#39;s index action
+    // for http GET
+    Get(&quot;index&quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
+    return ctx.Html(&quot;Hello World&quot;)
+}).Filters(new(TestActionFilter)). // this filter is for home.index action
+    // home controller&#39;s about action
+    // for http POST
+    Post(&quot;about&quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
+    return ctx.Raw(&quot;About&quot;)
+})</code></pre>
+
+<ul>
+<li>get <code>/home/index</code> will return <code>Hello World</code></li>
+
+<li>post <code>/home/index</code> will return 404</li>
+
+<li>post <code>/home/about</code> will return <code>About</code></li>
+</ul>
+
+<h2 id='actionresult'>ActionResult</h2>
+
+<p><code>ActionResulter</code> is type interface. all the action must return ActionResulter. you can return an ActionResulter in the action like this:</p>
+
+<pre><code>// ctx is *goku.HttpContext
+ctx.Raw(&quot;hi&quot;)
+ctx.NotFound(&quot;oh no! ):&quot;)
+ctx.Redirect(&quot;/&quot;)
+// or you can return a view that
+// will render a template
+ctx.View(viewModel)
+ctx.Render(&quot;viewName&quot;, viewModel)</code></pre>
+
+<p>or you can return a ActionResulter by this</p>
+
+<pre><code>return &amp;ActionResult{
+    StatusCode: http.StatusNotFound,
+    Headers:    map[string]string{&quot;Content-Type&quot;: &quot;text/html&quot;},
+    Body:       &quot;Page Not Found&quot;,
+}</code></pre>
+
+<p>for more info, check the code.</p>
+
+<h2 id='view_and_viewdata'>View and ViewData</h2>
+
+<p><code>Views are the components that display the application&#39;s user interface (UI)</code></p>
+
+<p>To render a view, you can just return a <code>ViewResut</code> which implement the <code>ActionResulter</code> interface. just like this:</p>
+
+<pre><code>goku.Controller(&quot;blog&quot;).
+    Get(&quot;page&quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
+    blog := GetBlogByid(10)
+
+    // you can add any val to ViewData
+    // then you can use it in template
+    // like this: 
+    ctx.ViewData[&quot;SiteName&quot;] = &quot;My Blog&quot;
+
+    // or you can pass a struct to ViewModel
+    // then you can use it in template
+    // like this: 
+    // that same as blog.Title
+    return ctx.View(blog)
+})</code></pre>
+
+<p><code>ctx.View()</code> will find the view in these rules:</p>
+
+<ol>
+<li>/{ViewPath}/{Controller}/{action}</li>
+
+<li>/{ViewPath}/shared/{action}</li>
+</ol>
+
+<p>for example, ServerConfig.ViewPath is set to &#8220;views&#8221;, and return ctx.View() in <code>home</code> controller&#8217;s <code>about</code> action, it will find the view file in this rule:</p>
+
+<ol>
+<li>{ProjectDir}/views/home/about.html</li>
+
+<li>{ProjectDir}/views/shared/about.html</li>
+</ol>
+
+<p>if you want to return a view that specified view name, you can use ctx.Render:</p>
+
+<pre><code>// it will find the view in these rules:
+//      1. /{ViewPath}/{Controller}/{viewName}
+//      2. /{ViewPath}/shared/{viewName}
+// if viewName start with &#39;/&#39;,
+// it will find the view direct by viewpath:
+//      1. /{ViewPath}/{viewName}
+ctx.Render(&quot;viewName&quot;, ViewModel)</code></pre>
+
+<h2 id='viewengine__template'>ViewEngine &amp; Template</h2>
+
+<pre><code>// you can add any val to ViewData
+// then you can use it in template
+// like this: 
+ctx.ViewData[&quot;SiteName&quot;] = &quot;My Blog&quot;
+
+blogs := GetBlogs()
+// or you can pass a struct to ViewModel
+// then you can use it in template
+// like this:   
+return ctx.View(blogs)</code></pre>
+
+<p>default template engine is golang&#8217;s template.</p>
+
+<pre><code>&lt;div class=&quot;box todos&quot;&gt;
+    &lt;h2 class=&quot;box&quot;&gt;&lt;/h2&gt;
+    &lt;ul&gt;
+      
+        &lt;li id=&quot;blog-&quot;&gt;
+          
+        &lt;/li&gt;
+      
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+<h4 id='layout'>Layout</h4>
+
+<p>layout.html</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Goku&lt;/title&gt;
+    
+&lt;/head&gt;
+&lt;body&gt;
+  
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>body.html</p>
+
+<pre><code>    &lt;!-- add css or js here --&gt;
+
+
+
+    I&#39;m main content.</code></pre>
+
+<p>note the dot in <code>, it will pass the ViewData to the sub template.</code></p>
+
+<p>HtmlHelper?</p>
+
+<h4 id='more_template_engine_support'>More Template Engine Support</h4>
+
+<p>if you want to use <a href='https://github.com/hoisie/mustache'>mustache</a> template, check <a href='https://github.com/QLeelulu/mustache.goku'>mustache.goku</a></p>
+
+<h2 id='httpcontext'>HttpContext</h2>
+
+<pre><code>type HttpContext struct {
+    Request        *http.Request       // http request
+    responseWriter http.ResponseWriter // http response
+    Method         string              // http method
+
+    //self fields
+    RouteData *RouteData             // route data
+    ViewData  map[string]interface{} // view data for template
+    Data      map[string]interface{} // data for httpcontex
+    Result    ActionResulter         // action result
+    Err       error                  // process error
+    User      string                 // user name
+    Canceled  bool                   // cancel continue process the request and return
+}</code></pre>
+
+<h1 id='form_validation'>Form Validation</h1>
+
+<p>you can create a form, to valid the user&#8217;s input, and get the clean value.</p>
+
+<pre><code>import &quot;github.com/QLeelulu/goku/form&quot;
+
+func CreateCommentForm() *goku.Form {
+    name := NewCharField(&quot;name&quot;, &quot;Name&quot;, true).Range(3, 10).Field()
+    nickName := NewCharField(&quot;nick_name&quot;, &quot;Nick Name&quot;, false).Min(3).Max(20).Field()
+    age := NewIntegerField(&quot;age&quot;, &quot;Age&quot;, true).Range(18, 50).Field()
+    content := NewTextField(&quot;content&quot;, &quot;Content&quot;, true).Min(10).Field()
+
+    form := NewForm(name, nickName, age, content)
+    return form
+}</code></pre>
+
+<p>and then you can use this form like this:</p>
+
+<pre><code>f := CreateCommentForm()
+f.FillByRequest(ctx.Request)
+
+if f.Valid() {
+    // after valid, we can get the clean values
+    m := f.CleanValues()
+    // and now you can save m to database
+} else {
+    // if not valid
+    // we can get the valid errors
+    errs := f.Errors()
+}</code></pre>
+
+<p>checkout <a href='https://github.com/QLeelulu/goku/blob/master/form/form_test.go'>form_test.go</a></p>
+
+<h2 id='database'>DataBase</h2>
+
+<p>simple database api.</p>
+
+<pre><code>db, err := OpenMysql(&quot;mymysql&quot;, &quot;tcp:localhost:3306*test_db/lulu/123456&quot;)
+
+// you can use all the api in golang&#39;s database/sql
+_, err = db.Query(&quot;select 1&quot;)
+
+// or you can use some simple api provide by goku
+r, err := db.Select(&quot;test_blog&quot;, SqlQueryInfo{
+    Fields: &quot;id, title, content&quot;,
+    Where:  &quot;id&gt;?&quot;,
+    Params: []interface{}{0},
+    Limit:  10,
+    Offset: 0,
+    Group:  &quot;&quot;,
+    Order:  &quot;id desc&quot;,
+})
+
+// insert map
+vals := map[string]interface{}{
+    &quot;title&quot;: &quot;golang&quot;,
+    &quot;content&quot;: &quot;Go is an open source programming environment that &quot; +
+        &quot;makes it easy to build simple, reliable, and efficient software.&quot;,
+    &quot;create_at&quot;: time.Now(),
+}
+r, err := db.Insert(&quot;test_blog&quot;, vals)
+
+// insert struct
+blog := TestBlog{
+    Title:    &quot;goku&quot;,
+    Content:  &quot;a mvc framework&quot;,
+    CreateAt: time.Now(),
+}
+r, err = db.InsertStruct(&amp;blog)
+
+// get struct
+blog := &amp;TestBlog{}
+err = db.GetStruct(blog, &quot;id=?&quot;, 3)
+
+// get struct list
+qi := SqlQueryInfo{}
+var blogs []Blog
+err := db.GetStructs(&amp;blogs, qi)
+
+// update by map
+vals := map[string]interface{}{
+    &quot;title&quot;: &quot;js&quot;,
+}
+r, err2 := db.Update(&quot;test_blog&quot;, vals, &quot;id=?&quot;, blog.Id)
+
+// delete
+r, err := db.Delete(&quot;test_blog&quot;, &quot;id=?&quot;, 8)</code></pre>
+
+<p>checkout <a href='https://github.com/QLeelulu/goku/blob/master/db_test.go'>db_test.go</a></p>
+
+<h4 id='database_sql_debug'>DataBase SQL Debug</h4>
+
+<p>if you want to debug what the sql query is, set db.Debug to <code>true</code></p>
+
+<pre><code>db, err := OpenMysql(&quot;mymysql&quot;, &quot;tcp:localhost:3306*test_db/username/pwd&quot;)
+db.Debug = true</code></pre>
+
+<p>after you set db.Debug to true, while you run a db command, it will print the sql query to the log, juse like this:</p>
+
+<pre><code>2012/07/30 20:58:03 SQL: UPDATE `user` SET friends=friends+? WHERE id=?;
+                    PARAMS: [[1 2]]</code></pre>
+
+<h2 id='action_filter'>Action Filter</h2>
+
+<pre><code>type TestActionFilter struct {
+}
+
+func (tf *TestActionFilter) OnActionExecuting(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
+    ctx.WriteString(&quot;OnActionExecuting - TestActionFilter \n&quot;)
+    return
+}
+func (tf *TestActionFilter) OnActionExecuted(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
+    ctx.WriteString(&quot;OnActionExecuted - TestActionFilter \n&quot;)
+    return
+}
+
+func (tf *TestActionFilter) OnResultExecuting(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
+    ctx.WriteString(&quot;    OnResultExecuting - TestActionFilter \n&quot;)
+    return
+}
+
+func (tf *TestActionFilter) OnResultExecuted(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
+    ctx.WriteString(&quot;    OnResultExecuted - TestActionFilter \n&quot;)
+    return
+}</code></pre>
+
+<p>Order of the filters execution is:</p>
+
+<p>1. OnActionExecuting 2. -&gt; Execute Action -&gt; return ActionResulter 3. OnActionExecuted 4. OnResultExecuting 5. -&gt; ActionResulter.ExecuteResult 6. OnResultExecuted</p>
+
+<h2 id='middleware'>Middleware</h2>
+
+<pre><code>type TestMiddleware struct {
+}
+
+func (tmd *TestMiddleware) OnBeginRequest(ctx *goku.HttpContext) (goku.ActionResulter, error) {
+    ctx.WriteString(&quot;OnBeginRequest - TestMiddleware \n&quot;)
+    return nil, nil
+}
+
+func (tmd *TestMiddleware) OnBeginMvcHandle(ctx *goku.HttpContext) (goku.ActionResulter, error) {
+    ctx.WriteString(&quot;  OnBeginMvcHandle - TestMiddleware \n&quot;)
+    return nil, nil
+}
+func (tmd *TestMiddleware) OnEndMvcHandle(ctx *goku.HttpContext) (goku.ActionResulter, error) {
+    ctx.WriteString(&quot;  OnEndMvcHandle - TestMiddleware \n&quot;)
+    return nil, nil
+}
+
+func (tmd *TestMiddleware) OnEndRequest(ctx *goku.HttpContext) (goku.ActionResulter, error) {
+    ctx.WriteString(&quot;OnEndRequest - TestMiddleware \n&quot;)
+    return nil, nil
+}</code></pre>
+
+<p>Order of the middleware event execution is:</p>
+
+<p>1. <code>OnBeginRequest</code> 2. <code>OnBeginMvcHandle</code>(if not the static file request) 3. =&gt; run controller action (if not the static file request) 4. <code>OnEndMvcHandle</code>(if not the static file request) 5. <code>OnEndRequest</code></p>
+
+<h2 id='log'>Log</h2>
+
+<p>To use logger in goku, just:</p>
+
+<pre><code>goku.Logger().Logln(&quot;i&quot;, &quot;am&quot;, &quot;log&quot;)
+goku.Logger().Errorln(&quot;oh&quot;, &quot;no!&quot;, &quot;Server Down!&quot;)</code></pre>
+
+<p>this will log like this:</p>
+
+<pre><code>2012/07/14 20:07:46 i am log
+2012/07/14 20:07:46 [ERROR] oh no! Server Down!</code></pre>
+
+<h2 id='authors'>Authors</h2>
+
+<ul>
+<li><a href='http://weibo.com/qleelulu'>@QLeelulu</a></li>
+
+<li>waiting for you</li>
+</ul>
+
+<h2 id='license'>License</h2>
+
+<p>View the <a href='https://github.com/senchalabs/connect/blob/master/LICENSE'>LICENSE</a> file.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/lessons/jekyll-introduction" title="Jekyll Introduction">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/doc/into" title="Into">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'gokudoc'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>08 November 2012</span></div>
+
+  
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#intro-ref">intro <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#beginner-ref">beginner <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#tutorial-ref">tutorial <span>3</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; QLeelulu 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+  </body>
+</html>
+

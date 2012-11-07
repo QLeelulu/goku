@@ -7,4 +7,6 @@ http://qleelulu.github.com/goku/pages.html
 http://qleelulu.github.com/goku/sitemap.txt
 http://qleelulu.github.com/goku/tags.html
 
-http://qleelulu.github.com/goku/lessons/2011/12/29/jekyll-introduction
+http://qleelulu.github.com/goku/doc/into
+http://qleelulu.github.com/goku/doc/about
+http://qleelulu.github.com/goku/lessons/jekyll-introduction
