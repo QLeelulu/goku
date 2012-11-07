@@ -1,0 +1,10 @@
+
+http://qleelulu.github.com/goku/archive.html
+http://qleelulu.github.com/goku/atom.xml
+http://qleelulu.github.com/goku/categories.html
+http://qleelulu.github.com/goku/index.html
+http://qleelulu.github.com/goku/pages.html
+http://qleelulu.github.com/goku/sitemap.txt
+http://qleelulu.github.com/goku/tags.html
+
+http://qleelulu.github.com/goku/lessons/2011/12/29/jekyll-introduction
