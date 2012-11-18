@@ -158,6 +158,103 @@
 <p>Let us create a simple mvc project, show how goku work.</p>
 
 <p>The project&#8217;s directory structure is like this:</p>
+
+<pre><code>.
+├── app.go
+└── gokudemo
+    ├── config.go
+    ├── controllers
+    │   └── home.go
+    ├── model
+    ├── routes.go
+    ├── static
+    │   ├── css
+    │   ├── img
+    │   └── js
+    └── views
+        ├── home
+        │   └── index.html
+        └── shared
+            └── layout.html</code></pre>
+
+<p>You can find this example <a href='http://github.com/QLeelulu/goku-demo'>in here</a>.</p>
+
+<h3 id='route'>Route</h3>
+
+<p>An URL request like &#8220;http://www.abc.com/home/index&#8221; will map to <code>home</code> controller&#8217;s <code>index</code> action. <br />This was rewrite by the routes:</p>
+
+<pre><code>var Routes []*goku.Route = []*goku.Route{
+    &amp;goku.Route{
+        Name:     &quot;static&quot;,
+        IsStatic: true,
+        Pattern:  &quot;/public/(.*)&quot;,
+    },
+    &amp;goku.Route{
+        Name:    &quot;default&quot;,
+        Pattern: &quot;/{controller}/{action}&quot;,
+        Default: map[string]string{&quot;controller&quot;: &quot;home&quot;, &quot;action&quot;: &quot;index&quot;},
+    },
+}</code></pre>
+
+<p>The <code>static</code> route set <code>IsStatic</code> to true, mean that if the url matched this route, will process the request as static file. <br />The <code>default</code> route mean that the url <code>/user/info</code>, will map to <code>user</code> controller&#8217;s <code>info</code> action, and the url <code>/</code> will map to <code>home</code> controller&#8217;s <code>index</code> action, because this is the default value.</p>
+
+<p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/app.go'>app.go</a>) :</p>
+
+<pre><code>func main() {
+    rt := &amp;goku.RouteTable{Routes: gokudemo.Routes}
+    middlewares := []goku.Middlewarer{}
+    s := goku.CreateServer(rt, middlewares, gokudemo.Config)
+    log.Fatal(s.ListenAndServe())
+}</code></pre>
+
+<h3 id='controller__action'>Controller &amp; Action</h3>
+
+<p>Add a controller like this code(<a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'>controllers/home.go</a>):</p>
+
+<pre><code>package controllers
+
+import (
+    &quot;github.com/QLeelulu/goku&quot;
+)
+
+// home controller
+var _ = goku.Controller(&quot;home&quot;).
+// index action
+Get(&quot;index&quot;, func (ctx *goku.HttpContext) goku.ActionResulter {
+    ctx.ViewData[&quot;Message&quot;] = &quot;Hello World&quot;
+    return ctx.View(nil)
+})</code></pre>
+
+<p>This code register a <code>home</code> controller, with a action named <code>index</code> for http <code>GET</code> methed, and add a viewdate <code>Message</code> can be use in the view.</p>
+
+<p>If the controllers register in the other packages, we must import it:</p>
+
+<pre><code>import _ &quot;gokudemo/gokudemo/controllers&quot; </code></pre>
+
+<p>we just import it but ignore it by <code>_</code>.</p>
+
+<h3 id='view'>View</h3>
+
+<p>In the <code>home</code> controller&#8217;s <code>index</code> action, we render view by <code>return ctx.View(nil)</code>. This will find the view template file by the location <code>/views/home/index.html</code>. And the default layout template is in <code>/views/shared/layout.html</code>.</p>
+
+<p>the layout.html:</p>
+<pre><code>&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Goku Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Goku Demo&lt;/h1&gt;
+    &#123;{ template "body" . }&#125;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>the /views/home/index.html:</p>
+<pre><code>&#123;{define "body"}&#125;
+    &#123;{.Data.Message}&#125;
+&#123;{end}&#125;
+</code></pre>
     <hr>
     <div class="pagination btn-group">
       

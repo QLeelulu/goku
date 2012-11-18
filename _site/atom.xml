@@ -4,7 +4,7 @@
  <title>Goku - Golang Web Mvc Framework</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-16T00:58:31+08:00</updated>
+ <updated>2012-11-19T01:58:14+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -21,7 +21,104 @@
 
 &lt;p&gt;Let us create a simple mvc project, show how goku work.&lt;/p&gt;
 
-&lt;p&gt;The project&amp;#8217;s directory structure is like this:&lt;/p&gt;</content>
+&lt;p&gt;The project&amp;#8217;s directory structure is like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── app.go
+└── gokudemo
+    ├── config.go
+    ├── controllers
+    │   └── home.go
+    ├── model
+    ├── routes.go
+    ├── static
+    │   ├── css
+    │   ├── img
+    │   └── js
+    └── views
+        ├── home
+        │   └── index.html
+        └── shared
+            └── layout.html&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can find this example &lt;a href='http://github.com/QLeelulu/goku-demo'&gt;in here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id='route'&gt;Route&lt;/h3&gt;
+
+&lt;p&gt;An URL request like &amp;#8220;http://www.abc.com/home/index&amp;#8221; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action. &lt;br /&gt;This was rewrite by the routes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var Routes []*goku.Route = []*goku.Route{
+    &amp;amp;goku.Route{
+        Name:     &amp;quot;static&amp;quot;,
+        IsStatic: true,
+        Pattern:  &amp;quot;/public/(.*)&amp;quot;,
+    },
+    &amp;amp;goku.Route{
+        Name:    &amp;quot;default&amp;quot;,
+        Pattern: &amp;quot;/{controller}/{action}&amp;quot;,
+        Default: map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;home&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;},
+    },
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;static&lt;/code&gt; route set &lt;code&gt;IsStatic&lt;/code&gt; to true, mean that if the url matched this route, will process the request as static file. &lt;br /&gt;The &lt;code&gt;default&lt;/code&gt; route mean that the url &lt;code&gt;/user/info&lt;/code&gt;, will map to &lt;code&gt;user&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;info&lt;/code&gt; action, and the url &lt;code&gt;/&lt;/code&gt; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action, because this is the default value.&lt;/p&gt;
+
+&lt;p&gt;We register the routes to goku server by this way (&lt;a href='http://github.com/QLeelulu/goku-demo/app.go'&gt;app.go&lt;/a&gt;) :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    rt := &amp;amp;goku.RouteTable{Routes: gokudemo.Routes}
+    middlewares := []goku.Middlewarer{}
+    s := goku.CreateServer(rt, middlewares, gokudemo.Config)
+    log.Fatal(s.ListenAndServe())
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id='controller__action'&gt;Controller &amp;amp; Action&lt;/h3&gt;
+
+&lt;p&gt;Add a controller like this code(&lt;a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'&gt;controllers/home.go&lt;/a&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package controllers
+
+import (
+    &amp;quot;github.com/QLeelulu/goku&amp;quot;
+)
+
+// home controller
+var _ = goku.Controller(&amp;quot;home&amp;quot;).
+// index action
+Get(&amp;quot;index&amp;quot;, func (ctx *goku.HttpContext) goku.ActionResulter {
+    ctx.ViewData[&amp;quot;Message&amp;quot;] = &amp;quot;Hello World&amp;quot;
+    return ctx.View(nil)
+})&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This code register a &lt;code&gt;home&lt;/code&gt; controller, with a action named &lt;code&gt;index&lt;/code&gt; for http &lt;code&gt;GET&lt;/code&gt; methed, and add a viewdate &lt;code&gt;Message&lt;/code&gt; can be use in the view.&lt;/p&gt;
+
+&lt;p&gt;If the controllers register in the other packages, we must import it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import _ &amp;quot;gokudemo/gokudemo/controllers&amp;quot; &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;we just import it but ignore it by &lt;code&gt;_&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id='view'&gt;View&lt;/h3&gt;
+
+&lt;p&gt;In the &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action, we render view by &lt;code&gt;return ctx.View(nil)&lt;/code&gt;. This will find the view template file by the location &lt;code&gt;/views/home/index.html&lt;/code&gt;. And the default layout template is in &lt;code&gt;/views/shared/layout.html&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;the layout.html:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE HTML&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;
+    &amp;lt;title&amp;gt;Goku Demo&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;h1&amp;gt;Goku Demo&amp;lt;/h1&amp;gt;
+    &amp;#123;{ template &quot;body&quot; . }&amp;#125;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;the /views/home/index.html:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;#123;{define &quot;body&quot;}&amp;#125;
+    &amp;#123;{.Data.Message}&amp;#125;
+&amp;#123;{end}&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;</content>
  </entry>
  
  <entry>
