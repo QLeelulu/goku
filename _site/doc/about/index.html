@@ -188,70 +188,70 @@
 <h2 id='example'>Example</h2>
 
 <p>Here is a simple example, or you can check <a href='/doc/into'>Into</a> for more detail.</p>
+<div class='highlight'><pre><code class='go'><span class='k'>package</span> <span class='n'>main</span>
 
-<pre><code>package main
+<span class='k'>import</span> <span class='p'>(</span>
+    <span class='s'>&quot;github.com/QLeelulu/goku&quot;</span>
+    <span class='s'>&quot;log&quot;</span>
+    <span class='s'>&quot;path&quot;</span>
+    <span class='s'>&quot;runtime&quot;</span>
+    <span class='s'>&quot;time&quot;</span>
+<span class='p'>)</span>
 
-import (
-    &quot;github.com/QLeelulu/goku&quot;
-    &quot;log&quot;
-    &quot;path&quot;
-    &quot;runtime&quot;
-    &quot;time&quot;
-)
+<span class='c1'>// routes</span>
+<span class='k'>var</span> <span class='n'>routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='c1'>// static file route</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+        <span class='n'>IsStatic</span><span class='p'>:</span> <span class='n'>true</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/static/(.*)&quot;</span><span class='p'>,</span>
+    <span class='p'>},</span>
+    <span class='c1'>// default controller and action route</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;/{controller}/{action}/{id}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span>    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;0&quot;</span><span class='p'>},</span>
+        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>},</span>
+    <span class='p'>},</span>
+<span class='p'>}</span>
 
-// routes
-var routes []*goku.Route = []*goku.Route{
-    // static file route
-    &amp;goku.Route{
-        Name:     &quot;static&quot;,
-        IsStatic: true,
-        Pattern:  &quot;/static/(.*)&quot;,
-    },
-    // default controller and action route
-    &amp;goku.Route{
-        Name:       &quot;default&quot;,
-        Pattern:    &quot;/{controller}/{action}/{id}&quot;,
-        Default:    map[string]string{&quot;controller&quot;: &quot;home&quot;, &quot;action&quot;: &quot;index&quot;, &quot;id&quot;: &quot;0&quot;},
-        Constraint: map[string]string{&quot;id&quot;: &quot;\\d+&quot;},
-    },
-}
+<span class='c1'>// server config</span>
+<span class='k'>var</span> <span class='n'>config</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>ServerConfig</span> <span class='p'>=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>ServerConfig</span><span class='p'>{</span>
+    <span class='n'>Addr</span><span class='p'>:</span>           <span class='s'>&quot;:8888&quot;</span><span class='p'>,</span>
+    <span class='n'>ReadTimeout</span><span class='p'>:</span>    <span class='mi'>10</span> <span class='p'>*</span> <span class='n'>time</span><span class='p'>.</span><span class='n'>Second</span><span class='p'>,</span>
+    <span class='n'>WriteTimeout</span><span class='p'>:</span>   <span class='mi'>10</span> <span class='p'>*</span> <span class='n'>time</span><span class='p'>.</span><span class='n'>Second</span><span class='p'>,</span>
+    <span class='n'>MaxHeaderBytes</span><span class='p'>:</span> <span class='mi'>1</span> <span class='p'>&lt;&lt;</span> <span class='mi'>20</span><span class='p'>,</span>
+    <span class='c1'>//RootDir:        os.Getwd(),</span>
+    <span class='n'>StaticPath</span><span class='p'>:</span> <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+    <span class='n'>ViewPath</span><span class='p'>:</span>   <span class='s'>&quot;views&quot;</span><span class='p'>,</span>
+    <span class='n'>Debug</span><span class='p'>:</span>      <span class='n'>true</span><span class='p'>,</span>
+<span class='p'>}</span>
 
-// server config
-var config *goku.ServerConfig = &amp;goku.ServerConfig{
-    Addr:           &quot;:8888&quot;,
-    ReadTimeout:    10 * time.Second,
-    WriteTimeout:   10 * time.Second,
-    MaxHeaderBytes: 1 &lt;&lt; 20,
-    //RootDir:        os.Getwd(),
-    StaticPath: &quot;static&quot;,
-    ViewPath:   &quot;views&quot;,
-    Debug:      true,
-}
+<span class='k'>func</span> <span class='n'>init</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='cm'>/**</span>
+<span class='cm'>     * project root dir</span>
+<span class='cm'>     */</span>
+    <span class='n'>_</span><span class='p'>,</span> <span class='n'>filename</span><span class='p'>,</span> <span class='n'>_</span><span class='p'>,</span> <span class='n'>_</span> <span class='p'>:=</span> <span class='n'>runtime</span><span class='p'>.</span><span class='n'>Caller</span><span class='p'>(</span><span class='mi'>1</span><span class='p'>)</span>
+    <span class='n'>config</span><span class='p'>.</span><span class='n'>RootDir</span> <span class='p'>=</span> <span class='n'>path</span><span class='p'>.</span><span class='n'>Dir</span><span class='p'>(</span><span class='n'>filename</span><span class='p'>)</span>
 
-func init() {
-    /**
-     * project root dir
-     */
-    _, filename, _, _ := runtime.Caller(1)
-    config.RootDir = path.Dir(filename)
+    <span class='cm'>/**</span>
+<span class='cm'>     * Controller &amp; Action</span>
+<span class='cm'>     */</span>
+    <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>).</span>
+        <span class='n'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>Html</span><span class='p'>(</span><span class='s'>&quot;Hello World&quot;</span><span class='p'>)</span>
+    <span class='p'>})</span>
 
-    /**
-     * Controller &amp; Action
-     */
-    goku.Controller(&quot;home&quot;).
-        Get(&quot;index&quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-        return ctx.Html(&quot;Hello World&quot;)
-    })
+<span class='p'>}</span>
 
-}
-
-func main() {
-    rt := &amp;goku.RouteTable{Routes: routes}
-    s := goku.CreateServer(rt, nil, config)
-    goku.Logger().Logln(&quot;Server start on&quot;, s.Addr)
-    log.Fatal(s.ListenAndServe())
-}</code></pre>
-
+<span class='k'>func</span> <span class='n'>main</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='n'>rt</span> <span class='p'>:=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>{</span><span class='n'>Routes</span><span class='p'>:</span> <span class='n'>routes</span><span class='p'>}</span>
+    <span class='n'>s</span> <span class='p'>:=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>CreateServer</span><span class='p'>(</span><span class='n'>rt</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>,</span> <span class='n'>config</span><span class='p'>)</span>
+    <span class='n'>goku</span><span class='p'>.</span><span class='n'>Logger</span><span class='p'>().</span><span class='n'>Logln</span><span class='p'>(</span><span class='s'>&quot;Server start on&quot;</span><span class='p'>,</span> <span class='n'>s</span><span class='p'>.</span><span class='n'>Addr</span><span class='p'>)</span>
+    <span class='n'>log</span><span class='p'>.</span><span class='n'>Fatal</span><span class='p'>(</span><span class='n'>s</span><span class='p'>.</span><span class='n'>ListenAndServe</span><span class='p'>())</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
 <h2 id='examples'>Examples</h2>
 
 <p>You can found some examples in the <code>github.com/QLeelulu/goku/examples</code> folder. <br />To run example &#8220;todo&#8221; app, just:</p>

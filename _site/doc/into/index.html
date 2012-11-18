@@ -182,55 +182,55 @@
 <h3 id='route'>Route</h3>
 
 <p>An URL request like &#8220;http://www.abc.com/home/index&#8221; will map to <code>home</code> controller&#8217;s <code>index</code> action. <br />This was rewrite by the routes:</p>
-
-<pre><code>var Routes []*goku.Route = []*goku.Route{
-    &amp;goku.Route{
-        Name:     &quot;static&quot;,
-        IsStatic: true,
-        Pattern:  &quot;/public/(.*)&quot;,
-    },
-    &amp;goku.Route{
-        Name:    &quot;default&quot;,
-        Pattern: &quot;/{controller}/{action}&quot;,
-        Default: map[string]string{&quot;controller&quot;: &quot;home&quot;, &quot;action&quot;: &quot;index&quot;},
-    },
-}</code></pre>
-
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+        <span class='n'>IsStatic</span><span class='p'>:</span> <span class='n'>true</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/public/(.*)&quot;</span><span class='p'>,</span>
+    <span class='p'>},</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span>
+    <span class='p'>},</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
 <p>The <code>static</code> route set <code>IsStatic</code> to true, mean that if the url matched this route, will process the request as static file. <br />The <code>default</code> route mean that the url <code>/user/info</code>, will map to <code>user</code> controller&#8217;s <code>info</code> action, and the url <code>/</code> will map to <code>home</code> controller&#8217;s <code>index</code> action, because this is the default value.</p>
 
 <p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/app.go'>app.go</a>) :</p>
-
-<pre><code>func main() {
-    rt := &amp;goku.RouteTable{Routes: gokudemo.Routes}
-    middlewares := []goku.Middlewarer{}
-    s := goku.CreateServer(rt, middlewares, gokudemo.Config)
-    log.Fatal(s.ListenAndServe())
-}</code></pre>
-
+<div class='highlight'><pre><code class='go'><span class='k'>func</span> <span class='n'>main</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='n'>rt</span> <span class='p'>:=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>{</span><span class='n'>Routes</span><span class='p'>:</span> <span class='n'>gokudemo</span><span class='p'>.</span><span class='n'>Routes</span><span class='p'>}</span>
+    <span class='n'>middlewares</span> <span class='p'>:=</span> <span class='p'>[]</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Middlewarer</span><span class='p'>{}</span>
+    <span class='n'>s</span> <span class='p'>:=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>CreateServer</span><span class='p'>(</span><span class='n'>rt</span><span class='p'>,</span> <span class='n'>middlewares</span><span class='p'>,</span> <span class='n'>gokudemo</span><span class='p'>.</span><span class='n'>Config</span><span class='p'>)</span>
+    <span class='n'>log</span><span class='p'>.</span><span class='n'>Fatal</span><span class='p'>(</span><span class='n'>s</span><span class='p'>.</span><span class='n'>ListenAndServe</span><span class='p'>())</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
 <h3 id='controller__action'>Controller &amp; Action</h3>
 
 <p>Add a controller like this code(<a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'>controllers/home.go</a>):</p>
+<div class='highlight'><pre><code class='go'><span class='k'>package</span> <span class='n'>controllers</span>
 
-<pre><code>package controllers
+<span class='k'>import</span> <span class='p'>(</span>
+    <span class='s'>&quot;github.com/QLeelulu/goku&quot;</span>
+<span class='p'>)</span>
 
-import (
-    &quot;github.com/QLeelulu/goku&quot;
-)
-
-// home controller
-var _ = goku.Controller(&quot;home&quot;).
-// index action
-Get(&quot;index&quot;, func (ctx *goku.HttpContext) goku.ActionResulter {
-    ctx.ViewData[&quot;Message&quot;] = &quot;Hello World&quot;
-    return ctx.View(nil)
-})</code></pre>
-
+<span class='c1'>// home controller</span>
+<span class='k'>var</span> <span class='n'>_</span> <span class='p'>=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>).</span>
+<span class='c1'>// index action</span>
+<span class='n'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='k'>func</span> <span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+    <span class='n'>ctx</span><span class='p'>.</span><span class='n'>ViewData</span><span class='p'>[</span><span class='s'>&quot;Message&quot;</span><span class='p'>]</span> <span class='p'>=</span> <span class='s'>&quot;Hello World&quot;</span>
+    <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>View</span><span class='p'>(</span><span class='n'>nil</span><span class='p'>)</span>
+<span class='p'>})</span>
+</code></pre>
+</div>
 <p>This code register a <code>home</code> controller, with a action named <code>index</code> for http <code>GET</code> methed, and add a viewdate <code>Message</code> can be use in the view.</p>
 
 <p>If the controllers register in the other packages, we must import it:</p>
-
-<pre><code>import _ &quot;gokudemo/gokudemo/controllers&quot; </code></pre>
-
+<div class='highlight'><pre><code class='go'><span class='k'>import</span> <span class='n'>_</span> <span class='s'>&quot;gokudemo/gokudemo/controllers&quot;</span> 
+</code></pre>
+</div>
 <p>we just import it but ignore it by <code>_</code>.</p>
 
 <h3 id='view'>View</h3>

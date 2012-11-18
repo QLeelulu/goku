@@ -4,7 +4,7 @@
  <title>Goku - Golang Web Mvc Framework</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-19T01:58:14+08:00</updated>
+ <updated>2012-11-19T02:13:03+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -46,55 +46,55 @@
 &lt;h3 id='route'&gt;Route&lt;/h3&gt;
 
 &lt;p&gt;An URL request like &amp;#8220;http://www.abc.com/home/index&amp;#8221; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action. &lt;br /&gt;This was rewrite by the routes:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var Routes []*goku.Route = []*goku.Route{
-    &amp;amp;goku.Route{
-        Name:     &amp;quot;static&amp;quot;,
-        IsStatic: true,
-        Pattern:  &amp;quot;/public/(.*)&amp;quot;,
-    },
-    &amp;amp;goku.Route{
-        Name:    &amp;quot;default&amp;quot;,
-        Pattern: &amp;quot;/{controller}/{action}&amp;quot;,
-        Default: map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;home&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;},
-    },
-}&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/public/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;static&lt;/code&gt; route set &lt;code&gt;IsStatic&lt;/code&gt; to true, mean that if the url matched this route, will process the request as static file. &lt;br /&gt;The &lt;code&gt;default&lt;/code&gt; route mean that the url &lt;code&gt;/user/info&lt;/code&gt;, will map to &lt;code&gt;user&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;info&lt;/code&gt; action, and the url &lt;code&gt;/&lt;/code&gt; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action, because this is the default value.&lt;/p&gt;
 
 &lt;p&gt;We register the routes to goku server by this way (&lt;a href='http://github.com/QLeelulu/goku-demo/app.go'&gt;app.go&lt;/a&gt;) :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;func main() {
-    rt := &amp;amp;goku.RouteTable{Routes: gokudemo.Routes}
-    middlewares := []goku.Middlewarer{}
-    s := goku.CreateServer(rt, middlewares, gokudemo.Config)
-    log.Fatal(s.ListenAndServe())
-}&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='n'&gt;middlewares&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Middlewarer&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
+    &lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;h3 id='controller__action'&gt;Controller &amp;amp; Action&lt;/h3&gt;
 
 &lt;p&gt;Add a controller like this code(&lt;a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'&gt;controllers/home.go&lt;/a&gt;):&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;package&lt;/span&gt; &lt;span class='n'&gt;controllers&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;package controllers
+&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/span&gt;
+&lt;span class='p'&gt;)&lt;/span&gt;
 
-import (
-    &amp;quot;github.com/QLeelulu/goku&amp;quot;
-)
-
-// home controller
-var _ = goku.Controller(&amp;quot;home&amp;quot;).
-// index action
-Get(&amp;quot;index&amp;quot;, func (ctx *goku.HttpContext) goku.ActionResulter {
-    ctx.ViewData[&amp;quot;Message&amp;quot;] = &amp;quot;Hello World&amp;quot;
-    return ctx.View(nil)
-})&lt;/code&gt;&lt;/pre&gt;
-
+&lt;span class='c1'&gt;// home controller&lt;/span&gt;
+&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+&lt;span class='c1'&gt;// index action&lt;/span&gt;
+&lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Message&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;This code register a &lt;code&gt;home&lt;/code&gt; controller, with a action named &lt;code&gt;index&lt;/code&gt; for http &lt;code&gt;GET&lt;/code&gt; methed, and add a viewdate &lt;code&gt;Message&lt;/code&gt; can be use in the view.&lt;/p&gt;
 
 &lt;p&gt;If the controllers register in the other packages, we must import it:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import _ &amp;quot;gokudemo/gokudemo/controllers&amp;quot; &lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;gokudemo/gokudemo/controllers&amp;quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;p&gt;we just import it but ignore it by &lt;code&gt;_&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h3 id='view'&gt;View&lt;/h3&gt;
@@ -161,70 +161,70 @@ Get(&amp;quot;index&amp;quot;, func (ctx *goku.HttpContext) goku.ActionResulter 
 &lt;h2 id='example'&gt;Example&lt;/h2&gt;
 
 &lt;p&gt;Here is a simple example, or you can check &lt;a href='/doc/into'&gt;Into&lt;/a&gt; for more detail.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;package&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;package main
+&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;log&amp;quot;&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;path&amp;quot;&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;runtime&amp;quot;&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;time&amp;quot;&lt;/span&gt;
+&lt;span class='p'&gt;)&lt;/span&gt;
 
-import (
-    &amp;quot;github.com/QLeelulu/goku&amp;quot;
-    &amp;quot;log&amp;quot;
-    &amp;quot;path&amp;quot;
-    &amp;quot;runtime&amp;quot;
-    &amp;quot;time&amp;quot;
-)
+&lt;span class='c1'&gt;// routes&lt;/span&gt;
+&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='c1'&gt;// static file route&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/static/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='c1'&gt;// default controller and action route&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;/{controller}/{action}/{id}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+        &lt;span class='n'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
 
-// routes
-var routes []*goku.Route = []*goku.Route{
-    // static file route
-    &amp;amp;goku.Route{
-        Name:     &amp;quot;static&amp;quot;,
-        IsStatic: true,
-        Pattern:  &amp;quot;/static/(.*)&amp;quot;,
-    },
-    // default controller and action route
-    &amp;amp;goku.Route{
-        Name:       &amp;quot;default&amp;quot;,
-        Pattern:    &amp;quot;/{controller}/{action}/{id}&amp;quot;,
-        Default:    map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;home&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;, &amp;quot;id&amp;quot;: &amp;quot;0&amp;quot;},
-        Constraint: map[string]string{&amp;quot;id&amp;quot;: &amp;quot;\\d+&amp;quot;},
-    },
-}
+&lt;span class='c1'&gt;// server config&lt;/span&gt;
+&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ServerConfig&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ServerConfig&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;           &lt;span class='s'&gt;&amp;quot;:8888&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='n'&gt;ReadTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='n'&gt;WriteTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='n'&gt;MaxHeaderBytes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt; &lt;span class='p'&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class='mi'&gt;20&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='c1'&gt;//RootDir:        os.Getwd(),&lt;/span&gt;
+    &lt;span class='n'&gt;StaticPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='n'&gt;ViewPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='s'&gt;&amp;quot;views&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='n'&gt;Debug&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;      &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
 
-// server config
-var config *goku.ServerConfig = &amp;amp;goku.ServerConfig{
-    Addr:           &amp;quot;:8888&amp;quot;,
-    ReadTimeout:    10 * time.Second,
-    WriteTimeout:   10 * time.Second,
-    MaxHeaderBytes: 1 &amp;lt;&amp;lt; 20,
-    //RootDir:        os.Getwd(),
-    StaticPath: &amp;quot;static&amp;quot;,
-    ViewPath:   &amp;quot;views&amp;quot;,
-    Debug:      true,
-}
+&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;init&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='cm'&gt;/**&lt;/span&gt;
+&lt;span class='cm'&gt;     * project root dir&lt;/span&gt;
+&lt;span class='cm'&gt;     */&lt;/span&gt;
+    &lt;span class='n'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;runtime&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Caller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RootDir&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Dir&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 
-func init() {
-    /**
-     * project root dir
-     */
-    _, filename, _, _ := runtime.Caller(1)
-    config.RootDir = path.Dir(filename)
+    &lt;span class='cm'&gt;/**&lt;/span&gt;
+&lt;span class='cm'&gt;     * Controller &amp;amp; Action&lt;/span&gt;
+&lt;span class='cm'&gt;     */&lt;/span&gt;
+    &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+        &lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
 
-    /**
-     * Controller &amp;amp; Action
-     */
-    goku.Controller(&amp;quot;home&amp;quot;).
-        Get(&amp;quot;index&amp;quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-        return ctx.Html(&amp;quot;Hello World&amp;quot;)
-    })
+&lt;span class='p'&gt;}&lt;/span&gt;
 
-}
-
-func main() {
-    rt := &amp;amp;goku.RouteTable{Routes: routes}
-    s := goku.CreateServer(rt, nil, config)
-    goku.Logger().Logln(&amp;quot;Server start on&amp;quot;, s.Addr)
-    log.Fatal(s.ListenAndServe())
-}&lt;/code&gt;&lt;/pre&gt;
-
+&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Logger&lt;/span&gt;&lt;span class='p'&gt;().&lt;/span&gt;&lt;span class='n'&gt;Logln&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Server start on&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;h2 id='examples'&gt;Examples&lt;/h2&gt;
 
 &lt;p&gt;You can found some examples in the &lt;code&gt;github.com/QLeelulu/goku/examples&lt;/code&gt; folder. &lt;br /&gt;To run example &amp;#8220;todo&amp;#8221; app, just:&lt;/p&gt;
