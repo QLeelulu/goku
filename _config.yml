@@ -10,7 +10,7 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Goku - golang mvc
+title : Goku - Golang Web Mvc Framework
 tagline: Site Tagline
 author :
   name : QLeelulu
@@ -82,7 +82,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : gokudoc
+      short_name : goku-mvc
     livefyre :
       site_id : 123
     intensedebate :

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Goku - golang mvc</title>
+ <title>Goku - Golang Web Mvc Framework</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-08T01:21:42+08:00</updated>
+ <updated>2012-11-16T00:58:31+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -17,81 +17,11 @@
    <link href="http://qleelulu.github.com/goku/doc/into"/>
    <updated>2012-11-08T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/into</id>
-   <content type="html">&lt;h2 id='installation'&gt;Installation&lt;/h2&gt;
+   <content type="html">&lt;h2 id='simple_mvc_project'&gt;Simple MVC project&lt;/h2&gt;
 
-&lt;p&gt;To install goku, simply run &lt;code&gt;go get github.com/QLeelulu/goku&lt;/code&gt;. &lt;br /&gt;To use it in a program, use &lt;code&gt;import &amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Let us create a simple mvc project, show how goku work.&lt;/p&gt;
 
-&lt;p&gt;To run example &amp;#8220;todo&amp;#8221; app, just:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
-$ go run app.go&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;maybe you need run todo.sql first.&lt;/p&gt;
-
-&lt;h2 id='usage'&gt;Usage&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;package main
-
-import (
-    &amp;quot;github.com/QLeelulu/goku&amp;quot;
-    &amp;quot;log&amp;quot;
-    &amp;quot;path&amp;quot;
-    &amp;quot;runtime&amp;quot;
-    &amp;quot;time&amp;quot;
-)
-
-// routes
-var routes []*goku.Route = []*goku.Route{
-    // static file route
-    &amp;amp;goku.Route{
-        Name:     &amp;quot;static&amp;quot;,
-        IsStatic: true,
-        Pattern:  &amp;quot;/static/(.*)&amp;quot;,
-    },
-    // default controller and action route
-    &amp;amp;goku.Route{
-        Name:       &amp;quot;default&amp;quot;,
-        Pattern:    &amp;quot;/{controller}/{action}/{id}&amp;quot;,
-        Default:    map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;home&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;, &amp;quot;id&amp;quot;: &amp;quot;0&amp;quot;},
-        Constraint: map[string]string{&amp;quot;id&amp;quot;: &amp;quot;\\d+&amp;quot;},
-    },
-}
-
-// server config
-var config *goku.ServerConfig = &amp;amp;goku.ServerConfig{
-    Addr:           &amp;quot;:8888&amp;quot;,
-    ReadTimeout:    10 * time.Second,
-    WriteTimeout:   10 * time.Second,
-    MaxHeaderBytes: 1 &amp;lt;&amp;lt; 20,
-    //RootDir:        os.Getwd(),
-    StaticPath: &amp;quot;static&amp;quot;,
-    ViewPath:   &amp;quot;views&amp;quot;,
-    Debug:      true,
-}
-
-func init() {
-    /**
-     * project root dir
-     */
-    _, filename, _, _ := runtime.Caller(1)
-    config.RootDir = path.Dir(filename)
-
-    /**
-     * Controller &amp;amp; Action
-     */
-    goku.Controller(&amp;quot;home&amp;quot;).
-        Get(&amp;quot;index&amp;quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-        return ctx.Html(&amp;quot;Hello World&amp;quot;)
-    })
-
-}
-
-func main() {
-    rt := &amp;amp;goku.RouteTable{Routes: routes}
-    s := goku.CreateServer(rt, nil, config)
-    goku.Logger().Logln(&amp;quot;Server start on&amp;quot;, s.Addr)
-    log.Fatal(s.ListenAndServe())
-}&lt;/code&gt;&lt;/pre&gt;</content>
+&lt;p&gt;The project&amp;#8217;s directory structure is like this:&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -101,22 +31,39 @@ func main() {
    <id>http://qleelulu.github.com/goku/doc/about</id>
    <content type="html">&lt;h1 id='goku'&gt;goku&lt;/h1&gt;
 
-&lt;p&gt;goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.&lt;/p&gt;
+&lt;p&gt;goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC. &lt;br /&gt;goku is simple and powerful. &lt;br /&gt;Base Features:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;mvc (Lightweight model)&lt;/li&gt;
+
+&lt;li&gt;route&lt;/li&gt;
+
+&lt;li&gt;multi template engine and layout&lt;/li&gt;
+
+&lt;li&gt;simple database api&lt;/li&gt;
+
+&lt;li&gt;form validation&lt;/li&gt;
+
+&lt;li&gt;filter for controller or action&lt;/li&gt;
+
+&lt;li&gt;middleware&lt;/li&gt;
+
+&lt;li&gt;and more&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;&lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku'&gt;doc &amp;amp; api&lt;/a&gt;&lt;/p&gt;
 
+&lt;blockquote&gt;
+&lt;p&gt;now goku is in the &lt;strong&gt;&lt;code&gt;preview version, anything can be change&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;h2 id='installation'&gt;Installation&lt;/h2&gt;
 
-&lt;p&gt;To install goku, simply run &lt;code&gt;go get github.com/QLeelulu/goku&lt;/code&gt;. To use it in a program, use &lt;code&gt;import &amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To install goku, simply run &lt;code&gt;go get github.com/QLeelulu/goku&lt;/code&gt;. &lt;br /&gt;To use it in a program, use &lt;code&gt;import &amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;To run example &amp;#8220;todo&amp;#8221; app, just:&lt;/p&gt;
+&lt;h2 id='example'&gt;Example&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;$ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
-$ go run app.go&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;maybe you need run todo.sql first.&lt;/p&gt;
-
-&lt;h2 id='usage'&gt;Usage&lt;/h2&gt;
+&lt;p&gt;Here is a simple example, or you can check &lt;a href='/doc/into'&gt;Into&lt;/a&gt; for more detail.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;package main
 
@@ -181,385 +128,14 @@ func main() {
     log.Fatal(s.ListenAndServe())
 }&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id='route'&gt;Route&lt;/h2&gt;
+&lt;h2 id='examples'&gt;Examples&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code&gt;var Routes []*goku.Route = []*goku.Route{
-    &amp;amp;goku.Route{
-        Name:     &amp;quot;static&amp;quot;,
-        IsStatic: true,
-        Pattern:  &amp;quot;/public/(.*)&amp;quot;,
-    },
-    &amp;amp;goku.Route{
-        Name:       &amp;quot;edit&amp;quot;,
-        Pattern:    &amp;quot;/{controller}/{id}/{action}&amp;quot;,
-        Default:    map[string]string{&amp;quot;action&amp;quot;: &amp;quot;edit&amp;quot;},
-        Constraint: map[string]string{&amp;quot;id&amp;quot;: &amp;quot;\\d+&amp;quot;},
-    },
-    &amp;amp;goku.Route{
-        Name:    &amp;quot;default&amp;quot;,
-        Pattern: &amp;quot;/{controller}/{action}&amp;quot;,
-        Default: map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;todo&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;},
-    },
-}
-// create server with the rules
-rt := &amp;amp;goku.RouteTable{Routes: todo.Routes}
-s := goku.CreateServer(rt, nil, nil)
-log.Fatal(s.ListenAndServe())&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can found some examples in the &lt;code&gt;github.com/QLeelulu/goku/examples&lt;/code&gt; folder. &lt;br /&gt;To run example &amp;#8220;todo&amp;#8221; app, just:&lt;/p&gt;
 
-&lt;p&gt;or&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
+$ go run app.go&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;rt := new(goku.RouteTable)
-rt.Static(&amp;quot;staticFile&amp;quot;, &amp;quot;/static/(.*)&amp;quot;)
-rt.Map(
-    &amp;quot;blog-page&amp;quot;, // route name
-    &amp;quot;/blog/p/{page}&amp;quot;, // pattern
-    map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;blog&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;page&amp;quot;, &amp;quot;page&amp;quot;: &amp;quot;0&amp;quot;}, // default
-    map[string]string{&amp;quot;page&amp;quot;: &amp;quot;\\d+&amp;quot;} // constraint
-)
-rt.Map(
-    &amp;quot;default&amp;quot;, // route name
-    &amp;quot;/{controller}/{action}&amp;quot;, // pattern
-    map[string]string{&amp;quot;controller&amp;quot;: &amp;quot;home&amp;quot;, &amp;quot;action&amp;quot;: &amp;quot;index&amp;quot;}, // default
-)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id='controller_and_action'&gt;Controller And Action&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;// add a controller named &amp;quot;home&amp;quot;
-goku.Controller(&amp;quot;home&amp;quot;).
-    Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
-    // home controller&amp;#39;s index action
-    // for http GET
-    Get(&amp;quot;index&amp;quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-    return ctx.Html(&amp;quot;Hello World&amp;quot;)
-}).Filters(new(TestActionFilter)). // this filter is for home.index action
-    // home controller&amp;#39;s about action
-    // for http POST
-    Post(&amp;quot;about&amp;quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-    return ctx.Raw(&amp;quot;About&amp;quot;)
-})&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;get &lt;code&gt;/home/index&lt;/code&gt; will return &lt;code&gt;Hello World&lt;/code&gt;&lt;/li&gt;
-
-&lt;li&gt;post &lt;code&gt;/home/index&lt;/code&gt; will return 404&lt;/li&gt;
-
-&lt;li&gt;post &lt;code&gt;/home/about&lt;/code&gt; will return &lt;code&gt;About&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id='actionresult'&gt;ActionResult&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;ActionResulter&lt;/code&gt; is type interface. all the action must return ActionResulter. you can return an ActionResulter in the action like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// ctx is *goku.HttpContext
-ctx.Raw(&amp;quot;hi&amp;quot;)
-ctx.NotFound(&amp;quot;oh no! ):&amp;quot;)
-ctx.Redirect(&amp;quot;/&amp;quot;)
-// or you can return a view that
-// will render a template
-ctx.View(viewModel)
-ctx.Render(&amp;quot;viewName&amp;quot;, viewModel)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;or you can return a ActionResulter by this&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;return &amp;amp;ActionResult{
-    StatusCode: http.StatusNotFound,
-    Headers:    map[string]string{&amp;quot;Content-Type&amp;quot;: &amp;quot;text/html&amp;quot;},
-    Body:       &amp;quot;Page Not Found&amp;quot;,
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;for more info, check the code.&lt;/p&gt;
-
-&lt;h2 id='view_and_viewdata'&gt;View and ViewData&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;Views are the components that display the application&amp;#39;s user interface (UI)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;To render a view, you can just return a &lt;code&gt;ViewResut&lt;/code&gt; which implement the &lt;code&gt;ActionResulter&lt;/code&gt; interface. just like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;goku.Controller(&amp;quot;blog&amp;quot;).
-    Get(&amp;quot;page&amp;quot;, func(ctx *goku.HttpContext) goku.ActionResulter {
-    blog := GetBlogByid(10)
-
-    // you can add any val to ViewData
-    // then you can use it in template
-    // like this: 
-    ctx.ViewData[&amp;quot;SiteName&amp;quot;] = &amp;quot;My Blog&amp;quot;
-
-    // or you can pass a struct to ViewModel
-    // then you can use it in template
-    // like this: 
-    // that same as blog.Title
-    return ctx.View(blog)
-})&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;ctx.View()&lt;/code&gt; will find the view in these rules:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;/{ViewPath}/{Controller}/{action}&lt;/li&gt;
-
-&lt;li&gt;/{ViewPath}/shared/{action}&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;for example, ServerConfig.ViewPath is set to &amp;#8220;views&amp;#8221;, and return ctx.View() in &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;about&lt;/code&gt; action, it will find the view file in this rule:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;{ProjectDir}/views/home/about.html&lt;/li&gt;
-
-&lt;li&gt;{ProjectDir}/views/shared/about.html&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;if you want to return a view that specified view name, you can use ctx.Render:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// it will find the view in these rules:
-//      1. /{ViewPath}/{Controller}/{viewName}
-//      2. /{ViewPath}/shared/{viewName}
-// if viewName start with &amp;#39;/&amp;#39;,
-// it will find the view direct by viewpath:
-//      1. /{ViewPath}/{viewName}
-ctx.Render(&amp;quot;viewName&amp;quot;, ViewModel)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id='viewengine__template'&gt;ViewEngine &amp;amp; Template&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;// you can add any val to ViewData
-// then you can use it in template
-// like this: 
-ctx.ViewData[&amp;quot;SiteName&amp;quot;] = &amp;quot;My Blog&amp;quot;
-
-blogs := GetBlogs()
-// or you can pass a struct to ViewModel
-// then you can use it in template
-// like this:   
-return ctx.View(blogs)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;default template engine is golang&amp;#8217;s template.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;box todos&amp;quot;&amp;gt;
-    &amp;lt;h2 class=&amp;quot;box&amp;quot;&amp;gt;&amp;lt;/h2&amp;gt;
-    &amp;lt;ul&amp;gt;
-      
-        &amp;lt;li id=&amp;quot;blog-&amp;quot;&amp;gt;
-          
-        &amp;lt;/li&amp;gt;
-      
-    &amp;lt;/ul&amp;gt;
-&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id='layout'&gt;Layout&lt;/h4&gt;
-
-&lt;p&gt;layout.html&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;title&amp;gt;Goku&amp;lt;/title&amp;gt;
-    
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-  
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;body.html&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    &amp;lt;!-- add css or js here --&amp;gt;
-
-
-
-    I&amp;#39;m main content.&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;note the dot in &lt;code&gt;, it will pass the ViewData to the sub template.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;HtmlHelper?&lt;/p&gt;
-
-&lt;h4 id='more_template_engine_support'&gt;More Template Engine Support&lt;/h4&gt;
-
-&lt;p&gt;if you want to use &lt;a href='https://github.com/hoisie/mustache'&gt;mustache&lt;/a&gt; template, check &lt;a href='https://github.com/QLeelulu/mustache.goku'&gt;mustache.goku&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id='httpcontext'&gt;HttpContext&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;type HttpContext struct {
-    Request        *http.Request       // http request
-    responseWriter http.ResponseWriter // http response
-    Method         string              // http method
-
-    //self fields
-    RouteData *RouteData             // route data
-    ViewData  map[string]interface{} // view data for template
-    Data      map[string]interface{} // data for httpcontex
-    Result    ActionResulter         // action result
-    Err       error                  // process error
-    User      string                 // user name
-    Canceled  bool                   // cancel continue process the request and return
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id='form_validation'&gt;Form Validation&lt;/h1&gt;
-
-&lt;p&gt;you can create a form, to valid the user&amp;#8217;s input, and get the clean value.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import &amp;quot;github.com/QLeelulu/goku/form&amp;quot;
-
-func CreateCommentForm() *goku.Form {
-    name := NewCharField(&amp;quot;name&amp;quot;, &amp;quot;Name&amp;quot;, true).Range(3, 10).Field()
-    nickName := NewCharField(&amp;quot;nick_name&amp;quot;, &amp;quot;Nick Name&amp;quot;, false).Min(3).Max(20).Field()
-    age := NewIntegerField(&amp;quot;age&amp;quot;, &amp;quot;Age&amp;quot;, true).Range(18, 50).Field()
-    content := NewTextField(&amp;quot;content&amp;quot;, &amp;quot;Content&amp;quot;, true).Min(10).Field()
-
-    form := NewForm(name, nickName, age, content)
-    return form
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and then you can use this form like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;f := CreateCommentForm()
-f.FillByRequest(ctx.Request)
-
-if f.Valid() {
-    // after valid, we can get the clean values
-    m := f.CleanValues()
-    // and now you can save m to database
-} else {
-    // if not valid
-    // we can get the valid errors
-    errs := f.Errors()
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;checkout &lt;a href='https://github.com/QLeelulu/goku/blob/master/form/form_test.go'&gt;form_test.go&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id='database'&gt;DataBase&lt;/h2&gt;
-
-&lt;p&gt;simple database api.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;db, err := OpenMysql(&amp;quot;mymysql&amp;quot;, &amp;quot;tcp:localhost:3306*test_db/lulu/123456&amp;quot;)
-
-// you can use all the api in golang&amp;#39;s database/sql
-_, err = db.Query(&amp;quot;select 1&amp;quot;)
-
-// or you can use some simple api provide by goku
-r, err := db.Select(&amp;quot;test_blog&amp;quot;, SqlQueryInfo{
-    Fields: &amp;quot;id, title, content&amp;quot;,
-    Where:  &amp;quot;id&amp;gt;?&amp;quot;,
-    Params: []interface{}{0},
-    Limit:  10,
-    Offset: 0,
-    Group:  &amp;quot;&amp;quot;,
-    Order:  &amp;quot;id desc&amp;quot;,
-})
-
-// insert map
-vals := map[string]interface{}{
-    &amp;quot;title&amp;quot;: &amp;quot;golang&amp;quot;,
-    &amp;quot;content&amp;quot;: &amp;quot;Go is an open source programming environment that &amp;quot; +
-        &amp;quot;makes it easy to build simple, reliable, and efficient software.&amp;quot;,
-    &amp;quot;create_at&amp;quot;: time.Now(),
-}
-r, err := db.Insert(&amp;quot;test_blog&amp;quot;, vals)
-
-// insert struct
-blog := TestBlog{
-    Title:    &amp;quot;goku&amp;quot;,
-    Content:  &amp;quot;a mvc framework&amp;quot;,
-    CreateAt: time.Now(),
-}
-r, err = db.InsertStruct(&amp;amp;blog)
-
-// get struct
-blog := &amp;amp;TestBlog{}
-err = db.GetStruct(blog, &amp;quot;id=?&amp;quot;, 3)
-
-// get struct list
-qi := SqlQueryInfo{}
-var blogs []Blog
-err := db.GetStructs(&amp;amp;blogs, qi)
-
-// update by map
-vals := map[string]interface{}{
-    &amp;quot;title&amp;quot;: &amp;quot;js&amp;quot;,
-}
-r, err2 := db.Update(&amp;quot;test_blog&amp;quot;, vals, &amp;quot;id=?&amp;quot;, blog.Id)
-
-// delete
-r, err := db.Delete(&amp;quot;test_blog&amp;quot;, &amp;quot;id=?&amp;quot;, 8)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;checkout &lt;a href='https://github.com/QLeelulu/goku/blob/master/db_test.go'&gt;db_test.go&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id='database_sql_debug'&gt;DataBase SQL Debug&lt;/h4&gt;
-
-&lt;p&gt;if you want to debug what the sql query is, set db.Debug to &lt;code&gt;true&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;db, err := OpenMysql(&amp;quot;mymysql&amp;quot;, &amp;quot;tcp:localhost:3306*test_db/username/pwd&amp;quot;)
-db.Debug = true&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;after you set db.Debug to true, while you run a db command, it will print the sql query to the log, juse like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;2012/07/30 20:58:03 SQL: UPDATE `user` SET friends=friends+? WHERE id=?;
-                    PARAMS: [[1 2]]&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id='action_filter'&gt;Action Filter&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;type TestActionFilter struct {
-}
-
-func (tf *TestActionFilter) OnActionExecuting(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
-    ctx.WriteString(&amp;quot;OnActionExecuting - TestActionFilter \n&amp;quot;)
-    return
-}
-func (tf *TestActionFilter) OnActionExecuted(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
-    ctx.WriteString(&amp;quot;OnActionExecuted - TestActionFilter \n&amp;quot;)
-    return
-}
-
-func (tf *TestActionFilter) OnResultExecuting(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
-    ctx.WriteString(&amp;quot;    OnResultExecuting - TestActionFilter \n&amp;quot;)
-    return
-}
-
-func (tf *TestActionFilter) OnResultExecuted(ctx *goku.HttpContext) (ar goku.ActionResulter, err error) {
-    ctx.WriteString(&amp;quot;    OnResultExecuted - TestActionFilter \n&amp;quot;)
-    return
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Order of the filters execution is:&lt;/p&gt;
-
-&lt;p&gt;1. OnActionExecuting 2. -&amp;gt; Execute Action -&amp;gt; return ActionResulter 3. OnActionExecuted 4. OnResultExecuting 5. -&amp;gt; ActionResulter.ExecuteResult 6. OnResultExecuted&lt;/p&gt;
-
-&lt;h2 id='middleware'&gt;Middleware&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;type TestMiddleware struct {
-}
-
-func (tmd *TestMiddleware) OnBeginRequest(ctx *goku.HttpContext) (goku.ActionResulter, error) {
-    ctx.WriteString(&amp;quot;OnBeginRequest - TestMiddleware \n&amp;quot;)
-    return nil, nil
-}
-
-func (tmd *TestMiddleware) OnBeginMvcHandle(ctx *goku.HttpContext) (goku.ActionResulter, error) {
-    ctx.WriteString(&amp;quot;  OnBeginMvcHandle - TestMiddleware \n&amp;quot;)
-    return nil, nil
-}
-func (tmd *TestMiddleware) OnEndMvcHandle(ctx *goku.HttpContext) (goku.ActionResulter, error) {
-    ctx.WriteString(&amp;quot;  OnEndMvcHandle - TestMiddleware \n&amp;quot;)
-    return nil, nil
-}
-
-func (tmd *TestMiddleware) OnEndRequest(ctx *goku.HttpContext) (goku.ActionResulter, error) {
-    ctx.WriteString(&amp;quot;OnEndRequest - TestMiddleware \n&amp;quot;)
-    return nil, nil
-}&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Order of the middleware event execution is:&lt;/p&gt;
-
-&lt;p&gt;1. &lt;code&gt;OnBeginRequest&lt;/code&gt; 2. &lt;code&gt;OnBeginMvcHandle&lt;/code&gt;(if not the static file request) 3. =&amp;gt; run controller action (if not the static file request) 4. &lt;code&gt;OnEndMvcHandle&lt;/code&gt;(if not the static file request) 5. &lt;code&gt;OnEndRequest&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id='log'&gt;Log&lt;/h2&gt;
-
-&lt;p&gt;To use logger in goku, just:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;goku.Logger().Logln(&amp;quot;i&amp;quot;, &amp;quot;am&amp;quot;, &amp;quot;log&amp;quot;)
-goku.Logger().Errorln(&amp;quot;oh&amp;quot;, &amp;quot;no!&amp;quot;, &amp;quot;Server Down!&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;this will log like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;2012/07/14 20:07:46 i am log
-2012/07/14 20:07:46 [ERROR] oh no! Server Down!&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;maybe you need run &lt;code&gt;todo.sql&lt;/code&gt; first.&lt;/p&gt;
 
 &lt;h2 id='authors'&gt;Authors&lt;/h2&gt;
 
