@@ -1,46 +1,120 @@
 ---
-layout: page
-title: Hello World!
-tagline: Supporting tagline
+layout: post
+category : doc
+tags : [intro, beginner, tutorial]
 ---
 {% include JB/setup %}
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+#About
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.    
+goku is simple and powerful.    
+Base Features:  
++ mvc (Lightweight model) 
++ route 
++ multi template engine and layout 
++ simple database api 
++ form validation 
++ filter for controller or action 
++ middleware
++ and more
 
-## Update Author Attributes
+## [doc & api](http://go.pkgdoc.org/github.com/QLeelulu/goku)
 
-In `_config.yml` remember to specify your own data:
+> now goku is in the __`preview version, anything can be change`__.
+
+##Installation
+
+To install goku, simply run `go get github.com/QLeelulu/goku`.     
+To use it in a program, use `import "github.com/QLeelulu/goku"`
+
+## Example
+
+Here is a simple example, or you can check [Into](/doc/into) for more detail.
+
+{% highlight go %}
+package main
+
+import (
+    "github.com/QLeelulu/goku"
+    "log"
+    "path"
+    "runtime"
+    "time"
+)
+
+// routes
+var routes []*goku.Route = []*goku.Route{
+    // static file route
+    &goku.Route{
+        Name:     "static",
+        IsStatic: true,
+        Pattern:  "/static/(.*)",
+    },
+    // default controller and action route
+    &goku.Route{
+        Name:       "default",
+        Pattern:    "/{controller}/{action}/{id}",
+        Default:    map[string]string{"controller": "home", "action": "index", "id": "0"},
+        Constraint: map[string]string{"id": "\\d+"},
+    },
+}
+
+// server config
+var config *goku.ServerConfig = &goku.ServerConfig{
+    Addr:           ":8888",
+    ReadTimeout:    10 * time.Second,
+    WriteTimeout:   10 * time.Second,
+    MaxHeaderBytes: 1 << 20,
+    //RootDir:        os.Getwd(),
+    StaticPath: "static",
+    ViewPath:   "views",
+    Debug:      true,
+}
+
+func init() {
+    /**
+     * project root dir
+     */
+    _, filename, _, _ := runtime.Caller(1)
+    config.RootDir = path.Dir(filename)
+
+    /**
+     * Controller & Action
+     */
+    goku.Controller("home").
+        Get("index", func(ctx *goku.HttpContext) goku.ActionResulter {
+        return ctx.Html("Hello World")
+    })
+
+}
+
+func main() {
+    rt := &goku.RouteTable{Routes: routes}
+    s := goku.CreateServer(rt, nil, config)
+    goku.Logger().Logln("Server start on", s.Addr)
+    log.Fatal(s.ListenAndServe())
+}
+{% endhighlight %}
+
+## Examples
+
+You can found some examples in the `github.com/QLeelulu/goku/examples` folder.    
+To run example "todo" app, just:
     
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
-      twitter : username
+{% highlight go %}
+$ cd $GOROOT/src/pkg/github.com/QLeelulu/goku/examples/todo/
+$ go run app.go
+{% endhighlight %}
 
-The theme should reference these variables whenever needed.
-    
-## Sample Posts
+maybe you need run `todo.sql` first.
 
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
+## Authors
 
-    $ rm -rf _posts/core-samples
-
-Here's a sample "posts list".
-
-<ul class="posts">
-  {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
-
-## To-Do
-
-This theme is still unfinished. If you'd like to be added as a contributor, [please fork](http://github.com/plusjade/jekyll-bootstrap)!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.
+ - [@QLeelulu](http://weibo.com/qleelulu)
+ - waiting for you
 
 
+## License
+
+View the [LICENSE](https://github.com/senchalabs/connect/blob/master/LICENSE) file. 

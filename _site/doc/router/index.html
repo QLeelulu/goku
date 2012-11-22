@@ -1,0 +1,125 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>
+      
+        Router - 
+      
+      Goku
+    </title>
+    <meta name="description" content="">
+    <meta name="author" content="QLeelulu">
+
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="outer">
+    <div class="sidebar">
+      <ul class="posts">
+        <li><a href="/">About</a></li>
+        <li><a href="/doc/into">Into</a></li>
+        <li><a href="/doc/router">Router</a></li>
+        <li><a href="/doc/controller--action">Controller & Action</a></li>
+        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
+        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/form-validation">Form Validation</a></li>
+        <li><a href="/doc/filter">Filter</a></li>
+        <li><a href="/doc/middleware">Middleware</a></li>
+        <li><a href="/doc/db">DB</a></li>
+        <li><a href="/doc/httpcontext">HttpContext</a></li>
+        <li><a href="/doc/log">Log</a></li>
+      </ul>
+    </div>
+
+    <div class="wrapper">
+      <header>
+        <h1><a class="brand" href="/">Goku</a></h1>
+        <p>Golang Web Mvc Framework</p>
+        <p class="view"><a href="http://github.com/qleelulu/goku">View the Project on GitHub <small>qleelulu/goku</small></a></p>
+        <ul>
+          <li><a href="https://github.com/qleelulu/goku/zipballmus/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/qleelulu/goku/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="http://github.com/qleelulu/goku">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        
+  <h1>
+    Router 
+    
+  </h1>
+
+<p>Routes map incoming requests for URLs to a Controller and Action. They also are used to construct an URL to a Controller/Action.</p>
+
+<h2 id='map_route'>Map Route</h2>
+
+<p>You can map route by this two ways:</p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+        <span class='n'>IsStatic</span><span class='p'>:</span> <span class='n'>true</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/public/(.*)&quot;</span><span class='p'>,</span>
+    <span class='p'>},</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;edit&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;/{controller}/{id}/{action}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span>    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;edit&quot;</span><span class='p'>},</span>
+        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>},</span>
+    <span class='p'>},</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;todo&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span>
+    <span class='p'>},</span>
+<span class='p'>}</span>
+<span class='c1'>// create server with the rules</span>
+<span class='n'>rt</span> <span class='p'>:=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>{</span><span class='n'>Routes</span><span class='p'>:</span> <span class='n'>todo</span><span class='p'>.</span><span class='n'>Routes</span><span class='p'>}</span>
+<span class='n'>s</span> <span class='p'>:=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>CreateServer</span><span class='p'>(</span><span class='n'>rt</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>)</span>
+<span class='n'>log</span><span class='p'>.</span><span class='n'>Fatal</span><span class='p'>(</span><span class='n'>s</span><span class='p'>.</span><span class='n'>ListenAndServe</span><span class='p'>())</span>
+</code></pre>
+</div>
+<p>or</p>
+<div class='highlight'><pre><code class='go'><span class='n'>rt</span> <span class='p'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>)</span>
+<span class='n'>rt</span><span class='p'>.</span><span class='n'>Static</span><span class='p'>(</span><span class='s'>&quot;staticFile&quot;</span><span class='p'>,</span> <span class='s'>&quot;/static/(.*)&quot;</span><span class='p'>)</span>
+<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+    <span class='s'>&quot;blog-page&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
+    <span class='s'>&quot;/blog/p/{page}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
+    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;blog&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;page&quot;</span><span class='p'>,</span> <span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;0&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>}</span> <span class='c1'>// constraint</span>
+<span class='p'>)</span>
+<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+    <span class='s'>&quot;default&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
+    <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
+    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+<span class='p'>)</span>
+</code></pre>
+</div>
+<h2 id='todo'>TODO</h2>
+
+<ul>
+<li>Build url by route</li>
+</ul>
+
+
+      </section>
+    </div>
+
+  </div>
+
+    <footer>
+      <p>Project maintained by <a href="https://www.github.com/QLeelulu">QLeelulu</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <script src="/assets/themes/modernist/javascripts/scale.fix.js"></script>
+  </body>
+</html>

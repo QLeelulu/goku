@@ -10,8 +10,8 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Goku - Golang Web Mvc Framework
-tagline: Site Tagline
+title : Goku
+tagline: Golang Web Mvc Framework
 author :
   name : QLeelulu
   email : qleelulu@gmail.com

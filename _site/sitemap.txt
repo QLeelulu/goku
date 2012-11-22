@@ -3,10 +3,21 @@ http://qleelulu.github.com/goku/archive.html
 http://qleelulu.github.com/goku/atom.xml
 http://qleelulu.github.com/goku/categories.html
 http://qleelulu.github.com/goku/index.html
+http://qleelulu.github.com/goku/index2.html
 http://qleelulu.github.com/goku/pages.html
 http://qleelulu.github.com/goku/sitemap.txt
 http://qleelulu.github.com/goku/tags.html
 
+http://qleelulu.github.com/goku/doc/viewengine--template
+http://qleelulu.github.com/goku/doc/view--viewdata
+http://qleelulu.github.com/goku/doc/router
+http://qleelulu.github.com/goku/doc/middleware
+http://qleelulu.github.com/goku/doc/log
+http://qleelulu.github.com/goku/doc/httpcontext
+http://qleelulu.github.com/goku/doc/form-validation
+http://qleelulu.github.com/goku/doc/filter
+http://qleelulu.github.com/goku/doc/db
+http://qleelulu.github.com/goku/doc/controller--action
 http://qleelulu.github.com/goku/doc/into
 http://qleelulu.github.com/goku/doc/about
 http://qleelulu.github.com/goku/lessons/jekyll-introduction

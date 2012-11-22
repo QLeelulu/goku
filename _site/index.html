@@ -1,208 +1,192 @@
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>
       
-        Hello World! - 
-      
-      Goku - Golang Web Mvc Framework
+      Goku
     </title>
     
     <meta name="author" content="QLeelulu">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-
-    <script src="/assets/themes/hooligan/js/jquery.min.js"></script>
-    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
-
-    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">    
-    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css" />
-    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
-    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">    
-    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
-
-    
-    <!-- fav and touch icons -->
-  <!-- Update these with your own images
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-  -->
   </head>
-
   <body>
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>      
 
-
-          <a class="brand" href="/">Goku - Golang Web Mvc Framework</a>
-
-
-          <div class="nav-collapse">
-            <ul class="nav">
-              
-              
-              
-
-
-  
-    
-      
-      	
-      	<li><a href="/archive.html">Archive</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/categories.html">Categories</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages.html">Pages</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/tags.html">Tags</a></li>
-      	
-      
-    
-  
-
-
-
-            </ul>
-            <ul class="nav pull-right social visible-desktop">
-              <li class="divider-vertical"></li>
-              
-                <li>
-                  <a href="https://www.github.com/QLeelulu" class="zocial github icon" target="_blank">
-                    <span class="hidden-desktop">Github</a>
-                  </a>
-                </li>
-              
-                  
-              
-                <li>
-                  <a href="http://www.twitter.com/QLeelulu" class="zocial twitter icon" target="_blank">
-                  <span class="hidden-desktop">Twitter</a>
-                  </a>
-                </li>
-                                        
-                         
-                                  
-              
-                <li>
-                  <a href="http://feeds.feedburner.com/feedname" class="zocial rss icon" target="_blank">
-                    <span class="hidden-desktop">FeedBurner</a>
-                  </a>
-                </li>
-              
-            </ul>
-          </div>
-        </div>
-      </div>
+  <div class="outer">
+    <div class="sidebar">
+      <ul class="posts">
+        <li><a href="/">About</a></li>
+        <li><a href="/doc/into">Into</a></li>
+        <li><a href="/doc/router">Router</a></li>
+        <li><a href="/doc/controller--action">Controller & Action</a></li>
+        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
+        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/form-validation">Form Validation</a></li>
+        <li><a href="/doc/filter">Filter</a></li>
+        <li><a href="/doc/middleware">Middleware</a></li>
+        <li><a href="/doc/db">DB</a></li>
+        <li><a href="/doc/httpcontext">HttpContext</a></li>
+        <li><a href="/doc/log">Log</a></li>
+      </ul>
     </div>
 
-    <div class="container">
-      <div class="content">
+    <div class="wrapper">
+      <header>
+        <h1><a class="brand" href="/">Goku</a></h1>
+        <p>Golang Web Mvc Framework</p>
+        <p class="view"><a href="http://github.com/qleelulu/goku">View the Project on GitHub <small>qleelulu/goku</small></a></p>
+        <ul>
+          <li><a href="https://github.com/qleelulu/goku/zipballmus/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/qleelulu/goku/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="http://github.com/qleelulu/goku">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         
-<div class="page-header-wrapper">
-	<div class="page-header">
-  		<h1>Hello World!  <small>Supporting tagline</small></h1>
-  	</div>
-</div>
-
-<div class="row">
-  <div class="span12">
-    <p>Read <a href='http://jekyllbootstrap.com/usage/jekyll-quick-start.html'>Jekyll Quick Start</a></p>
-
-<p>Complete usage and documentation available at: <a href='http://jekyllbootstrap.com'>Jekyll Bootstrap</a></p>
-
-<h2 id='update_author_attributes'>Update Author Attributes</h2>
-
-<p>In <code>_config.yml</code> remember to specify your own data:</p>
-
-<pre><code>title : My Blog =)
-
-author :
-  name : Name Lastname
-  email : blah@email.test
-  github : username
-  twitter : username</code></pre>
-
-<p>The theme should reference these variables whenever needed.</p>
-
-<h2 id='sample_posts'>Sample Posts</h2>
-
-<p>This blog contains sample posts which help stage pages and blog data. When you don&#8217;t need the samples anymore just delete the <code>_posts/core-samples</code> folder.</p>
-
-<pre><code>$ rm -rf _posts/core-samples</code></pre>
-
-<p>Here&#8217;s a sample &#8220;posts list&#8221;.</p>
-<ul class='posts'>
-  
-    <li><span>08 Nov 2012</span> &raquo; <a href='/doc/into'>Into</a></li>
-  
-    <li><span>08 Nov 2012</span> &raquo; <a href='/doc/about'>About</a></li>
-  
-    <li><span>29 Dec 2011</span> &raquo; <a href='/lessons/jekyll-introduction'>Jekyll Introduction</a></li>
-  
-</ul>
-<h2 id='todo'>To-Do</h2>
-
-<p>This theme is still unfinished. If you&#8217;d like to be added as a contributor, <a href='http://github.com/plusjade/jekyll-bootstrap'>please fork</a>! We need to clean up the themes, make theme usage guides with theme-specific markup examples.</p>
-  </div>
-</div>
-
-
-      </div>
-
-      <footer>
-        <p>&copy; QLeelulu 2012 
-          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
-          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
-        </p>
-      </footer>
-    </div> <!-- /container -->
+  <h1>
+     
     
+  </h1>
+
+<h1 id='about'>About</h1>
+
+<p>goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC. <br />goku is simple and powerful. <br />Base Features:</p>
+
+<ul>
+<li>mvc (Lightweight model)</li>
+
+<li>route</li>
+
+<li>multi template engine and layout</li>
+
+<li>simple database api</li>
+
+<li>form validation</li>
+
+<li>filter for controller or action</li>
+
+<li>middleware</li>
+
+<li>and more</li>
+</ul>
+
+<h2 id='doc__api'><a href='http://go.pkgdoc.org/github.com/QLeelulu/goku'>doc &amp; api</a></h2>
+
+<blockquote>
+<p>now goku is in the <strong><code>preview version, anything can be change</code></strong>.</p>
+</blockquote>
+
+<h2 id='installation'>Installation</h2>
+
+<p>To install goku, simply run <code>go get github.com/QLeelulu/goku</code>. <br />To use it in a program, use <code>import &quot;github.com/QLeelulu/goku&quot;</code></p>
+
+<h2 id='example'>Example</h2>
+
+<p>Here is a simple example, or you can check <a href='/doc/into'>Into</a> for more detail.</p>
+<div class='highlight'><pre><code class='go'><span class='k'>package</span> <span class='n'>main</span>
+
+<span class='k'>import</span> <span class='p'>(</span>
+    <span class='s'>&quot;github.com/QLeelulu/goku&quot;</span>
+    <span class='s'>&quot;log&quot;</span>
+    <span class='s'>&quot;path&quot;</span>
+    <span class='s'>&quot;runtime&quot;</span>
+    <span class='s'>&quot;time&quot;</span>
+<span class='p'>)</span>
+
+<span class='c1'>// routes</span>
+<span class='k'>var</span> <span class='n'>routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='c1'>// static file route</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+        <span class='n'>IsStatic</span><span class='p'>:</span> <span class='n'>true</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/static/(.*)&quot;</span><span class='p'>,</span>
+    <span class='p'>},</span>
+    <span class='c1'>// default controller and action route</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;/{controller}/{action}/{id}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span>    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;0&quot;</span><span class='p'>},</span>
+        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>},</span>
+    <span class='p'>},</span>
+<span class='p'>}</span>
+
+<span class='c1'>// server config</span>
+<span class='k'>var</span> <span class='n'>config</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>ServerConfig</span> <span class='p'>=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>ServerConfig</span><span class='p'>{</span>
+    <span class='n'>Addr</span><span class='p'>:</span>           <span class='s'>&quot;:8888&quot;</span><span class='p'>,</span>
+    <span class='n'>ReadTimeout</span><span class='p'>:</span>    <span class='mi'>10</span> <span class='p'>*</span> <span class='n'>time</span><span class='p'>.</span><span class='n'>Second</span><span class='p'>,</span>
+    <span class='n'>WriteTimeout</span><span class='p'>:</span>   <span class='mi'>10</span> <span class='p'>*</span> <span class='n'>time</span><span class='p'>.</span><span class='n'>Second</span><span class='p'>,</span>
+    <span class='n'>MaxHeaderBytes</span><span class='p'>:</span> <span class='mi'>1</span> <span class='p'>&lt;&lt;</span> <span class='mi'>20</span><span class='p'>,</span>
+    <span class='c1'>//RootDir:        os.Getwd(),</span>
+    <span class='n'>StaticPath</span><span class='p'>:</span> <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+    <span class='n'>ViewPath</span><span class='p'>:</span>   <span class='s'>&quot;views&quot;</span><span class='p'>,</span>
+    <span class='n'>Debug</span><span class='p'>:</span>      <span class='n'>true</span><span class='p'>,</span>
+<span class='p'>}</span>
+
+<span class='k'>func</span> <span class='n'>init</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='cm'>/**</span>
+<span class='cm'>     * project root dir</span>
+<span class='cm'>     */</span>
+    <span class='n'>_</span><span class='p'>,</span> <span class='n'>filename</span><span class='p'>,</span> <span class='n'>_</span><span class='p'>,</span> <span class='n'>_</span> <span class='p'>:=</span> <span class='n'>runtime</span><span class='p'>.</span><span class='n'>Caller</span><span class='p'>(</span><span class='mi'>1</span><span class='p'>)</span>
+    <span class='n'>config</span><span class='p'>.</span><span class='n'>RootDir</span> <span class='p'>=</span> <span class='n'>path</span><span class='p'>.</span><span class='n'>Dir</span><span class='p'>(</span><span class='n'>filename</span><span class='p'>)</span>
+
+    <span class='cm'>/**</span>
+<span class='cm'>     * Controller &amp; Action</span>
+<span class='cm'>     */</span>
+    <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>).</span>
+        <span class='n'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>Html</span><span class='p'>(</span><span class='s'>&quot;Hello World&quot;</span><span class='p'>)</span>
+    <span class='p'>})</span>
+
+<span class='p'>}</span>
+
+<span class='k'>func</span> <span class='n'>main</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='n'>rt</span> <span class='p'>:=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>{</span><span class='n'>Routes</span><span class='p'>:</span> <span class='n'>routes</span><span class='p'>}</span>
+    <span class='n'>s</span> <span class='p'>:=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>CreateServer</span><span class='p'>(</span><span class='n'>rt</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>,</span> <span class='n'>config</span><span class='p'>)</span>
+    <span class='n'>goku</span><span class='p'>.</span><span class='n'>Logger</span><span class='p'>().</span><span class='n'>Logln</span><span class='p'>(</span><span class='s'>&quot;Server start on&quot;</span><span class='p'>,</span> <span class='n'>s</span><span class='p'>.</span><span class='n'>Addr</span><span class='p'>)</span>
+    <span class='n'>log</span><span class='p'>.</span><span class='n'>Fatal</span><span class='p'>(</span><span class='n'>s</span><span class='p'>.</span><span class='n'>ListenAndServe</span><span class='p'>())</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<h2 id='examples'>Examples</h2>
+
+<p>You can found some examples in the <code>github.com/QLeelulu/goku/examples</code> folder. <br />To run example &#8220;todo&#8221; app, just:</p>
+<div class='highlight'><pre><code class='go'><span class='err'>$</span> <span class='n'>cd</span> <span class='err'>$</span><span class='n'>GOROOT</span><span class='p'>/</span><span class='n'>src</span><span class='p'>/</span><span class='n'>pkg</span><span class='p'>/</span><span class='n'>github</span><span class='p'>.</span><span class='n'>com</span><span class='p'>/</span><span class='n'>QLeelulu</span><span class='p'>/</span><span class='n'>goku</span><span class='p'>/</span><span class='n'>examples</span><span class='p'>/</span><span class='n'>todo</span><span class='p'>/</span>
+<span class='err'>$</span> <span class='k'>go</span> <span class='n'>run</span> <span class='n'>app</span><span class='p'>.</span><span class='k'>go</span>
+</code></pre>
+</div>
+<p>maybe you need run <code>todo.sql</code> first.</p>
+
+<h2 id='authors'>Authors</h2>
+
+<ul>
+<li><a href='http://weibo.com/qleelulu'>@QLeelulu</a></li>
+
+<li>waiting for you</li>
+</ul>
+
+<h2 id='license'>License</h2>
+
+<p>View the <a href='https://github.com/senchalabs/connect/blob/master/LICENSE'>LICENSE</a> file.</p>
+
+
+      </section>
+    </div>
+
+  </div>
+
+    <footer>
+      <p>Project maintained by <a href="https://www.github.com/QLeelulu">QLeelulu</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <script src="/assets/themes/modernist/javascripts/scale.fix.js"></script>
   </body>
 </html>
-

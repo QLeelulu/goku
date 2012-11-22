@@ -1,163 +1,71 @@
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>
       
         Jekyll Introduction - 
       
-      Goku - Golang Web Mvc Framework
+      Goku
     </title>
     
     <meta name="author" content="QLeelulu">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-
-    <script src="/assets/themes/hooligan/js/jquery.min.js"></script>
-    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
-
-    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">    
-    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css" />
-    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
-    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">    
-    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
-
-    
-    <!-- fav and touch icons -->
-  <!-- Update these with your own images
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-  -->
   </head>
-
   <body>
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>      
 
-
-          <a class="brand" href="/">Goku - Golang Web Mvc Framework</a>
-
-
-          <div class="nav-collapse">
-            <ul class="nav">
-              
-              
-              
-
-
-  
-    
-      
-      	
-      	<li><a href="/archive.html">Archive</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/categories.html">Categories</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages.html">Pages</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/tags.html">Tags</a></li>
-      	
-      
-    
-  
-
-
-
-            </ul>
-            <ul class="nav pull-right social visible-desktop">
-              <li class="divider-vertical"></li>
-              
-                <li>
-                  <a href="https://www.github.com/QLeelulu" class="zocial github icon" target="_blank">
-                    <span class="hidden-desktop">Github</a>
-                  </a>
-                </li>
-              
-                  
-              
-                <li>
-                  <a href="http://www.twitter.com/QLeelulu" class="zocial twitter icon" target="_blank">
-                  <span class="hidden-desktop">Twitter</a>
-                  </a>
-                </li>
-                                        
-                         
-                                  
-              
-                <li>
-                  <a href="http://feeds.feedburner.com/feedname" class="zocial rss icon" target="_blank">
-                    <span class="hidden-desktop">FeedBurner</a>
-                  </a>
-                </li>
-              
-            </ul>
-          </div>
-        </div>
-      </div>
+  <div class="outer">
+    <div class="sidebar">
+      <ul class="posts">
+        <li><a href="/">About</a></li>
+        <li><a href="/doc/into">Into</a></li>
+        <li><a href="/doc/router">Router</a></li>
+        <li><a href="/doc/controller--action">Controller & Action</a></li>
+        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
+        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/form-validation">Form Validation</a></li>
+        <li><a href="/doc/filter">Filter</a></li>
+        <li><a href="/doc/middleware">Middleware</a></li>
+        <li><a href="/doc/db">DB</a></li>
+        <li><a href="/doc/httpcontext">HttpContext</a></li>
+        <li><a href="/doc/log">Log</a></li>
+      </ul>
     </div>
 
-    <div class="container">
-      <div class="content">
+    <div class="wrapper">
+      <header>
+        <h1><a class="brand" href="/">Goku</a></h1>
+        <p>Golang Web Mvc Framework</p>
+        <p class="view"><a href="http://github.com/qleelulu/goku">View the Project on GitHub <small>qleelulu/goku</small></a></p>
+        <ul>
+          <li><a href="https://github.com/qleelulu/goku/zipballmus/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/qleelulu/goku/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="http://github.com/qleelulu/goku">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         
-<div class="page-header">
   <h1>
     Jekyll Introduction 
     
   </h1>
-</div>
 
-<div class="row">
-  <div class="span8">
-    <p>This Jekyll introduction will outline specifically what Jekyll is and why you would want to use it. Directly following the intro we&#8217;ll learn exactly <em>how</em> Jekyll does what it does.</p>
+<p>This Jekyll introduction will outline specifically what Jekyll is and why you would want to use it. Directly following the intro we&#8217;ll learn exactly <em>how</em> Jekyll does what it does.</p>
 
 <h2 id='overview'>Overview</h2>
 
 <h3 id='what_is_jekyll'>What is Jekyll?</h3>
+
+<p>主题：：： http://orderedlist.github.com/modernist/</p>
 
 <p>Jekyll is a parsing engine bundled as a ruby gem used to build static websites from dynamic components such as templates, partials, liquid code, markdown, etc. Jekyll is known as &#8220;a simple, blog aware, static site generator&#8221;.</p>
 
@@ -471,92 +379,17 @@ tags : [how-to, jekyll]
 <h2 id='next_steps'>Next Steps</h2>
 
 <p>Please take a look at <a href='' /> or jump right into <a href=''>Usage</a> if you&#8217;d like.</p>
-    <hr>
-    <div class="pagination btn-group">
-      
-        <a class="btn disabled prev">&larr; Previous</a>
-      
-        <a class="btn" href="/archive.html">Archive</a>
-      
-        <a class="btn next" href="/doc/about" title="About">Next &rarr;</a>
-      
+
+
+      </section>
     </div>
-    <hr>
-    
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'goku-mvc'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
 
   </div>
-  
-  <div class="span4">
-    <section>
-      <h4>Published</h4>
-      <div class="date"><span>29 December 2011</span></div>
-    </section>
-    
-      <section>
-        <h4>Category</h4>
-        <span class="category">
-          lessons
-        </span>
-      </section>
-         
-    
-      <section>
-        <h4>Tags</h4>
-        <ul class="tag_box">
-          
-          
 
-
-  
-     
-    	<li><a href="/tags.html#intro-ref">intro <span>3</span></a></li>
-     
-    	<li><a href="/tags.html#beginner-ref">beginner <span>3</span></a></li>
-     
-    	<li><a href="/tags.html#jekyll-ref">jekyll <span>1</span></a></li>
-     
-    	<li><a href="/tags.html#tutorial-ref">tutorial <span>3</span></a></li>
-    
-  
-
-
-
-        </ul>
-      </section>
-             
-  </div>
-</div>
-
-
-      </div>
-
-      <footer>
-        <p>&copy; QLeelulu 2012 
-          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
-          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
-        </p>
-      </footer>
-    </div> <!-- /container -->
-    
+    <footer>
+      <p>Project maintained by <a href="https://www.github.com/QLeelulu">QLeelulu</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <script src="/assets/themes/modernist/javascripts/scale.fix.js"></script>
   </body>
 </html>
-
