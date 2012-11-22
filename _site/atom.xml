@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-22T23:36:59+08:00</updated>
+ <updated>2012-11-23T00:33:00+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -76,6 +76,49 @@
     &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// pattern&lt;/span&gt;
     &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
 &lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id='url_patterns'&gt;URL Patterns&lt;/h2&gt;
+
+&lt;p&gt;A URL pattern can contain literal values and variable placeholders (referred to as URL parameters). The literals and placeholders are located in segments of the URL which are delimited by the slash (/) character.&lt;/p&gt;
+
+&lt;p&gt;When a request is made, the URL is parsed into segments and placeholders, and the variable values are provided to the request handler. This process is similar to the way the data in query strings is parsed and passed to the request handler. In both cases variable information is included in the URL and passed to the handler in the form of key-value pairs. For query strings both the keys and the values are in the URL. For routes, the keys are the placeholder names defined in the URL pattern, and only the values are in the URL.&lt;/p&gt;
+
+&lt;p&gt;In a URL pattern, you define placeholders by enclosing them in braces ( { and } ). You can define more than one placeholder in a segment, but they must be separated by a literal value. For example, &lt;code&gt;{language}-{country}/{action}&lt;/code&gt; is a valid route pattern. However, &lt;code&gt;{language}{country}/{action}&lt;/code&gt; is not a valid pattern, because there is no literal value or delimiter between the placeholders. Therefore, routing cannot determine where to separate the value for the language placeholder from the value for the country placeholder.&lt;/p&gt;
+
+&lt;p&gt;The following table shows valid route patterns and examples of URL requests that match the patterns.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;em&gt;Route definition&lt;/em&gt;&lt;/th&gt;&lt;th&gt;&lt;em&gt;Example of matching URL&lt;/em&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{controller}/{action}/{id}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/Products/show/beverages&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{table}/Details.aspx&lt;/td&gt;&lt;td style='text-align: left;'&gt;/Products/Details.aspx&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;blog/{action}/{entry}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/blog/show/123&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{reporttype}/{year}/{month}/{day}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/sales/2008/1/5&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{locale}/{action}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/US/show&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{language}-{country}/{action}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/en-US/show&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;h2 id='setting_default_values_for_url_parameters'&gt;Setting Default Values for URL Parameters&lt;/h2&gt;
+
+&lt;p&gt;When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a dictionary object to the &lt;code&gt;Defaults&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Category/{action}/{categoryName}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;category&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;show&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;food&amp;quot;&lt;/span&gt;
+        &lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;When goku routing handles a URL request, the route definition shown in the example (with default values of food for categoryName and show for action) produces the results that are listed in the following table.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;th&gt;Parameter values&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;show&amp;#8221; (default value) &lt;br /&gt; categoryName = &amp;#8220;food&amp;#8221; (default value)&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category/add&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;add&amp;#8221; &lt;br /&gt; categoryName = &amp;#8220;food&amp;#8221; (default value)&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category/add/beverages&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;add&amp;#8221; &lt;br /&gt; categoryName= &amp;#8220;beverages&amp;#8221;&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;h2 id='route_data'&gt;Route Data&lt;/h2&gt;
+
+&lt;p&gt;For the Pattern &lt;code&gt;Category/{action}/{categoryName}&lt;/code&gt;, and a URL &lt;code&gt;/Category/add/beverages&lt;/code&gt;, you can get the &lt;code&gt;categoryName&lt;/code&gt; parameter in the controller action by this way:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// ctx is HttpContext&lt;/span&gt;
+&lt;span class='n'&gt;categoryName&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteData&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Params&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+&lt;span class='c1'&gt;// categoryName == beverages&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;h2 id='todo'&gt;TODO&lt;/h2&gt;

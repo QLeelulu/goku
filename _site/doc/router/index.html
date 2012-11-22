@@ -104,6 +104,49 @@
 <span class='p'>)</span>
 </code></pre>
 </div>
+<h2 id='url_patterns'>URL Patterns</h2>
+
+<p>A URL pattern can contain literal values and variable placeholders (referred to as URL parameters). The literals and placeholders are located in segments of the URL which are delimited by the slash (/) character.</p>
+
+<p>When a request is made, the URL is parsed into segments and placeholders, and the variable values are provided to the request handler. This process is similar to the way the data in query strings is parsed and passed to the request handler. In both cases variable information is included in the URL and passed to the handler in the form of key-value pairs. For query strings both the keys and the values are in the URL. For routes, the keys are the placeholder names defined in the URL pattern, and only the values are in the URL.</p>
+
+<p>In a URL pattern, you define placeholders by enclosing them in braces ( { and } ). You can define more than one placeholder in a segment, but they must be separated by a literal value. For example, <code>{language}-{country}/{action}</code> is a valid route pattern. However, <code>{language}{country}/{action}</code> is not a valid pattern, because there is no literal value or delimiter between the placeholders. Therefore, routing cannot determine where to separate the value for the language placeholder from the value for the country placeholder.</p>
+
+<p>The following table shows valid route patterns and examples of URL requests that match the patterns.</p>
+<table><thead><tr><th><em>Route definition</em></th><th><em>Example of matching URL</em></th></tr></thead><tbody><tr><td style='text-align: left;'>{controller}/{action}/{id}</td><td style='text-align: left;'>/Products/show/beverages</td>
+</tr><tr><td style='text-align: left;'>{table}/Details.aspx</td><td style='text-align: left;'>/Products/Details.aspx</td>
+</tr><tr><td style='text-align: left;'>blog/{action}/{entry}</td><td style='text-align: left;'>/blog/show/123</td>
+</tr><tr><td style='text-align: left;'>{reporttype}/{year}/{month}/{day}</td><td style='text-align: left;'>/sales/2008/1/5</td>
+</tr><tr><td style='text-align: left;'>{locale}/{action}</td><td style='text-align: left;'>/US/show</td>
+</tr><tr><td style='text-align: left;'>{language}-{country}/{action}</td><td style='text-align: left;'>/en-US/show</td>
+</tr></tbody></table>
+<h2 id='setting_default_values_for_url_parameters'>Setting Default Values for URL Parameters</h2>
+
+<p>When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a dictionary object to the <code>Defaults</code> property of the <code>Route</code> struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.</p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;Category/{action}/{categoryName}&quot;</span><span class='p'>,</span>
+        <span class='n'>Default</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span>
+            <span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;category&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;show&quot;</span><span class='p'>,</span> <span class='s'>&quot;categoryName&quot;</span><span class='p'>:</span><span class='s'>&quot;food&quot;</span>
+        <span class='p'>},</span>
+    <span class='p'>}</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<p>When goku routing handles a URL request, the route definition shown in the example (with default values of food for categoryName and show for action) produces the results that are listed in the following table.</p>
+<table><thead><tr><th>URL</th><th>Parameter values</th></tr></thead><tbody><tr><td style='text-align: left;'>/Category</td><td style='text-align: left;'>action = &#8220;show&#8221; (default value) <br /> categoryName = &#8220;food&#8221; (default value)</td>
+</tr><tr><td style='text-align: left;'>/Category/add</td><td style='text-align: left;'>action = &#8220;add&#8221; <br /> categoryName = &#8220;food&#8221; (default value)</td>
+</tr><tr><td style='text-align: left;'>/Category/add/beverages</td><td style='text-align: left;'>action = &#8220;add&#8221; <br /> categoryName= &#8220;beverages&#8221;</td>
+</tr></tbody></table>
+<h2 id='route_data'>Route Data</h2>
+
+<p>For the Pattern <code>Category/{action}/{categoryName}</code>, and a URL <code>/Category/add/beverages</code>, you can get the <code>categoryName</code> parameter in the controller action by this way:</p>
+<div class='highlight'><pre><code class='go'><span class='c1'>// ctx is HttpContext</span>
+<span class='n'>categoryName</span> <span class='p'>:=</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>RouteData</span><span class='p'>.</span><span class='n'>Params</span><span class='p'>[</span><span class='s'>&quot;categoryName&quot;</span><span class='p'>]</span>
+<span class='c1'>// categoryName == beverages</span>
+</code></pre>
+</div>
 <h2 id='todo'>TODO</h2>
 
 <ul>
