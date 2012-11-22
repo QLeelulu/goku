@@ -114,7 +114,7 @@
 
 <p>The following table shows valid route patterns and examples of URL requests that match the patterns.</p>
 <table><thead><tr><th><em>Route definition</em></th><th><em>Example of matching URL</em></th></tr></thead><tbody><tr><td style='text-align: left;'>{controller}/{action}/{id}</td><td style='text-align: left;'>/Products/show/beverages</td>
-</tr><tr><td style='text-align: left;'>{table}/Details.aspx</td><td style='text-align: left;'>/Products/Details.aspx</td>
+</tr><tr><td style='text-align: left;'>{table}/Details.html</td><td style='text-align: left;'>/Products/Details.html</td>
 </tr><tr><td style='text-align: left;'>blog/{action}/{entry}</td><td style='text-align: left;'>/blog/show/123</td>
 </tr><tr><td style='text-align: left;'>{reporttype}/{year}/{month}/{day}</td><td style='text-align: left;'>/sales/2008/1/5</td>
 </tr><tr><td style='text-align: left;'>{locale}/{action}</td><td style='text-align: left;'>/US/show</td>
@@ -122,7 +122,7 @@
 </tr></tbody></table>
 <h2 id='setting_default_values_for_url_parameters'>Setting Default Values for URL Parameters</h2>
 
-<p>When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a dictionary object to the <code>Defaults</code> property of the <code>Route</code> struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.</p>
+<p>When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a map to the <code>Defaults</code> property of the <code>Route</code> struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.</p>
 <div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
     <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
         <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
@@ -139,9 +139,44 @@
 </tr><tr><td style='text-align: left;'>/Category/add</td><td style='text-align: left;'>action = &#8220;add&#8221; <br /> categoryName = &#8220;food&#8221; (default value)</td>
 </tr><tr><td style='text-align: left;'>/Category/add/beverages</td><td style='text-align: left;'>action = &#8220;add&#8221; <br /> categoryName= &#8220;beverages&#8221;</td>
 </tr></tbody></table>
+<h2 id='adding_constraints_to_routes'>Adding Constraints to Routes</h2>
+
+<p>In addition to matching a URL request to a route definition by the number of parameters in the URL, you can specify that values in the parameters meet certain constraints. If a URL contains values that are outside the constraints for a route, that route is not used to handle the request. You add constraints to make sure that the URL parameters contain values that will work in your application.</p>
+
+<p>Constraints are defined by using regular expressions. You add constraints for a route by assigning a map to the <code>Constraint</code> property of the <code>Route</code> struct, or add by <code>RouteTable.Map()</code></p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
+        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;post-list&quot;</span><span class='p'>,</span>
+        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;whatever/{locale}/{year}&quot;</span><span class='p'>,</span>
+        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span>
+            <span class='s'>&quot;locale&quot;</span><span class='p'>:</span> <span class='s'>&quot;[a-z]{2}-[a-z]{2}&quot;</span><span class='p'>,</span> <span class='s'>&quot;year&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d{4}&quot;</span>
+        <span class='p'>},</span>
+    <span class='p'>},</span>
+<span class='p'>}</span>
+
+<span class='c1'>// or</span>
+
+<span class='n'>rt</span> <span class='p'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>)</span>
+<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+    <span class='s'>&quot;post-list&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
+    <span class='s'>&quot;whatever/{locale}/{year}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
+    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;post&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;show&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span> <span class='c1'>// constraint</span>
+        <span class='s'>&quot;locale&quot;</span><span class='p'>:</span> <span class='s'>&quot;[a-z]{2}-[a-z]{2}&quot;</span><span class='p'>,</span> <span class='s'>&quot;year&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d{4}&quot;</span>
+    <span class='p'>}</span>
+<span class='p'>)</span>
+</code></pre>
+</div>
+<p>When routing handles a URL request, the route definition shown in the previous example produces the results that are listed in the following table.</p>
+<table><thead><tr><th>URL</th><th>Result</th></tr></thead><tbody><tr><td style='text-align: left;'>/en-us</td><td style='text-align: left;'>No match. <br /> Both locale and year are required.</td>
+</tr><tr><td style='text-align: left;'>/en-us/08</td><td style='text-align: left;'>No match. <br /> The constraint on year requires 4 digits.</td>
+</tr><tr><td style='text-align: left;'>/en-us/2008</td><td style='text-align: left;'>locale = &#8220;en-us&#8221; <br /> year = &#8220;2008&#8221;</td>
+</tr></tbody></table>
+<p>If default value not set, that mean the parameter is required.</p>
+
 <h2 id='route_data'>Route Data</h2>
 
-<p>For the Pattern <code>Category/{action}/{categoryName}</code>, and a URL <code>/Category/add/beverages</code>, you can get the <code>categoryName</code> parameter in the controller action by this way:</p>
+<p>For the Pattern <code>Category/{action}/{categoryName}</code>, and a URL <code>/Category/add/beverages</code>, you can get the <code>categoryName</code> parameter in the controller action by HttpContext:</p>
 <div class='highlight'><pre><code class='go'><span class='c1'>// ctx is HttpContext</span>
 <span class='n'>categoryName</span> <span class='p'>:=</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>RouteData</span><span class='p'>.</span><span class='n'>Params</span><span class='p'>[</span><span class='s'>&quot;categoryName&quot;</span><span class='p'>]</span>
 <span class='c1'>// categoryName == beverages</span>
@@ -150,7 +185,7 @@
 <h2 id='todo'>TODO</h2>
 
 <ul>
-<li>Build url by route</li>
+<li>Construct URLs from Routes</li>
 </ul>
 
 

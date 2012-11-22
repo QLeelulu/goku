@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-23T00:33:00+08:00</updated>
+ <updated>2012-11-23T01:43:04+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -88,7 +88,7 @@
 
 &lt;p&gt;The following table shows valid route patterns and examples of URL requests that match the patterns.&lt;/p&gt;
 &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;em&gt;Route definition&lt;/em&gt;&lt;/th&gt;&lt;th&gt;&lt;em&gt;Example of matching URL&lt;/em&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{controller}/{action}/{id}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/Products/show/beverages&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{table}/Details.aspx&lt;/td&gt;&lt;td style='text-align: left;'&gt;/Products/Details.aspx&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{table}/Details.html&lt;/td&gt;&lt;td style='text-align: left;'&gt;/Products/Details.html&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;blog/{action}/{entry}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/blog/show/123&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{reporttype}/{year}/{month}/{day}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/sales/2008/1/5&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;{locale}/{action}&lt;/td&gt;&lt;td style='text-align: left;'&gt;/US/show&lt;/td&gt;
@@ -96,7 +96,7 @@
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;h2 id='setting_default_values_for_url_parameters'&gt;Setting Default Values for URL Parameters&lt;/h2&gt;
 
-&lt;p&gt;When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a dictionary object to the &lt;code&gt;Defaults&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.&lt;/p&gt;
+&lt;p&gt;When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a map to the &lt;code&gt;Defaults&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
     &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
         &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
@@ -113,9 +113,44 @@
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category/add&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;add&amp;#8221; &lt;br /&gt; categoryName = &amp;#8220;food&amp;#8221; (default value)&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category/add/beverages&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;add&amp;#8221; &lt;br /&gt; categoryName= &amp;#8220;beverages&amp;#8221;&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;h2 id='adding_constraints_to_routes'&gt;Adding Constraints to Routes&lt;/h2&gt;
+
+&lt;p&gt;In addition to matching a URL request to a route definition by the number of parameters in the URL, you can specify that values in the parameters meet certain constraints. If a URL contains values that are outside the constraints for a route, that route is not used to handle the request. You add constraints to make sure that the URL parameters contain values that will work in your application.&lt;/p&gt;
+
+&lt;p&gt;Constraints are defined by using regular expressions. You add constraints for a route by assigning a map to the &lt;code&gt;Constraint&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct, or add by &lt;code&gt;RouteTable.Map()&lt;/code&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;post-list&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;whatever/{locale}/{year}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='n'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;locale&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;[a-z]{2}-[a-z]{2}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;year&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d{4}&amp;quot;&lt;/span&gt;
+        &lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='p'&gt;},&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='c1'&gt;// or&lt;/span&gt;
+
+&lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;post-list&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// route name&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;whatever/{locale}/{year}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// pattern&lt;/span&gt;
+    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;show&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
+    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='c1'&gt;// constraint&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;quot;locale&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;[a-z]{2}-[a-z]{2}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;year&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d{4}&amp;quot;&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;When routing handles a URL request, the route definition shown in the previous example produces the results that are listed in the following table.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;th&gt;Result&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/en-us&lt;/td&gt;&lt;td style='text-align: left;'&gt;No match. &lt;br /&gt; Both locale and year are required.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/en-us/08&lt;/td&gt;&lt;td style='text-align: left;'&gt;No match. &lt;br /&gt; The constraint on year requires 4 digits.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/en-us/2008&lt;/td&gt;&lt;td style='text-align: left;'&gt;locale = &amp;#8220;en-us&amp;#8221; &lt;br /&gt; year = &amp;#8220;2008&amp;#8221;&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;If default value not set, that mean the parameter is required.&lt;/p&gt;
+
 &lt;h2 id='route_data'&gt;Route Data&lt;/h2&gt;
 
-&lt;p&gt;For the Pattern &lt;code&gt;Category/{action}/{categoryName}&lt;/code&gt;, and a URL &lt;code&gt;/Category/add/beverages&lt;/code&gt;, you can get the &lt;code&gt;categoryName&lt;/code&gt; parameter in the controller action by this way:&lt;/p&gt;
+&lt;p&gt;For the Pattern &lt;code&gt;Category/{action}/{categoryName}&lt;/code&gt;, and a URL &lt;code&gt;/Category/add/beverages&lt;/code&gt;, you can get the &lt;code&gt;categoryName&lt;/code&gt; parameter in the controller action by HttpContext:&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// ctx is HttpContext&lt;/span&gt;
 &lt;span class='n'&gt;categoryName&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteData&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Params&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
 &lt;span class='c1'&gt;// categoryName == beverages&lt;/span&gt;
@@ -124,7 +159,7 @@
 &lt;h2 id='todo'&gt;TODO&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Build url by route&lt;/li&gt;
+&lt;li&gt;Construct URLs from Routes&lt;/li&gt;
 &lt;/ul&gt;</content>
  </entry>
  
