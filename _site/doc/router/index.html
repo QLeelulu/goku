@@ -27,7 +27,7 @@
     <div class="sidebar">
       <ul class="posts">
         <li><a href="/">About</a></li>
-        <li><a href="/doc/into">Into</a></li>
+        <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
         <li><a href="/doc/view--viewdata">View & ViewData</a></li>
@@ -104,6 +104,12 @@
 <span class='p'>)</span>
 </code></pre>
 </div>
+<h2 id='static_file_route'>Static File Route</h2>
+
+<p>When a route set <code>IsStatic</code> to <code>true</code>, if a url matched this route, the request will process as static file. Such as JS, CSS file.</p>
+
+<p>In production environment, i suggest you proxy the static files with Nginx.</p>
+
 <h2 id='url_patterns'>URL Patterns</h2>
 
 <p>A URL pattern can contain literal values and variable placeholders (referred to as URL parameters). The literals and placeholders are located in segments of the URL which are delimited by the slash (/) character.</p>

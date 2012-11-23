@@ -30,7 +30,7 @@ To use it in a program, use `import "github.com/QLeelulu/goku"`
 
 ## Example
 
-Here is a simple example, or you can check [Into](/doc/into) for more detail.
+Here is a simple example, or you can check [Intro](/doc/intro) for more detail.
 
 {% highlight go %}
 package main

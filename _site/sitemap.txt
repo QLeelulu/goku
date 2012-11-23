@@ -18,6 +18,6 @@ http://qleelulu.github.com/goku/doc/form-validation
 http://qleelulu.github.com/goku/doc/filter
 http://qleelulu.github.com/goku/doc/db
 http://qleelulu.github.com/goku/doc/controller--action
-http://qleelulu.github.com/goku/doc/into
+http://qleelulu.github.com/goku/doc/intro
 http://qleelulu.github.com/goku/doc/about
 http://qleelulu.github.com/goku/lessons/jekyll-introduction

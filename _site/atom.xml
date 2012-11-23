@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-23T01:43:04+08:00</updated>
+ <updated>2012-11-23T23:00:09+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -78,6 +78,12 @@
 &lt;span class='p'&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;h2 id='static_file_route'&gt;Static File Route&lt;/h2&gt;
+
+&lt;p&gt;When a route set &lt;code&gt;IsStatic&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt;, if a url matched this route, the request will process as static file. Such as JS, CSS file.&lt;/p&gt;
+
+&lt;p&gt;In production environment, i suggest you proxy the static files with Nginx.&lt;/p&gt;
+
 &lt;h2 id='url_patterns'&gt;URL Patterns&lt;/h2&gt;
 
 &lt;p&gt;A URL pattern can contain literal values and variable placeholders (referred to as URL parameters). The literals and placeholders are located in segments of the URL which are delimited by the slash (/) character.&lt;/p&gt;
@@ -220,10 +226,10 @@
  </entry>
  
  <entry>
-   <title>Into</title>
-   <link href="http://qleelulu.github.com/goku/doc/into"/>
+   <title>Intro</title>
+   <link href="http://qleelulu.github.com/goku/doc/intro"/>
    <updated>2012-11-08T00:00:00+08:00</updated>
-   <id>http://qleelulu.github.com/goku/doc/into</id>
+   <id>http://qleelulu.github.com/goku/doc/intro</id>
    <content type="html">&lt;h2 id='simple_mvc_project'&gt;Simple MVC project&lt;/h2&gt;
 
 &lt;p&gt;Let us create a simple mvc project, show how goku work.&lt;/p&gt;
@@ -325,7 +331,13 @@
 &lt;pre&gt;&lt;code&gt;&amp;#123;{define &quot;body&quot;}&amp;#125;
     &amp;#123;{.Data.Message}&amp;#125;
 &amp;#123;{end}&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;</content>
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We get the data pass from the action in view by &lt;code&gt;{ {.Data.Message} }&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id='run_the_app'&gt;Run the app&lt;/h2&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;import _ &lt;span class='s2'&gt;&amp;quot;gokudemo/gokudemo/controllers&amp;quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
  </entry>
  
  <entry>
@@ -367,7 +379,7 @@
 
 &lt;h2 id='example'&gt;Example&lt;/h2&gt;
 
-&lt;p&gt;Here is a simple example, or you can check &lt;a href='/doc/into'&gt;Into&lt;/a&gt; for more detail.&lt;/p&gt;
+&lt;p&gt;Here is a simple example, or you can check &lt;a href='/doc/intro'&gt;Intro&lt;/a&gt; for more detail.&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;package&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;
 
 &lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
