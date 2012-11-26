@@ -59,7 +59,71 @@
     
   </h1>
 
+<p>Goku maps URLs to controllers that regiest to goku server. Controllers process incoming requests, handle user input and interactions, and execute appropriate application logic. A controller typically calls a separate view component to generate the HTML markup for the request.</p>
 
+<h2 id='controllerbuilder'>ControllerBuilder</h2>
+
+<p>We build controller with <a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'>ControllerBuilder</a></p>
+<div class='highlight'><pre><code class='go'><span class='c1'>// a home controller builder</span>
+<span class='k'>var</span> <span class='n'>cb</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>ControllerBuilder</span> <span class='p'>=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>)</span>
+<span class='c1'>// add a &quot;index&quot; action to &quot;home&quot; controller for http get</span>
+<span class='n'>cb</span><span class='p'>.</span><span class='n'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+    <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>Html</span><span class='p'>(</span><span class='s'>&quot;Hello World&quot;</span><span class='p'>)</span>
+<span class='p'>})</span>
+</code></pre>
+</div>
+<p>Use <code>goku.Controller(&quot;controller-name&quot;)</code> to get a controller builder. If the controller <code>&quot;controller-name&quot;</code> exist, it will just return the same controller builder.</p>
+
+<h2 id='action'>Action</h2>
+
+<p>User interaction with goku MVC applications is organized around controllers and action methods. The controller defines action methods. Controllers can include as many action methods as needed.</p>
+
+<p>When a user enters a URL into the browser, the MVC application uses routing rules to parse the URL and to determine the path of the controller. The controller then determines the appropriate action method to handle the request. By default, the URL of a request is treated as a sub-path that includes the controller name followed by the action name. For example, if a user enters the URL <code>http://abc.com/Products/Categories</code>, the sub-path is <code>/Products/Categories</code>. The default routing rule treats &#8220;Products&#8221; as the controller. It treats &#8220;Categories&#8221; as the name of the action. Therefore, the routing rule invokes the Categories action of the Products controller in order to process the request. If the URL ends with <code>/Products/Detail/5</code>, the default routing rule treats <code>&quot;Detail&quot;</code> as the name of the action, and the Detail action of the Products controller is invoked to process the request.</p>
+
+<p>The following example shows a controller that has a <code>HelloWorld</code> action for http GET method.</p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>_</span> <span class='p'>=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;my&quot;</span><span class='p'>).</span>
+    <span class='n'>Action</span><span class='p'>(</span><span class='s'>&quot;get&quot;</span><span class='p'>,</span> <span class='s'>&quot;HelloWorld&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>Html</span><span class='p'>(</span><span class='s'>&quot;Hello World&quot;</span><span class='p'>)</span>
+    <span class='p'>})</span>
+</code></pre>
+</div>
+<p><a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'>ControllerBuilder</a> has some helper method: <code>Get</code>, <code>Post</code>, <code>Put</code>. So you can do it the same by this code:</p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>_</span> <span class='p'>=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;my&quot;</span><span class='p'>).</span>
+    <span class='n'>Get</span><span class='p'>(</span><span class='s'>&quot;HelloWorld&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>Html</span><span class='p'>(</span><span class='s'>&quot;Hello World&quot;</span><span class='p'>)</span>
+    <span class='p'>})</span>
+</code></pre>
+</div>
+<p>If you set http method to <code>all</code>, the action will match all http method, but Priority is low. <br />For example:</p>
+<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>_</span> <span class='p'>=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>Controller</span><span class='p'>(</span><span class='s'>&quot;user&quot;</span><span class='p'>).</span>
+    <span class='c1'>// action 1</span>
+    <span class='n'>Post</span><span class='p'>(</span><span class='s'>&quot;edit&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>View</span><span class='p'>(</span><span class='n'>nil</span><span class='p'>)</span>
+    <span class='p'>}).</span>
+    <span class='c1'>// action 2</span>
+    <span class='n'>Action</span><span class='p'>(</span><span class='s'>&quot;all&quot;</span><span class='p'>,</span> <span class='s'>&quot;edit&quot;</span><span class='p'>,</span> <span class='k'>func</span><span class='p'>(</span><span class='n'>ctx</span> <span class='p'>*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>HttpContext</span><span class='p'>)</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>View</span><span class='p'>(</span><span class='n'>nil</span><span class='p'>)</span>
+    <span class='p'>})</span>
+</code></pre>
+</div>
+<p>A <code>Http POST /user/edit</code> request will process by <code>Post(&quot;edit&quot;, ...)</code>, <br />but a <code>Http GET /user/edit</code> request will process by <code>Action(&quot;all&quot;, &quot;edit&quot;, ...)</code>.</p>
+
+<h2 id='actionresult_return_type'>ActionResult Return Type</h2>
+
+<p>Action methods return an instance of a struct that implement the <a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ActionResulter'>ActionResulter</a> interface. There are different action result types, depending on the task that the action method is performing. For example, the most common action is to call the <code>HttpContext.View</code> method. The View method returns an instance of the ViewResult struct, which is implement the ActionResulter interface.</p>
+
+<p>The following table shows the built-in action result types and the action helper methods that return them.</p>
+<table><thead><tr><th>Action Result</th><th>Helper Method</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'>ViewResult</td><td style='text-align: left;'>View</td><td style='text-align: left;'>Renders a view as a Web page.</td>
+</tr><tr><td style='text-align: left;'>PartialViewResult</td><td style='text-align: left;'>PartialView</td><td style='text-align: left;'>Renders a partial view, which defines a section of a view that can be rendered inside another view.</td>
+</tr><tr><td style='text-align: left;'>RedirectResult</td><td style='text-align: left;'>Redirect</td><td style='text-align: left;'>Redirects to another action method by using its URL.</td>
+</tr><tr><td style='text-align: left;'>RedirectToRouteResult</td><td style='text-align: left;'>RedirectToAction <br /> RedirectToRoute</td><td style='text-align: left;'>Redirects to another action method.</td>
+</tr><tr><td style='text-align: left;'>ContentResult</td><td style='text-align: left;'>Content</td><td style='text-align: left;'>Returns a user-defined content type.</td>
+</tr><tr><td style='text-align: left;'>JsonResult</td><td style='text-align: left;'>Json</td><td style='text-align: left;'>Returns a serialized JSON object.</td>
+</tr><tr><td style='text-align: left;'>JavaScriptResult</td><td style='text-align: left;'>JavaScript</td><td style='text-align: left;'>Returns a script that can be executed on the client.</td>
+</tr><tr><td style='text-align: left;'>FileResult</td><td style='text-align: left;'>File</td><td style='text-align: left;'>Returns binary output to write to the response.</td>
+</tr><tr><td style='text-align: left;'>EmptyResult</td><td style='text-align: left;'>(None)</td><td style='text-align: left;'>Represents a return value that is used if the action method must return a null result (void).</td>
+</tr></tbody></table>
+<h2 id='custom_actionresult'>Custom ActionResult</h2>
 
 
       </section>

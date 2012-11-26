@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-23T23:00:09+08:00</updated>
+ <updated>2012-11-26T23:36:17+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -222,7 +222,71 @@
    <link href="http://qleelulu.github.com/goku/doc/controller--action"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/controller--action</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;Goku maps URLs to controllers that regiest to goku server. Controllers process incoming requests, handle user input and interactions, and execute appropriate application logic. A controller typically calls a separate view component to generate the HTML markup for the request.&lt;/p&gt;
+
+&lt;h2 id='controllerbuilder'&gt;ControllerBuilder&lt;/h2&gt;
+
+&lt;p&gt;We build controller with &lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'&gt;ControllerBuilder&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// a home controller builder&lt;/span&gt;
+&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;cb&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ControllerBuilder&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='c1'&gt;// add a &amp;quot;index&amp;quot; action to &amp;quot;home&amp;quot; controller for http get&lt;/span&gt;
+&lt;span class='n'&gt;cb&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Use &lt;code&gt;goku.Controller(&amp;quot;controller-name&amp;quot;)&lt;/code&gt; to get a controller builder. If the controller &lt;code&gt;&amp;quot;controller-name&amp;quot;&lt;/code&gt; exist, it will just return the same controller builder.&lt;/p&gt;
+
+&lt;h2 id='action'&gt;Action&lt;/h2&gt;
+
+&lt;p&gt;User interaction with goku MVC applications is organized around controllers and action methods. The controller defines action methods. Controllers can include as many action methods as needed.&lt;/p&gt;
+
+&lt;p&gt;When a user enters a URL into the browser, the MVC application uses routing rules to parse the URL and to determine the path of the controller. The controller then determines the appropriate action method to handle the request. By default, the URL of a request is treated as a sub-path that includes the controller name followed by the action name. For example, if a user enters the URL &lt;code&gt;http://abc.com/Products/Categories&lt;/code&gt;, the sub-path is &lt;code&gt;/Products/Categories&lt;/code&gt;. The default routing rule treats &amp;#8220;Products&amp;#8221; as the controller. It treats &amp;#8220;Categories&amp;#8221; as the name of the action. Therefore, the routing rule invokes the Categories action of the Products controller in order to process the request. If the URL ends with &lt;code&gt;/Products/Detail/5&lt;/code&gt;, the default routing rule treats &lt;code&gt;&amp;quot;Detail&amp;quot;&lt;/code&gt; as the name of the action, and the Detail action of the Products controller is invoked to process the request.&lt;/p&gt;
+
+&lt;p&gt;The following example shows a controller that has a &lt;code&gt;HelloWorld&lt;/code&gt; action for http GET method.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='n'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;get&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'&gt;ControllerBuilder&lt;/a&gt; has some helper method: &lt;code&gt;Get&lt;/code&gt;, &lt;code&gt;Post&lt;/code&gt;, &lt;code&gt;Put&lt;/code&gt;. So you can do it the same by this code:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;If you set http method to &lt;code&gt;all&lt;/code&gt;, the action will match all http method, but Priority is low. &lt;br /&gt;For example:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='c1'&gt;// action 1&lt;/span&gt;
+    &lt;span class='n'&gt;Post&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;}).&lt;/span&gt;
+    &lt;span class='c1'&gt;// action 2&lt;/span&gt;
+    &lt;span class='n'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;A &lt;code&gt;Http POST /user/edit&lt;/code&gt; request will process by &lt;code&gt;Post(&amp;quot;edit&amp;quot;, ...)&lt;/code&gt;, &lt;br /&gt;but a &lt;code&gt;Http GET /user/edit&lt;/code&gt; request will process by &lt;code&gt;Action(&amp;quot;all&amp;quot;, &amp;quot;edit&amp;quot;, ...)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id='actionresult_return_type'&gt;ActionResult Return Type&lt;/h2&gt;
+
+&lt;p&gt;Action methods return an instance of a struct that implement the &lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt; interface. There are different action result types, depending on the task that the action method is performing. For example, the most common action is to call the &lt;code&gt;HttpContext.View&lt;/code&gt; method. The View method returns an instance of the ViewResult struct, which is implement the ActionResulter interface.&lt;/p&gt;
+
+&lt;p&gt;The following table shows the built-in action result types and the action helper methods that return them.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Action Result&lt;/th&gt;&lt;th&gt;Helper Method&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;ViewResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;View&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a view as a Web page.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;PartialViewResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;PartialView&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a partial view, which defines a section of a view that can be rendered inside another view.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;RedirectResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirect&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method by using its URL.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;RedirectToRouteResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;RedirectToAction &lt;br /&gt; RedirectToRoute&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;ContentResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Content&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a user-defined content type.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;JsonResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Json&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a serialized JSON object.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;JavaScriptResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;JavaScript&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a script that can be executed on the client.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;FileResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;File&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns binary output to write to the response.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;EmptyResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;(None)&lt;/td&gt;&lt;td style='text-align: left;'&gt;Represents a return value that is used if the action method must return a null result (void).&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;h2 id='custom_actionresult'&gt;Custom ActionResult&lt;/h2&gt;</content>
  </entry>
  
  <entry>
@@ -335,9 +399,13 @@
 &lt;p&gt;We get the data pass from the action in view by &lt;code&gt;{ {.Data.Message} }&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id='run_the_app'&gt;Run the app&lt;/h2&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;import _ &lt;span class='s2'&gt;&amp;quot;gokudemo/gokudemo/controllers&amp;quot;&lt;/span&gt; 
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;&lt;span class='nv'&gt;$ &lt;/span&gt;go run app.go 
+2012/11/23 23:06:51 Server start on :8080
+2012/11/23 23:07:13 D 200 GET / 
+2012/11/23 23:07:13 N 404 GET /favicon.ico
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content>
+&lt;/div&gt;
+&lt;p&gt;Now you can open a web-browser with the URL &lt;code&gt;http://127.0.0.1:8080&lt;/code&gt; to see what happen.&lt;/p&gt;</content>
  </entry>
  
  <entry>

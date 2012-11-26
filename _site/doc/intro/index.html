@@ -164,9 +164,13 @@
 <p>We get the data pass from the action in view by <code>{ {.Data.Message} }</code>.</p>
 
 <h2 id='run_the_app'>Run the app</h2>
-<div class='highlight'><pre><code class='bash'>import _ <span class='s2'>&quot;gokudemo/gokudemo/controllers&quot;</span> 
+<div class='highlight'><pre><code class='bash'><span class='nv'>$ </span>go run app.go 
+2012/11/23 23:06:51 Server start on :8080
+2012/11/23 23:07:13 D 200 GET / 
+2012/11/23 23:07:13 N 404 GET /favicon.ico
 </code></pre>
 </div>
+<p>Now you can open a web-browser with the URL <code>http://127.0.0.1:8080</code> to see what happen.</p>
 
 
       </section>
