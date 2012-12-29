@@ -4,6 +4,7 @@ import (
     "regexp"
     "strconv"
     "strings"
+    "unicode/utf8"
 )
 
 const (
@@ -191,7 +192,7 @@ func (nv *stringValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
     if vr.IsValid || vr.ErrorMsg != "" {
         return vr
     }
-    if opt.Range[0] > 0 && len(source) < opt.Range[0] {
+    if opt.Range[0] > 0 && utf8.RuneCountInString(source) < opt.Range[0] {
         if opt.Range[1] > 0 {
             vr.ErrorMsg = strings.Replace(
                 getOrDefault(opt.ErrorMsgs, "range", MST_RANGE_LENGTH),
@@ -203,7 +204,7 @@ func (nv *stringValidater) Valid(source string, opt *FieldOption) (vr *ValidResu
         }
         return vr
     }
-    if opt.Range[1] > 0 && len(source) > opt.Range[1] {
+    if opt.Range[1] > 0 && utf8.RuneCountInString(source) > opt.Range[1] {
         if opt.Range[0] > 0 {
             vr.ErrorMsg = strings.Replace(
                 getOrDefault(opt.ErrorMsgs, "range", MST_RANGE_LENGTH), "{0}", strconv.Itoa(opt.Range[0]), -1)
