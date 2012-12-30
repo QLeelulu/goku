@@ -99,7 +99,10 @@ func (rh *RequestHandler) pprofHTTP(w http.ResponseWriter, r *http.Request) bool
     return false
 }
 
-// 你可以通过三种途径取消一个请求： 设置 ctx.Canceled = true , 返回一个ActionResulter或者一个错误
+// you can cancel the request three way: 
+//   1. set ctx.Canceled = true
+//   2. return an ActionResulter
+//   3. return error
 func (rh *RequestHandler) execute(ctx *HttpContext) (ar ActionResulter, err error) {
     defer func() {
         // handle all the error
