@@ -82,30 +82,28 @@ type ViewInfo struct {
     IsPartial                        bool
 }
 
-// ViewEnginer interface
-// Render need a template engine
-// so it may take a TemplateEnginer
+// ViewEnginer interface.
+// For how to find the view file.
 type ViewEnginer interface {
-    Render(vi *ViewInfo, viewData *ViewData, wr io.Writer)
     // find the view and layout
     // if template engine not suppot layout, just return empty string
-    Lookup(vi *ViewInfo) (viewPath string, layoutPath string)
+    FindView(vi *ViewInfo) (viewPath string, layoutPath string)
 }
 
 // DefaultViewEngine
 type DefaultViewEngine struct {
+    ExtName               string // template file ext name, default is ".html"
     RootDir               string // view's root dir, must set
     Layout                string // template layout name, default is "layout"
     ViewLocationFormats   []string
     LayoutLocationFormats []string
-    TemplateEngine        TemplateEnginer
     UseCache              bool              // whether cache the viewfile
     Caches                map[string]string // controller & action & view to the real-file-path cache
 }
 
-func (ve *DefaultViewEngine) Lookup(vi *ViewInfo) (viewPath string, layoutPath string) {
+func (ve *DefaultViewEngine) FindView(vi *ViewInfo) (viewPath string, layoutPath string) {
     viewPath = ve.lookup(vi, false)
-    if !vi.IsPartial && ve.TemplateEngine.SupportLayout() {
+    if !vi.IsPartial {
         layoutPath = ve.lookup(vi, true)
     }
     return
@@ -134,7 +132,7 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
         cacheKey = vi.Controller + "_" + viewName
         locas = ve.ViewLocationFormats
     }
-    viewName = viewName + ve.TemplateEngine.Ext()
+    viewName = viewName + ve.ExtName
     if ve.UseCache {
         if v, ok := ve.Caches[cacheKey]; ok {
             return v
@@ -169,27 +167,21 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
     return ""
 }
 
-func (ve *DefaultViewEngine) Render(vi *ViewInfo, viewData *ViewData, wr io.Writer) {
-    viewFile, layoutFile := ve.Lookup(vi)
-    ve.TemplateEngine.Render(viewFile, layoutFile, viewData, wr)
-}
-
-// create a default ViewEnginer
-// if TemplateEnginer is nil, will use the default template engine
+// create a default ViewEnginer. 
 // some default value:
 // 		+ Layout: "layout"
 // 		+ ViewLocationFormats:   []string{"{1}/{0}", "shared/{0}"} , {1} is controller, {0} is action or a viewName
 // 		+ LayoutLocationFormats: []string{"{1}/{0}", "shared/{0}"}
-func CreateDefaultViewEngine(viewDir string, te TemplateEnginer, layout string, useCache bool) *DefaultViewEngine {
+func CreateDefaultViewEngine(viewDir, layout, extName string, useCache bool) *DefaultViewEngine {
     if viewDir == "" {
         panic("CreateDefaultViewEngine: viewDir can not be empty.")
     }
     dve := &DefaultViewEngine{
-        RootDir:        viewDir,
-        Layout:         layout,
-        TemplateEngine: te,
-        UseCache:       useCache,
-        Caches:         make(map[string]string),
+        ExtName:  extName,
+        RootDir:  viewDir,
+        Layout:   layout,
+        UseCache: useCache,
+        Caches:   make(map[string]string),
     }
     // default location paths
     dve.ViewLocationFormats = []string{
@@ -203,14 +195,17 @@ func CreateDefaultViewEngine(viewDir string, te TemplateEnginer, layout string, 
     if dve.Layout == "" {
         dve.Layout = "layout"
     }
-    // DefaultTemplateEngine
-    if dve.TemplateEngine == nil {
-        dve.TemplateEngine = &DefaultTemplateEngine{
-            UseCache:      useCache,
-            TemplateCache: make(map[string]*template.Template),
-        }
-    }
     return dve
+}
+
+// create a default TemplateEnginer.
+func CreateDefaultTemplateEngine(useCache bool) *DefaultTemplateEngine {
+
+    te := &DefaultTemplateEngine{
+        UseCache:      useCache,
+        TemplateCache: make(map[string]*template.Template),
+    }
+    return te
 }
 
 var globalViewData map[string]interface{} = make(map[string]interface{})

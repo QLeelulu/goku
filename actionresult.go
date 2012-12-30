@@ -49,17 +49,21 @@ func (ar *ActionResult) ExecuteResult(ctx *HttpContext) {
 type ViewResult struct {
     ActionResult
 
-    ViewEngine ViewEnginer
-    ViewData   map[string]interface{}
-    ViewModel  interface{}
-    ViewName   string
-    Layout     string
-    IsPartial  bool // if is Partial, not use layout
+    ViewEngine     ViewEnginer
+    TemplateEngine TemplateEnginer
+    ViewData       map[string]interface{}
+    ViewModel      interface{}
+    ViewName       string
+    Layout         string
+    IsPartial      bool // if is Partial, not use layout
 }
 
 func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
     if vr.ViewEngine == nil {
         vr.ViewEngine = ctx.requestHandler.ViewEnginer
+    }
+    if vr.TemplateEngine == nil {
+        vr.TemplateEngine = ctx.requestHandler.TemplateEnginer
     }
     vi := &ViewInfo{
         Controller: ctx.RouteData.Controller,
@@ -73,7 +77,8 @@ func (vr *ViewResult) Render(ctx *HttpContext, wr io.Writer) {
         Model:   vr.ViewModel,
         Globals: globalViewData,
     }
-    vr.ViewEngine.Render(vi, viewData, wr)
+    viewFile, layoutFile := vr.ViewEngine.FindView(vi)
+    vr.TemplateEngine.Render(viewFile, layoutFile, viewData, wr)
 }
 
 func (vr *ViewResult) ExecuteResult(ctx *HttpContext) {

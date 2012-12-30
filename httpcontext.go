@@ -162,12 +162,13 @@ func (ctx *HttpContext) RenderPartial(viewName string, viewModel interface{}) *V
 
 func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}, isPartial bool) *ViewResult {
     vr := &ViewResult{
-        ViewEngine: ctx.requestHandler.ViewEnginer,
-        ViewData:   ctx.ViewData,
-        ViewModel:  viewModel,
-        ViewName:   viewName,
-        Layout:     layout,
-        IsPartial:  isPartial,
+        ViewEngine:     ctx.requestHandler.ViewEnginer,
+        TemplateEngine: ctx.requestHandler.TemplateEnginer,
+        ViewData:       ctx.ViewData,
+        ViewModel:      viewModel,
+        ViewName:       viewName,
+        Layout:         layout,
+        IsPartial:      isPartial,
     }
     vr.Body = new(bytes.Buffer)
     vr.Headers = map[string]string{"Content-Type": "text/html"}

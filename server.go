@@ -48,6 +48,7 @@ type RequestHandler struct {
     MiddlewareHandler MiddlewareHandler
     ServerConfig      *ServerConfig
     ViewEnginer       ViewEnginer
+    TemplateEnginer   TemplateEnginer
 }
 
 // implement the http.Handler interface
@@ -306,12 +307,20 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
     if sc.ViewPath == "" {
         sc.ViewPath = "views"
     }
+
+    // default template engine
+    if handler.TemplateEnginer == nil {
+        handler.TemplateEnginer = CreateDefaultTemplateEngine(
+            !sc.Debug, // cache template
+        )
+    }
+
     // default view engine
     if handler.ViewEnginer == nil {
         handler.ViewEnginer = CreateDefaultViewEngine(
             path.Join(sc.RootDir, sc.ViewPath),
-            sc.TemplateEnginer,
             sc.Layout,
+            handler.TemplateEnginer.Ext(),
             !sc.Debug, // cache template
         )
     }
