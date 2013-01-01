@@ -170,6 +170,7 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
 // create a default ViewEnginer. 
 // some default value:
 // 		+ Layout: "layout"
+//      + ExtName: ".html"
 // 		+ ViewLocationFormats:   []string{"{1}/{0}", "shared/{0}"} , {1} is controller, {0} is action or a viewName
 // 		+ LayoutLocationFormats: []string{"{1}/{0}", "shared/{0}"}
 func CreateDefaultViewEngine(viewDir, layout, extName string, useCache bool) *DefaultViewEngine {
@@ -194,6 +195,9 @@ func CreateDefaultViewEngine(viewDir, layout, extName string, useCache bool) *De
     }
     if dve.Layout == "" {
         dve.Layout = "layout"
+    }
+    if dve.ExtName == "" {
+        dve.ExtName = ".html"
     }
     return dve
 }
