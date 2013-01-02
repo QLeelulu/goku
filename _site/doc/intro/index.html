@@ -29,8 +29,8 @@
         <li><a href="/">About</a></li>
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
-        <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/controller--action">Controller &#38; Action</a></li>
+        <li><a href="/doc/view">View &#38; ViewEngine</a></li>
         <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
@@ -83,7 +83,7 @@
         └── shared
             └── layout.html</code></pre>
 
-<p>You can find this example <a href='http://github.com/QLeelulu/goku-demo'>in here</a>.</p>
+<p>You can find this example <a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro'>in here</a>.</p>
 
 <h3 id='route'>Route</h3>
 
@@ -103,7 +103,7 @@
 </code></pre></div>
 <p>The <code>static</code> route set <code>IsStatic</code> to true, mean that if the url matched this route, will process the request as static file. <br />The <code>default</code> route mean that the url <code>/user/info</code>, will map to <code>user</code> controller&#8217;s <code>info</code> action, and the url <code>/</code> will map to <code>home</code> controller&#8217;s <code>index</code> action, because this is the default value.</p>
 
-<p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/app.go'>app.go</a>) :</p>
+<p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/app.go'>app.go</a>) :</p>
 <div class='highlight'><pre><code class='go'><span class='kd'>func</span> <span class='nx'>main</span><span class='p'>()</span> <span class='p'>{</span>
     <span class='nx'>rt</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>{</span><span class='nx'>Routes</span><span class='p'>:</span> <span class='nx'>gokudemo</span><span class='p'>.</span><span class='nx'>Routes</span><span class='p'>}</span>
     <span class='nx'>middlewares</span> <span class='o'>:=</span> <span class='p'>[]</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Middlewarer</span><span class='p'>{}</span>
@@ -113,7 +113,7 @@
 </code></pre></div>
 <h3 id='controller__action'>Controller &amp; Action</h3>
 
-<p>Add a controller like this code(<a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'>controllers/home.go</a>):</p>
+<p>Add a controller like this code(<a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/controllers/home.go'>controllers/home.go</a>):</p>
 <div class='highlight'><pre><code class='go'><span class='kn'>package</span> <span class='nx'>controllers</span>
 
 <span class='kn'>import</span> <span class='p'>(</span>

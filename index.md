@@ -5,7 +5,7 @@ tags : [intro, beginner, tutorial]
 ---
 {% include JB/setup %}
 
-#About
+# About
 
 goku is a Web Mvc Framework for golang, mostly like ASP.NET MVC.    
 goku is simple and powerful.    
@@ -19,7 +19,7 @@ Base Features:
 + middleware
 + and more
 
-## [doc & api](http://go.pkgdoc.org/github.com/QLeelulu/goku)
+## [doc & api @pkgdoc](http://go.pkgdoc.org/github.com/QLeelulu/goku)
 
 > now goku is in the __`preview version, anything can be change`__.
 
@@ -30,7 +30,7 @@ To use it in a program, use `import "github.com/QLeelulu/goku"`
 
 ## Example
 
-Here is a simple example, or you can check [Intro](/doc/intro) for more detail.
+Here is a simple example, or you can check [Intro](/goku/doc/intro) for more detail.
 
 {% highlight go %}
 package main
@@ -111,10 +111,10 @@ maybe you need run `todo.sql` first.
 
 ## Authors
 
- - [@QLeelulu](http://weibo.com/qleelulu)
- - waiting for you
+-   [QLeelulu](https://github.com/QLeelulu)
+-   waiting for you
 
 
 ## License
 
-View the [LICENSE](https://github.com/senchalabs/connect/blob/master/LICENSE) file. 
+View the [LICENSE](https://github.com/QLeelulu/goku/blob/master/LICENSE) file. 
