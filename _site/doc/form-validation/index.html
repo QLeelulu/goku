@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,34 @@
     
   </h1>
 
+<p>you can create a form, to valid the user&#8217;s input, and get the clean value.</p>
+<div class='highlight'><pre><code class='go'><span class='kn'>import</span> <span class='s'>&quot;github.com/QLeelulu/goku/form&quot;</span>
 
+<span class='kd'>func</span> <span class='nx'>CreateCommentForm</span><span class='p'>()</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Form</span> <span class='p'>{</span>
+    <span class='nx'>name</span> <span class='o'>:=</span> <span class='nx'>NewCharField</span><span class='p'>(</span><span class='s'>&quot;name&quot;</span><span class='p'>,</span> <span class='s'>&quot;Name&quot;</span><span class='p'>,</span> <span class='kc'>true</span><span class='p'>).</span><span class='nx'>Range</span><span class='p'>(</span><span class='mi'>3</span><span class='p'>,</span> <span class='mi'>10</span><span class='p'>).</span><span class='nx'>Field</span><span class='p'>()</span>
+    <span class='nx'>nickName</span> <span class='o'>:=</span> <span class='nx'>NewCharField</span><span class='p'>(</span><span class='s'>&quot;nick_name&quot;</span><span class='p'>,</span> <span class='s'>&quot;Nick Name&quot;</span><span class='p'>,</span> <span class='kc'>false</span><span class='p'>).</span><span class='nx'>Min</span><span class='p'>(</span><span class='mi'>3</span><span class='p'>).</span><span class='nx'>Max</span><span class='p'>(</span><span class='mi'>20</span><span class='p'>).</span><span class='nx'>Field</span><span class='p'>()</span>
+    <span class='nx'>age</span> <span class='o'>:=</span> <span class='nx'>NewIntegerField</span><span class='p'>(</span><span class='s'>&quot;age&quot;</span><span class='p'>,</span> <span class='s'>&quot;Age&quot;</span><span class='p'>,</span> <span class='kc'>true</span><span class='p'>).</span><span class='nx'>Range</span><span class='p'>(</span><span class='mi'>18</span><span class='p'>,</span> <span class='mi'>50</span><span class='p'>).</span><span class='nx'>Field</span><span class='p'>()</span>
+    <span class='nx'>content</span> <span class='o'>:=</span> <span class='nx'>NewTextField</span><span class='p'>(</span><span class='s'>&quot;content&quot;</span><span class='p'>,</span> <span class='s'>&quot;Content&quot;</span><span class='p'>,</span> <span class='kc'>true</span><span class='p'>).</span><span class='nx'>Min</span><span class='p'>(</span><span class='mi'>10</span><span class='p'>).</span><span class='nx'>Field</span><span class='p'>()</span>
+
+    <span class='nx'>form</span> <span class='o'>:=</span> <span class='nx'>NewForm</span><span class='p'>(</span><span class='nx'>name</span><span class='p'>,</span> <span class='nx'>nickName</span><span class='p'>,</span> <span class='nx'>age</span><span class='p'>,</span> <span class='nx'>content</span><span class='p'>)</span>
+    <span class='k'>return</span> <span class='nx'>form</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>and then you can use this form like this:</p>
+<div class='highlight'><pre><code class='go'><span class='nx'>f</span> <span class='o'>:=</span> <span class='nx'>CreateCommentForm</span><span class='p'>()</span>
+<span class='nx'>f</span><span class='p'>.</span><span class='nx'>FillByRequest</span><span class='p'>(</span><span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Request</span><span class='p'>)</span>
+
+<span class='k'>if</span> <span class='nx'>f</span><span class='p'>.</span><span class='nx'>Valid</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='c1'>// after valid, we can get the clean values</span>
+    <span class='nx'>m</span> <span class='o'>:=</span> <span class='nx'>f</span><span class='p'>.</span><span class='nx'>CleanValues</span><span class='p'>()</span>
+    <span class='c1'>// and now you can save m to database</span>
+<span class='p'>}</span> <span class='k'>else</span> <span class='p'>{</span>
+    <span class='c1'>// if not valid</span>
+    <span class='c1'>// we can get the valid errors</span>
+    <span class='nx'>errs</span> <span class='o'>:=</span> <span class='nx'>f</span><span class='p'>.</span><span class='nx'>Errors</span><span class='p'>()</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>checkout <a href='https://github.com/QLeelulu/goku/blob/master/form/form_test.go'>form_test.go</a></p>
 
 
       </section>

@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,25 @@
     
   </h1>
 
+<div class='highlight'><pre><code class='go'><span class='kd'>type</span> <span class='nx'>HttpContext</span> <span class='kd'>struct</span> <span class='p'>{</span>
+    <span class='nx'>Request</span> <span class='o'>*</span><span class='nx'>http</span><span class='p'>.</span><span class='nx'>Request</span> <span class='c1'>// http request</span>
 
+    <span class='nx'>Method</span> <span class='kt'>string</span> <span class='c1'>// http method</span>
+
+    <span class='c1'>//self fields</span>
+    <span class='nx'>RouteData</span> <span class='o'>*</span><span class='nx'>RouteData</span>             <span class='c1'>// route data</span>
+    <span class='nx'>ViewData</span>  <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kd'>interface</span><span class='p'>{}</span> <span class='c1'>// view data for template</span>
+    <span class='nx'>Data</span>      <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kd'>interface</span><span class='p'>{}</span> <span class='c1'>// data for httpcontex</span>
+    <span class='nx'>Result</span>    <span class='nx'>ActionResulter</span>         <span class='c1'>// action result</span>
+    <span class='nx'>Err</span>       <span class='kt'>error</span>                  <span class='c1'>// process error</span>
+    <span class='nx'>User</span>      <span class='kt'>string</span>                 <span class='c1'>// user name</span>
+    <span class='nx'>Canceled</span>  <span class='kt'>bool</span>                   <span class='c1'>// cancel continue process the request and return</span>
+    <span class='c1'>// contains filtered or unexported fields</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>If you want to shared data in a request, you can set it to <code>HttpContext.Data</code>, and then you can access it in the whole request.</p>
+
+<p>For more detail, check <a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext'>HttpContext doc</a>.</p>
 
 
       </section>

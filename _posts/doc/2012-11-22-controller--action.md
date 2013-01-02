@@ -79,17 +79,19 @@ The following table shows the built-in action result types and the action helper
 
 Action Result | Helper Method | Description
 --------------|---------------|------------
-ViewResult | View | Renders a view as a Web page.
-PartialViewResult | PartialView | Renders a partial view, which defines a section of a view that can be rendered inside another view.
-RedirectResult | Redirect | Redirects to another action method by using its URL.
-RedirectToRouteResult | RedirectToAction <br/> RedirectToRoute | Redirects to another action method.
-ContentResult | Content | Returns a user-defined content type.
-JsonResult | Json | Returns a serialized JSON object.
-JavaScriptResult | JavaScript | Returns a script that can be executed on the client.
-FileResult | File | Returns binary output to write to the response.
-EmptyResult | (None) | Represents a return value that is used if the action method must return a null result (void).
+[ViewResult](http://godoc.org/github.com/QLeelulu/goku#ViewResult) | [ctx.View](http://godoc.org/github.com/QLeelulu/goku#HttpContext.View) | Renders a view as a Web page.
+[ViewResult](http://godoc.org/github.com/QLeelulu/goku#ViewResult) | [ctx.RenderPartial](http://godoc.org/github.com/QLeelulu/goku#HttpContext.RenderPartial) | Renders a partial view, mean that not render the layout.
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.Redirect](http://godoc.org/github.com/QLeelulu/goku#HttpContext.Redirect) | Redirects to another action method by using its URL.(`302`)
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.RedirectPermanent](http://godoc.org/github.com/QLeelulu/goku#HttpContext.RedirectPermanent) | Redirects to another action method by using its URL.(`301`)
+[ContentResult](http://godoc.org/github.com/QLeelulu/goku#ContentResult) | No | Returns binary output to write to the response.
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.Json](http://godoc.org/github.com/QLeelulu/goku#HttpContext.Json) | Returns a serialized JSON object.
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.Html](http://godoc.org/github.com/QLeelulu/goku#HttpContext.Html) | Returns string content, but set response Content-Type to text/html .
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.Raw](http://godoc.org/github.com/QLeelulu/goku#HttpContext.Raw) | Returns string content, but set response Content-Type to text/plain .
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.NotModified](http://godoc.org/github.com/QLeelulu/goku#HttpContext.NotModified) | Returns 304 not modified .
+[ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) | [ctx.NotFound](http://godoc.org/github.com/QLeelulu/goku#HttpContext.NotFound) | Returns 404 page not found .
 
 
 ## Custom ActionResult
 
+To implement your own action result, you just need to implement the [ActionResulter](http://godoc.org/github.com/QLeelulu/goku#ActionResulter) interface, and return it in the action.
 

@@ -1,0 +1,154 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>
+      
+        Template - 
+      
+      Goku
+    </title>
+    <meta name="description" content="">
+    <meta name="author" content="QLeelulu">
+
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="outer">
+    <div class="sidebar">
+      <ul class="posts">
+        <li><a href="/">About</a></li>
+        <li><a href="/doc/intro">Intro</a></li>
+        <li><a href="/doc/router">Router</a></li>
+        <li><a href="/doc/controller--action">Controller & Action</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
+        <li><a href="/doc/form-validation">Form Validation</a></li>
+        <li><a href="/doc/filter">Filter</a></li>
+        <li><a href="/doc/middleware">Middleware</a></li>
+        <li><a href="/doc/db">DB</a></li>
+        <li><a href="/doc/httpcontext">HttpContext</a></li>
+        <li><a href="/doc/log">Log</a></li>
+      </ul>
+    </div>
+
+    <div class="wrapper">
+      <header>
+        <h1><a class="brand" href="/">Goku</a></h1>
+        <p>Golang Web Mvc Framework</p>
+        <p class="view"><a href="http://github.com/qleelulu/goku">View the Project on GitHub <small>qleelulu/goku</small></a></p>
+        <ul>
+          <li><a href="https://github.com/qleelulu/goku/zipballmus/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/qleelulu/goku/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="http://github.com/qleelulu/goku">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        
+  <h1>
+    Template 
+    
+  </h1>
+
+<p>View Engine decide how to find the view file to render, and then pass to Template Engine parse and generate HTML.</p>
+
+<h2 id='template_engine'>Template Engine</h2>
+<div class='highlight'><pre><code class='go'><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Controller</span><span class='p'>(</span><span class='s'>&quot;blog&quot;</span><span class='p'>).</span>
+    <span class='nx'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='kd'>func</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span> <span class='p'>{</span>
+
+    <span class='c1'>// you can add any val to ViewData</span>
+    <span class='c1'>// then you can use it in template</span>
+    <span class='c1'>// like this: { { .Data.SiteName } }</span>
+    <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>ViewData</span><span class='p'>[</span><span class='s'>&quot;SiteName&quot;</span><span class='p'>]</span> <span class='p'>=</span> <span class='s'>&quot;My Blog&quot;</span>
+
+    <span class='nx'>blogs</span> <span class='o'>:=</span> <span class='nx'>GetBlogs</span><span class='p'>()</span>
+    <span class='c1'>// or you can pass a struct to ViewModel</span>
+    <span class='c1'>// then you can use it in template</span>
+    <span class='c1'>// like this: { {range .Model} }  { { .Title } }  { {end} }</span>
+    <span class='k'>return</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>View</span><span class='p'>(</span><span class='nx'>blogs</span><span class='p'>)</span>
+<span class='p'>})</span>
+</code></pre></div>
+<p>The default template engine is golang&#8217;s <code>html/template</code>.</p>
+<div class='highlight'><pre><code class='html'>    <span class='nt'>&lt;div&gt;</span>
+        <span class='nt'>&lt;h2&gt;</span>{ { .Data.SiteName } }<span class='nt'>&lt;/h2&gt;</span>
+        <span class='nt'>&lt;ul&gt;</span>
+          { {range .Model} }
+            <span class='nt'>&lt;li</span> <span class='na'>id=</span><span class='s'>&quot;blog-{ {.Id} }&quot;</span><span class='nt'>&gt;</span>
+              { {.Title} }
+            <span class='nt'>&lt;/li&gt;</span>
+          { {end} }
+        <span class='nt'>&lt;/ul&gt;</span>
+    <span class='nt'>&lt;/div&gt;</span>
+</code></pre></div>
+<h2 id='layout'>Layout</h2>
+
+<p>Goku will find layout in these rules:</p>
+
+<pre><code>1. /{ViewPath}/{Controller}/{layout}
+2. /{ViewPath}/shared/{layout}</code></pre>
+
+<p>the default layout is <code>layout.html</code>, and you can change it in <a href='http://godoc.org/github.com/QLeelulu/goku#ServerConfig'>ServerConfig.Layout</a>.</p>
+
+<p>layout.html</p>
+<div class='highlight'><pre><code class='html'>    <span class='cp'>&lt;!DOCTYPE html&gt;</span>
+    <span class='nt'>&lt;html&gt;</span>
+    <span class='nt'>&lt;head&gt;</span>
+        <span class='nt'>&lt;title&gt;</span>Goku<span class='nt'>&lt;/title&gt;</span>
+        { { template &quot;head&quot; } }
+    <span class='nt'>&lt;/head&gt;</span>
+    <span class='nt'>&lt;body&gt;</span>
+      { { template &quot;body&quot; . } }
+    <span class='nt'>&lt;/body&gt;</span>
+    <span class='nt'>&lt;/html&gt;</span>
+</code></pre></div>
+<p>and in the view template, it will look like this:</p>
+<div class='highlight'><pre><code class='html'>    { {define &quot;head&quot;} }
+        <span class='c'>&lt;!-- add css or js here --&gt;</span>
+    { {end} }
+
+    { {define &quot;body&quot;} }
+        I&#39;m main content.
+    { {end} }
+</code></pre></div>
+<p>note the dot in <code>{ {template &quot;body&quot; .} }</code> in layout , it will pass the ViewData to the sub template.</p>
+
+<h2 id='more_template_engine_support'>More Template Engine Support</h2>
+
+<p>if you want to use <a href='https://github.com/hoisie/mustache'>mustache</a> template, check <a href='https://github.com/QLeelulu/mustache.goku'>mustache.goku</a></p>
+
+<h2 id='custom_template_engine'>Custom Template Engine</h2>
+
+<p>To Custom a Template Engine, just implement the <code>TemplateEnginer</code> interface.</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>type</span> <span class='nx'>TemplateEnginer</span> <span class='kd'>interface</span> <span class='p'>{</span>
+    <span class='c1'>// render the view with viewData and write to w</span>
+    <span class='nx'>Render</span><span class='p'>(</span><span class='nx'>viewpath</span> <span class='kt'>string</span><span class='p'>,</span> <span class='nx'>layoutPath</span> <span class='kt'>string</span><span class='p'>,</span> <span class='nx'>viewData</span> <span class='o'>*</span><span class='nx'>ViewData</span><span class='p'>,</span> <span class='nx'>w</span> <span class='nx'>io</span><span class='p'>.</span><span class='nx'>Writer</span><span class='p'>)</span>
+    <span class='c1'>// return whether the tempalte support layout</span>
+    <span class='nx'>SupportLayout</span><span class='p'>()</span> <span class='kt'>bool</span>
+    <span class='c1'>// template file ext name, default is &quot;.html&quot;</span>
+    <span class='nx'>Ext</span><span class='p'>()</span> <span class='kt'>string</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>For more detail, you can check <a href='https://github.com/QLeelulu/mustache.goku'>mustache.goku</a>, it will show you how to this.</p>
+
+
+      </section>
+    </div>
+
+  </div>
+
+    <footer>
+      <p>Project maintained by <a href="https://www.github.com/QLeelulu">QLeelulu</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <script src="/assets/themes/modernist/javascripts/scale.fix.js"></script>
+  </body>
+</html>

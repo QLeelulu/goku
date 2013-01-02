@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,21 @@
     
   </h1>
 
+<p>To use logger in goku, just:</p>
 
+<pre><code>goku.Logger().Logln(&quot;i&quot;, &quot;am&quot;, &quot;log&quot;)
+goku.Logger().Errorln(&quot;oh&quot;, &quot;no!&quot;, &quot;Server Down!&quot;)</code></pre>
+
+<p>this will log like this:</p>
+
+<pre><code>2012/07/14 20:07:46 i am log
+2012/07/14 20:07:46 [ERROR] oh no! Server Down!</code></pre>
+
+<p>TODO:</p>
+
+<ul>
+<li>like log4j ?</li>
+</ul>
 
 
       </section>

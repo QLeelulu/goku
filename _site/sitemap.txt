@@ -8,8 +8,8 @@ http://qleelulu.github.com/goku/pages.html
 http://qleelulu.github.com/goku/sitemap.txt
 http://qleelulu.github.com/goku/tags.html
 
-http://qleelulu.github.com/goku/doc/viewengine--template
-http://qleelulu.github.com/goku/doc/view--viewdata
+http://qleelulu.github.com/goku/doc/view
+http://qleelulu.github.com/goku/doc/template
 http://qleelulu.github.com/goku/doc/router
 http://qleelulu.github.com/goku/doc/middleware
 http://qleelulu.github.com/goku/doc/log

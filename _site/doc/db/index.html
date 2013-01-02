@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,70 @@
     
   </h1>
 
+<p>simple database api.</p>
+<div class='highlight'><pre><code class='go'>    <span class='nx'>db</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>OpenMysql</span><span class='p'>(</span><span class='s'>&quot;mymysql&quot;</span><span class='p'>,</span> <span class='s'>&quot;tcp:localhost:3306*dbname/username/pwd&quot;</span><span class='p'>)</span>
 
+    <span class='c1'>// you can use all the api in golang&#39;s database/sql</span>
+    <span class='nx'>_</span><span class='p'>,</span> <span class='nx'>err</span> <span class='p'>=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Query</span><span class='p'>(</span><span class='s'>&quot;select 1&quot;</span><span class='p'>)</span>
+
+    <span class='c1'>// or you can use some simple api provide by goku</span>
+    <span class='nx'>r</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Select</span><span class='p'>(</span><span class='s'>&quot;test_blog&quot;</span><span class='p'>,</span> <span class='nx'>SqlQueryInfo</span><span class='p'>{</span>
+        <span class='nx'>Fields</span><span class='p'>:</span> <span class='s'>&quot;id, title, content&quot;</span><span class='p'>,</span>
+        <span class='nx'>Where</span><span class='p'>:</span>  <span class='s'>&quot;id&gt;?&quot;</span><span class='p'>,</span>
+        <span class='nx'>Params</span><span class='p'>:</span> <span class='p'>[]</span><span class='kd'>interface</span><span class='p'>{}{</span><span class='mi'>0</span><span class='p'>},</span>
+        <span class='nx'>Limit</span><span class='p'>:</span>  <span class='mi'>10</span><span class='p'>,</span>
+        <span class='nx'>Offset</span><span class='p'>:</span> <span class='mi'>0</span><span class='p'>,</span>
+        <span class='nx'>Group</span><span class='p'>:</span>  <span class='s'>&quot;&quot;</span><span class='p'>,</span>
+        <span class='nx'>Order</span><span class='p'>:</span>  <span class='s'>&quot;id desc&quot;</span><span class='p'>,</span>
+    <span class='p'>})</span>
+
+    <span class='c1'>// insert map</span>
+    <span class='nx'>vals</span> <span class='o'>:=</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kd'>interface</span><span class='p'>{}{</span>
+        <span class='s'>&quot;title&quot;</span><span class='p'>:</span> <span class='s'>&quot;golang&quot;</span><span class='p'>,</span>
+        <span class='s'>&quot;content&quot;</span><span class='p'>:</span> <span class='s'>&quot;Go is an open source programming environment that &quot;</span> <span class='o'>+</span>
+            <span class='s'>&quot;makes it easy to build simple, reliable, and efficient software.&quot;</span><span class='p'>,</span>
+        <span class='s'>&quot;create_at&quot;</span><span class='p'>:</span> <span class='nx'>time</span><span class='p'>.</span><span class='nx'>Now</span><span class='p'>(),</span>
+    <span class='p'>}</span>
+    <span class='nx'>r</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Insert</span><span class='p'>(</span><span class='s'>&quot;test_blog&quot;</span><span class='p'>,</span> <span class='nx'>vals</span><span class='p'>)</span>
+
+    <span class='c1'>// insert struct</span>
+    <span class='nx'>blog</span> <span class='o'>:=</span> <span class='nx'>TestBlog</span><span class='p'>{</span>
+        <span class='nx'>Title</span><span class='p'>:</span>    <span class='s'>&quot;goku&quot;</span><span class='p'>,</span>
+        <span class='nx'>Content</span><span class='p'>:</span>  <span class='s'>&quot;a mvc framework&quot;</span><span class='p'>,</span>
+        <span class='nx'>CreateAt</span><span class='p'>:</span> <span class='nx'>time</span><span class='p'>.</span><span class='nx'>Now</span><span class='p'>(),</span>
+    <span class='p'>}</span>
+    <span class='nx'>r</span><span class='p'>,</span> <span class='nx'>err</span> <span class='p'>=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>InsertStruct</span><span class='p'>(</span><span class='o'>&amp;</span><span class='nx'>blog</span><span class='p'>)</span>
+
+    <span class='c1'>// get struct</span>
+    <span class='nx'>blog</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>TestBlog</span><span class='p'>{}</span>
+    <span class='nx'>err</span> <span class='p'>=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>GetStruct</span><span class='p'>(</span><span class='nx'>blog</span><span class='p'>,</span> <span class='s'>&quot;id=?&quot;</span><span class='p'>,</span> <span class='mi'>3</span><span class='p'>)</span>
+
+    <span class='c1'>// get struct list</span>
+    <span class='nx'>qi</span> <span class='o'>:=</span> <span class='nx'>SqlQueryInfo</span><span class='p'>{}</span>
+    <span class='kd'>var</span> <span class='nx'>blogs</span> <span class='p'>[]</span><span class='nx'>Blog</span>
+    <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>GetStructs</span><span class='p'>(</span><span class='o'>&amp;</span><span class='nx'>blogs</span><span class='p'>,</span> <span class='nx'>qi</span><span class='p'>)</span>
+
+    <span class='c1'>// update by map</span>
+    <span class='nx'>vals</span> <span class='o'>:=</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kd'>interface</span><span class='p'>{}{</span>
+        <span class='s'>&quot;title&quot;</span><span class='p'>:</span> <span class='s'>&quot;js&quot;</span><span class='p'>,</span>
+    <span class='p'>}</span>
+    <span class='nx'>r</span><span class='p'>,</span> <span class='nx'>err2</span> <span class='o'>:=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Update</span><span class='p'>(</span><span class='s'>&quot;test_blog&quot;</span><span class='p'>,</span> <span class='nx'>vals</span><span class='p'>,</span> <span class='s'>&quot;id=?&quot;</span><span class='p'>,</span> <span class='nx'>blog</span><span class='p'>.</span><span class='nx'>Id</span><span class='p'>)</span>
+
+    <span class='c1'>// delete</span>
+    <span class='nx'>r</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Delete</span><span class='p'>(</span><span class='s'>&quot;test_blog&quot;</span><span class='p'>,</span> <span class='s'>&quot;id=?&quot;</span><span class='p'>,</span> <span class='mi'>8</span><span class='p'>)</span>
+</code></pre></div>
+<p>checkout <a href='https://github.com/QLeelulu/goku/blob/master/db_test.go'>db_test.go</a></p>
+
+<h3 id='database_sql_debug'>DataBase SQL Debug</h3>
+
+<p>if you want to debug what the sql query is, set db.Debug to <code>true</code></p>
+<div class='highlight'><pre><code class='go'>    <span class='nx'>db</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>OpenMysql</span><span class='p'>(</span><span class='s'>&quot;mymysql&quot;</span><span class='p'>,</span> <span class='s'>&quot;tcp:localhost:3306*test_db/username/pwd&quot;</span><span class='p'>)</span>
+    <span class='nx'>db</span><span class='p'>.</span><span class='nx'>Debug</span> <span class='p'>=</span> <span class='kc'>true</span>
+</code></pre></div>
+<p>after you set db.Debug to true, while you run a db command, it will print the sql query to the log, juse like this:</p>
+
+<pre><code>2012/07/30 20:58:03 SQL: UPDATE `user` SET friends=friends+? WHERE id=?;
+                    PARAMS: [[1 2]]</code></pre>
 
 
       </section>

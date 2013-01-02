@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,45 @@
     
   </h1>
 
+<p>Sometimes we want to perform logic either before all the request or after all the request. To support this, Goku provides middlewares. Middleware provided a way let you to do something before or after a request.</p>
 
+<p><img alt='/assets/themes/goku-mf.png' src='/assets/themes/goku-mf.png' /></p>
+
+<h2 id='how_to_create_middleware'>How To Create Middleware</h2>
+
+<p>To create a middleware, just implement the <a href='http://godoc.org/github.com/QLeelulu/goku#Middlewarer'>Middlewarer</a> interface.</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>type</span> <span class='nx'>Middlewarer</span> <span class='kd'>interface</span> <span class='p'>{</span>
+    <span class='nx'>OnBeginRequest</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnBeginMvcHandle</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnEndMvcHandle</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnEndRequest</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>middlewarer interface execute order:</p>
+
+<pre><code>1. OnBeginRequest
+2. OnBeginMvcHandle
+3.  -&gt; {controller}
+4. OnEndMvcHandle
+5. OnEndRequest</code></pre>
+
+<p>notice that:</p>
+
+<pre><code>OnBeginRequest &amp; OnEndRequest: All requests will be through these
+OnBeginMvcHandle &amp; OnEndMvcHandle: not matched route &amp; static file are not through these</code></pre>
+
+<p>To add a middleware to the goku server, we can do this when we create goku server:</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>func</span> <span class='nx'>main</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>rt</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>{}</span>
+    <span class='nx'>middlewares</span> <span class='o'>:=</span> <span class='p'>[]</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Middlewarer</span><span class='p'>{</span>
+        <span class='nb'>new</span><span class='p'>(</span><span class='nx'>middlewares</span><span class='p'>.</span><span class='nx'>UserMiddleware</span><span class='p'>),</span>
+        <span class='nb'>new</span><span class='p'>(</span><span class='nx'>middlewares</span><span class='p'>.</span><span class='nx'>LogMiddleware</span><span class='p'>),</span>
+    <span class='p'>}</span>
+    <span class='c1'>// add middlewares when we create server</span>
+    <span class='nx'>s</span> <span class='o'>:=</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>CreateServer</span><span class='p'>(</span><span class='nx'>rt</span><span class='p'>,</span> <span class='nx'>middlewares</span><span class='p'>,</span> <span class='nx'>serverConfig</span><span class='p'>)</span>
+    <span class='nx'>log</span><span class='p'>.</span><span class='nx'>Fatal</span><span class='p'>(</span><span class='nx'>s</span><span class='p'>.</span><span class='nx'>ListenAndServe</span><span class='p'>())</span>
+<span class='p'>}</span>
+</code></pre></div>
 
 
       </section>

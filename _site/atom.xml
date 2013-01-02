@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2012-11-26T23:36:17+08:00</updated>
+ <updated>2013-01-03T01:31:34+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -13,19 +13,159 @@
 
  
  <entry>
-   <title>ViewEngine & Template</title>
-   <link href="http://qleelulu.github.com/goku/doc/viewengine--template"/>
+   <title>View & ViewEngine</title>
+   <link href="http://qleelulu.github.com/goku/doc/view"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
-   <id>http://qleelulu.github.com/goku/doc/viewengine--template</id>
-   <content type="html"></content>
+   <id>http://qleelulu.github.com/goku/doc/view</id>
+   <content type="html">&lt;blockquote&gt;
+&lt;p&gt;Views are the components that display the application&amp;#8217;s user interface (UI)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To render a view, you can just return a &lt;code&gt;ViewResut&lt;/code&gt; which implement the &lt;code&gt;ActionResulter&lt;/code&gt; interface. just like this:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;    &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+        &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;blog&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;GetBlogByid&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+        &lt;span class='c1'&gt;// you can add any val to ViewData&lt;/span&gt;
+        &lt;span class='c1'&gt;// then you can use it in template&lt;/span&gt;
+        &lt;span class='c1'&gt;// like this: { { .Data.SiteName } }&lt;/span&gt;
+        &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;SiteName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;My Blog&amp;quot;&lt;/span&gt;
+
+        &lt;span class='c1'&gt;// or you can pass a struct to ViewModel&lt;/span&gt;
+        &lt;span class='c1'&gt;// then you can use it in template&lt;/span&gt;
+        &lt;span class='c1'&gt;// like this: { { .Model.Title } }&lt;/span&gt;
+        &lt;span class='c1'&gt;// that same as blog.Title&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;blog&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;ctx.View()&lt;/code&gt; will find the view in these rules:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='mf'&gt;1.&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;ViewPath&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;action&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='mf'&gt;2.&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;ViewPath&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;shared&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;action&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;for example, &lt;code&gt;ServerConfig.ViewPath&lt;/code&gt; is set to &lt;code&gt;&amp;quot;views&amp;quot;&lt;/code&gt;, and return ctx.View() in &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;about&lt;/code&gt; action, it will find the view file in this rule:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='mf'&gt;1.&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;ProjectDir&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;views&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;home&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;about&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;html&lt;/span&gt;
+&lt;span class='mf'&gt;2.&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;ProjectDir&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;views&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;shared&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;about&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;html&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;if you want to return a view that specified view name, you can use &lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Render'&gt;ctx.Render&lt;/a&gt;:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;    &lt;span class='c1'&gt;// it will find the view in these rules:&lt;/span&gt;
+    &lt;span class='c1'&gt;//      1. /{ViewPath}/{Controller}/{viewName}&lt;/span&gt;
+    &lt;span class='c1'&gt;//      2. /{ViewPath}/shared/{viewName}&lt;/span&gt;
+    &lt;span class='c1'&gt;// if viewName start with &amp;#39;/&amp;#39;,&lt;/span&gt;
+    &lt;span class='c1'&gt;// it will find the view direct by viewpath:&lt;/span&gt;
+    &lt;span class='c1'&gt;//      1. /{ViewPath}/{viewName}&lt;/span&gt;
+    &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Render&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;viewName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;ViewModel&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id='custom_viewengine'&gt;Custom ViewEngine&lt;/h2&gt;
+
+&lt;p&gt;ViewEngine is for how to find the view file. To Custom a ViewEngine, just implement the &lt;code&gt;ViewEnginer&lt;/code&gt; interface.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// ViewEnginer interface.&lt;/span&gt;
+&lt;span class='c1'&gt;// For how to find the view file.&lt;/span&gt;
+&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;ViewEnginer&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='c1'&gt;// find the view and layout&lt;/span&gt;
+    &lt;span class='c1'&gt;// if template engine not suppot layout, just return empty string&lt;/span&gt;
+    &lt;span class='nx'&gt;FindView&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;vi&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;ViewInfo&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;viewPath&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;layoutPath&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then set it to the &lt;a href='http://godoc.org/github.com/QLeelulu/goku#ServerConfig'&gt;ServerConfig.ViewEnginer&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// server config&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;config&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ServerConfig&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ServerConfig&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;           &lt;span class='s'&gt;&amp;quot;:8888&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;ViewEnginer&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;YourViewEngine&lt;/span&gt;&lt;span class='p'&gt;{},&lt;/span&gt; &lt;span class='c1'&gt;// set here&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A simple &lt;a href='https://github.com/QLeelulu/goku-demo/tree/master/custom_viewengine'&gt;ThemeViewEngine&lt;/a&gt; is show how to do this, just check it.&lt;/p&gt;</content>
  </entry>
  
  <entry>
-   <title>View & ViewData</title>
-   <link href="http://qleelulu.github.com/goku/doc/view--viewdata"/>
+   <title>Template</title>
+   <link href="http://qleelulu.github.com/goku/doc/template"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
-   <id>http://qleelulu.github.com/goku/doc/view--viewdata</id>
-   <content type="html"></content>
+   <id>http://qleelulu.github.com/goku/doc/template</id>
+   <content type="html">&lt;p&gt;View Engine decide how to find the view file to render, and then pass to Template Engine parse and generate HTML.&lt;/p&gt;
+
+&lt;h2 id='template_engine'&gt;Template Engine&lt;/h2&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// you can add any val to ViewData&lt;/span&gt;
+    &lt;span class='c1'&gt;// then you can use it in template&lt;/span&gt;
+    &lt;span class='c1'&gt;// like this: { { .Data.SiteName } }&lt;/span&gt;
+    &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;SiteName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;My Blog&amp;quot;&lt;/span&gt;
+
+    &lt;span class='nx'&gt;blogs&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;GetBlogs&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+    &lt;span class='c1'&gt;// or you can pass a struct to ViewModel&lt;/span&gt;
+    &lt;span class='c1'&gt;// then you can use it in template&lt;/span&gt;
+    &lt;span class='c1'&gt;// like this: { {range .Model} }  { { .Title } }  { {end} }&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;blogs&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The default template engine is golang&amp;#8217;s &lt;code&gt;html/template&lt;/code&gt;.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;    &lt;span class='nt'&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;{ { .Data.SiteName } }&lt;span class='nt'&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
+          { {range .Model} }
+            &lt;span class='nt'&gt;&amp;lt;li&lt;/span&gt; &lt;span class='na'&gt;id=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;blog-{ {.Id} }&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;
+              { {.Title} }
+            &lt;span class='nt'&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+          { {end} }
+        &lt;span class='nt'&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id='layout'&gt;Layout&lt;/h2&gt;
+
+&lt;p&gt;Goku will find layout in these rules:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1. /{ViewPath}/{Controller}/{layout}
+2. /{ViewPath}/shared/{layout}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;the default layout is &lt;code&gt;layout.html&lt;/code&gt;, and you can change it in &lt;a href='http://godoc.org/github.com/QLeelulu/goku#ServerConfig'&gt;ServerConfig.Layout&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;layout.html&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;    &lt;span class='cp'&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Goku&lt;span class='nt'&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+        { { template &amp;quot;head&amp;quot; } }
+    &lt;span class='nt'&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+      { { template &amp;quot;body&amp;quot; . } }
+    &lt;span class='nt'&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and in the view template, it will look like this:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;    { {define &amp;quot;head&amp;quot;} }
+        &lt;span class='c'&gt;&amp;lt;!-- add css or js here --&amp;gt;&lt;/span&gt;
+    { {end} }
+
+    { {define &amp;quot;body&amp;quot;} }
+        I&amp;#39;m main content.
+    { {end} }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;note the dot in &lt;code&gt;{ {template &amp;quot;body&amp;quot; .} }&lt;/code&gt; in layout , it will pass the ViewData to the sub template.&lt;/p&gt;
+
+&lt;h2 id='more_template_engine_support'&gt;More Template Engine Support&lt;/h2&gt;
+
+&lt;p&gt;if you want to use &lt;a href='https://github.com/hoisie/mustache'&gt;mustache&lt;/a&gt; template, check &lt;a href='https://github.com/QLeelulu/mustache.goku'&gt;mustache.goku&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id='custom_template_engine'&gt;Custom Template Engine&lt;/h2&gt;
+
+&lt;p&gt;To Custom a Template Engine, just implement the &lt;code&gt;TemplateEnginer&lt;/code&gt; interface.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;TemplateEnginer&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='c1'&gt;// render the view with viewData and write to w&lt;/span&gt;
+    &lt;span class='nx'&gt;Render&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;viewpath&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;layoutPath&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;viewData&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;w&lt;/span&gt; &lt;span class='nx'&gt;io&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Writer&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='c1'&gt;// return whether the tempalte support layout&lt;/span&gt;
+    &lt;span class='nx'&gt;SupportLayout&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='kt'&gt;bool&lt;/span&gt;
+    &lt;span class='c1'&gt;// template file ext name, default is &amp;quot;.html&amp;quot;&lt;/span&gt;
+    &lt;span class='nx'&gt;Ext&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For more detail, you can check &lt;a href='https://github.com/QLeelulu/mustache.goku'&gt;mustache.goku&lt;/a&gt;, it will show you how to this.&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -38,46 +178,44 @@
 &lt;h2 id='map_route'&gt;Map Route&lt;/h2&gt;
 
 &lt;p&gt;You can map route by this two ways:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/public/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/public/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;/{controller}/{id}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
-        &lt;span class='n'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;/{controller}/{id}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+        &lt;span class='nx'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;todo&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;todo&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
 &lt;span class='c1'&gt;// create server with the rules&lt;/span&gt;
-&lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;todo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
-&lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;todo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;or&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Static&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;staticFile&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/static/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Static&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;staticFile&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/static/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;blog-page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// route name&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;/blog/p/{page}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// pattern&lt;/span&gt;
-    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
-    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt; &lt;span class='c1'&gt;// constraint&lt;/span&gt;
+    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
+    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;page&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt; &lt;span class='c1'&gt;// constraint&lt;/span&gt;
 &lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// route name&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// pattern&lt;/span&gt;
-    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
+    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
 &lt;span class='p'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id='static_file_route'&gt;Static File Route&lt;/h2&gt;
 
 &lt;p&gt;When a route set &lt;code&gt;IsStatic&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt;, if a url matched this route, the request will process as static file. Such as JS, CSS file.&lt;/p&gt;
@@ -103,17 +241,16 @@
 &lt;h2 id='setting_default_values_for_url_parameters'&gt;Setting Default Values for URL Parameters&lt;/h2&gt;
 
 &lt;p&gt;When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a map to the &lt;code&gt;Defaults&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Category/{action}/{categoryName}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Category/{action}/{categoryName}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
             &lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;category&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;show&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;food&amp;quot;&lt;/span&gt;
         &lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;}&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;When goku routing handles a URL request, the route definition shown in the example (with default values of food for categoryName and show for action) produces the results that are listed in the following table.&lt;/p&gt;
 &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;th&gt;Parameter values&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;show&amp;#8221; (default value) &lt;br /&gt; categoryName = &amp;#8220;food&amp;#8221; (default value)&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/Category/add&lt;/td&gt;&lt;td style='text-align: left;'&gt;action = &amp;#8220;add&amp;#8221; &lt;br /&gt; categoryName = &amp;#8220;food&amp;#8221; (default value)&lt;/td&gt;
@@ -124,11 +261,11 @@
 &lt;p&gt;In addition to matching a URL request to a route definition by the number of parameters in the URL, you can specify that values in the parameters meet certain constraints. If a URL contains values that are outside the constraints for a route, that route is not used to handle the request. You add constraints to make sure that the URL parameters contain values that will work in your application.&lt;/p&gt;
 
 &lt;p&gt;Constraints are defined by using regular expressions. You add constraints for a route by assigning a map to the &lt;code&gt;Constraint&lt;/code&gt; property of the &lt;code&gt;Route&lt;/code&gt; struct, or add by &lt;code&gt;RouteTable.Map()&lt;/code&gt;&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;post-list&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;whatever/{locale}/{year}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;post-list&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;whatever/{locale}/{year}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
             &lt;span class='s'&gt;&amp;quot;locale&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;[a-z]{2}-[a-z]{2}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;year&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d{4}&amp;quot;&lt;/span&gt;
         &lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
@@ -136,17 +273,16 @@
 
 &lt;span class='c1'&gt;// or&lt;/span&gt;
 
-&lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Map&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;post-list&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// route name&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;whatever/{locale}/{year}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='c1'&gt;// pattern&lt;/span&gt;
-    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;show&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
-    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='c1'&gt;// constraint&lt;/span&gt;
+    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;show&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt; &lt;span class='c1'&gt;// default&lt;/span&gt;
+    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='c1'&gt;// constraint&lt;/span&gt;
         &lt;span class='s'&gt;&amp;quot;locale&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;[a-z]{2}-[a-z]{2}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;year&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d{4}&amp;quot;&lt;/span&gt;
     &lt;span class='p'&gt;}&lt;/span&gt;
 &lt;span class='p'&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;When routing handles a URL request, the route definition shown in the previous example produces the results that are listed in the following table.&lt;/p&gt;
 &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;th&gt;Result&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/en-us&lt;/td&gt;&lt;td style='text-align: left;'&gt;No match. &lt;br /&gt; Both locale and year are required.&lt;/td&gt;
 &lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;/en-us/08&lt;/td&gt;&lt;td style='text-align: left;'&gt;No match. &lt;br /&gt; The constraint on year requires 4 digits.&lt;/td&gt;
@@ -158,10 +294,9 @@
 
 &lt;p&gt;For the Pattern &lt;code&gt;Category/{action}/{categoryName}&lt;/code&gt;, and a URL &lt;code&gt;/Category/add/beverages&lt;/code&gt;, you can get the &lt;code&gt;categoryName&lt;/code&gt; parameter in the controller action by HttpContext:&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// ctx is HttpContext&lt;/span&gt;
-&lt;span class='n'&gt;categoryName&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteData&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Params&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+&lt;span class='nx'&gt;categoryName&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteData&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Params&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;categoryName&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
 &lt;span class='c1'&gt;// categoryName == beverages&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id='todo'&gt;TODO&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -174,7 +309,45 @@
    <link href="http://qleelulu.github.com/goku/doc/middleware"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/middleware</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;Sometimes we want to perform logic either before all the request or after all the request. To support this, Goku provides middlewares. Middleware provided a way let you to do something before or after a request.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='/assets/themes/goku-mf.png' src='/assets/themes/goku-mf.png' /&gt;&lt;/p&gt;
+
+&lt;h2 id='how_to_create_middleware'&gt;How To Create Middleware&lt;/h2&gt;
+
+&lt;p&gt;To create a middleware, just implement the &lt;a href='http://godoc.org/github.com/QLeelulu/goku#Middlewarer'&gt;Middlewarer&lt;/a&gt; interface.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;Middlewarer&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;OnBeginRequest&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnBeginMvcHandle&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnEndMvcHandle&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnEndRequest&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;middlewarer interface execute order:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1. OnBeginRequest
+2. OnBeginMvcHandle
+3.  -&amp;gt; {controller}
+4. OnEndMvcHandle
+5. OnEndRequest&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;notice that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;OnBeginRequest &amp;amp; OnEndRequest: All requests will be through these
+OnBeginMvcHandle &amp;amp; OnEndMvcHandle: not matched route &amp;amp; static file are not through these&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To add a middleware to the goku server, we can do this when we create goku server:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
+    &lt;span class='nx'&gt;middlewares&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Middlewarer&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;UserMiddleware&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
+        &lt;span class='nb'&gt;new&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;LogMiddleware&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='c1'&gt;// add middlewares when we create server&lt;/span&gt;
+    &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;serverConfig&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
  
  <entry>
@@ -182,7 +355,21 @@
    <link href="http://qleelulu.github.com/goku/doc/log"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/log</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;To use logger in goku, just:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;goku.Logger().Logln(&amp;quot;i&amp;quot;, &amp;quot;am&amp;quot;, &amp;quot;log&amp;quot;)
+goku.Logger().Errorln(&amp;quot;oh&amp;quot;, &amp;quot;no!&amp;quot;, &amp;quot;Server Down!&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;this will log like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2012/07/14 20:07:46 i am log
+2012/07/14 20:07:46 [ERROR] oh no! Server Down!&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;TODO:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;like log4j ?&lt;/li&gt;
+&lt;/ul&gt;</content>
  </entry>
  
  <entry>
@@ -190,7 +377,25 @@
    <link href="http://qleelulu.github.com/goku/doc/httpcontext"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/httpcontext</id>
-   <content type="html"></content>
+   <content type="html">&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;HttpContext&lt;/span&gt; &lt;span class='kd'&gt;struct&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;Request&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;http&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Request&lt;/span&gt; &lt;span class='c1'&gt;// http request&lt;/span&gt;
+
+    &lt;span class='nx'&gt;Method&lt;/span&gt; &lt;span class='kt'&gt;string&lt;/span&gt; &lt;span class='c1'&gt;// http method&lt;/span&gt;
+
+    &lt;span class='c1'&gt;//self fields&lt;/span&gt;
+    &lt;span class='nx'&gt;RouteData&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;RouteData&lt;/span&gt;             &lt;span class='c1'&gt;// route data&lt;/span&gt;
+    &lt;span class='nx'&gt;ViewData&lt;/span&gt;  &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt; &lt;span class='c1'&gt;// view data for template&lt;/span&gt;
+    &lt;span class='nx'&gt;Data&lt;/span&gt;      &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt; &lt;span class='c1'&gt;// data for httpcontex&lt;/span&gt;
+    &lt;span class='nx'&gt;Result&lt;/span&gt;    &lt;span class='nx'&gt;ActionResulter&lt;/span&gt;         &lt;span class='c1'&gt;// action result&lt;/span&gt;
+    &lt;span class='nx'&gt;Err&lt;/span&gt;       &lt;span class='kt'&gt;error&lt;/span&gt;                  &lt;span class='c1'&gt;// process error&lt;/span&gt;
+    &lt;span class='nx'&gt;User&lt;/span&gt;      &lt;span class='kt'&gt;string&lt;/span&gt;                 &lt;span class='c1'&gt;// user name&lt;/span&gt;
+    &lt;span class='nx'&gt;Canceled&lt;/span&gt;  &lt;span class='kt'&gt;bool&lt;/span&gt;                   &lt;span class='c1'&gt;// cancel continue process the request and return&lt;/span&gt;
+    &lt;span class='c1'&gt;// contains filtered or unexported fields&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you want to shared data in a request, you can set it to &lt;code&gt;HttpContext.Data&lt;/code&gt;, and then you can access it in the whole request.&lt;/p&gt;
+
+&lt;p&gt;For more detail, check &lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext'&gt;HttpContext doc&lt;/a&gt;.&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -198,7 +403,34 @@
    <link href="http://qleelulu.github.com/goku/doc/form-validation"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/form-validation</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;you can create a form, to valid the user&amp;#8217;s input, and get the clean value.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;github.com/QLeelulu/goku/form&amp;quot;&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;CreateCommentForm&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Form&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;name&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;NewCharField&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Name&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Range&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Field&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+    &lt;span class='nx'&gt;nickName&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;NewCharField&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;nick_name&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Nick Name&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;false&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Min&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Max&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;20&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Field&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+    &lt;span class='nx'&gt;age&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;NewIntegerField&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Age&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Range&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;18&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;50&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Field&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+    &lt;span class='nx'&gt;content&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;NewTextField&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Content&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Min&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;&lt;span class='nx'&gt;Field&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+
+    &lt;span class='nx'&gt;form&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;NewForm&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;name&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;nickName&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;age&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;form&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and then you can use this form like this:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='nx'&gt;f&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;CreateCommentForm&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+&lt;span class='nx'&gt;f&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;FillByRequest&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Request&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nx'&gt;f&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Valid&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='c1'&gt;// after valid, we can get the clean values&lt;/span&gt;
+    &lt;span class='nx'&gt;m&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;f&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CleanValues&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+    &lt;span class='c1'&gt;// and now you can save m to database&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='c1'&gt;// if not valid&lt;/span&gt;
+    &lt;span class='c1'&gt;// we can get the valid errors&lt;/span&gt;
+    &lt;span class='nx'&gt;errs&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;f&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Errors&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;checkout &lt;a href='https://github.com/QLeelulu/goku/blob/master/form/form_test.go'&gt;form_test.go&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -206,7 +438,89 @@
    <link href="http://qleelulu.github.com/goku/doc/filter"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/filter</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;Controllers define action methods that usually have a one-to-one relationship with possible user interactions, such as clicking a link or submitting a form. For example, when the user clicks a link, a request is routed to the designated controller, and the corresponding action method is called.&lt;/p&gt;
+
+&lt;p&gt;Sometimes you want to perform logic either before an action method is called or after an action method runs. To support this, Goku provides filters. Filters are custom stuct that provide both a declarative and programmatic means to add pre-action and post-action behavior to controller action methods.&lt;/p&gt;
+
+&lt;h2 id='how_to_create_filter'&gt;How To Create Filter&lt;/h2&gt;
+
+&lt;p&gt;To create a filter, just implement the &lt;a href='http://godoc.org/github.com/QLeelulu/goku#Filter'&gt;Filter&lt;/a&gt; interface.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;Filter&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;OnActionExecuting&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnActionExecuted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnResultExecuting&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;OnResultExecuted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Order of the filters execution is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1. OnActionExecuting
+2. -&amp;gt; Execute Action -&amp;gt; return ActionResulter
+3. OnActionExecuted
+4. OnResultExecuting
+5. -&amp;gt; ActionResulter.ExecuteResult
+6. OnResultExecuted&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you want cancel the request(end the request) in the filter, you can return an &lt;code&gt;ActionResulter&lt;/code&gt; or return &lt;code&gt;error&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is a example show how to create a Auth filter.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;type&lt;/span&gt; &lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt; &lt;span class='kd'&gt;struct&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;f&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;OnActionExecuting&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ar&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;c&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Cookie&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;user&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;users&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;GetByTicket&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;c&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Value&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nx'&gt;user&lt;/span&gt; &lt;span class='o'&gt;!=&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+            &lt;span class='c1'&gt;// we can set data to ctx.Data,&lt;/span&gt;
+            &lt;span class='c1'&gt;// then we can get it any where.&lt;/span&gt;
+            &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Data&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;user&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt;
+        &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;IsAjax&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;ar&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Json&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}{&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;success&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='kc'&gt;false&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;needLogin&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;errors&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;Please Login&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='p'&gt;})&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;ar&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Redirect&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;/user/login?returnurl=&amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='nx'&gt;url&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;QueryEscape&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Request&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RequestURI&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;f&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;OnActionExecuted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;f&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;OnResultExecuting&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;f&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;OnResultExecuted&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;error&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then we can apply this filter to controller:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='c1'&gt;// apply filter to controller,&lt;/span&gt;
+    &lt;span class='c1'&gt;// all this controller&amp;#39;s actions.&lt;/span&gt;
+    &lt;span class='nx'&gt;Filters&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;{}).&lt;/span&gt;
+    &lt;span class='c1'&gt;// index action&lt;/span&gt;
+    &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Or we can only apply the filter to the specified action.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='c1'&gt;// index action&lt;/span&gt;
+    &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='p'&gt;}).&lt;/span&gt;
+    &lt;span class='c1'&gt;// only apply filter to index action&lt;/span&gt;
+    &lt;span class='nx'&gt;Filters&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;RequireLoginFilter&lt;/span&gt;&lt;span class='p'&gt;{})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
  
  <entry>
@@ -214,7 +528,70 @@
    <link href="http://qleelulu.github.com/goku/doc/db"/>
    <updated>2012-11-22T00:00:00+08:00</updated>
    <id>http://qleelulu.github.com/goku/doc/db</id>
-   <content type="html"></content>
+   <content type="html">&lt;p&gt;simple database api.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;    &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;OpenMysql&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;mymysql&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;tcp:localhost:3306*dbname/username/pwd&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// you can use all the api in golang&amp;#39;s database/sql&lt;/span&gt;
+    &lt;span class='nx'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Query&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;select 1&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// or you can use some simple api provide by goku&lt;/span&gt;
+    &lt;span class='nx'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Select&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;test_blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;SqlQueryInfo&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Fields&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id, title, content&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Where&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;id&amp;gt;?&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Params&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}{&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+        &lt;span class='nx'&gt;Limit&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Offset&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Group&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Order&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;id desc&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='p'&gt;})&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// insert map&lt;/span&gt;
+    &lt;span class='nx'&gt;vals&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}{&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;quot;title&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;golang&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Go is an open source programming environment that &amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt;
+            &lt;span class='s'&gt;&amp;quot;makes it easy to build simple, reliable, and efficient software.&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;quot;create_at&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Now&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Insert&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;test_blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;vals&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// insert struct&lt;/span&gt;
+    &lt;span class='nx'&gt;blog&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;TestBlog&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Title&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;goku&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Content&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;a mvc framework&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;CreateAt&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Now&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;InsertStruct&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;blog&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// get struct&lt;/span&gt;
+    &lt;span class='nx'&gt;blog&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;TestBlog&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
+    &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;GetStruct&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;blog&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id=?&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// get struct list&lt;/span&gt;
+    &lt;span class='nx'&gt;qi&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;SqlQueryInfo&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
+    &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;blogs&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='nx'&gt;Blog&lt;/span&gt;
+    &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;GetStructs&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;blogs&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;qi&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// update by map&lt;/span&gt;
+    &lt;span class='nx'&gt;vals&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kd'&gt;interface&lt;/span&gt;&lt;span class='p'&gt;{}{&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;quot;title&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;js&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err2&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Update&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;test_blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;vals&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id=?&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;blog&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Id&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c1'&gt;// delete&lt;/span&gt;
+    &lt;span class='nx'&gt;r&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Delete&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;test_blog&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id=?&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;checkout &lt;a href='https://github.com/QLeelulu/goku/blob/master/db_test.go'&gt;db_test.go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='database_sql_debug'&gt;DataBase SQL Debug&lt;/h3&gt;
+
+&lt;p&gt;if you want to debug what the sql query is, set db.Debug to &lt;code&gt;true&lt;/code&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;    &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;err&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;OpenMysql&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;mymysql&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;tcp:localhost:3306*test_db/username/pwd&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;db&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Debug&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;after you set db.Debug to true, while you run a db command, it will print the sql query to the log, juse like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2012/07/30 20:58:03 SQL: UPDATE `user` SET friends=friends+? WHERE id=?;
+                    PARAMS: [[1 2]]&lt;/code&gt;&lt;/pre&gt;</content>
  </entry>
  
  <entry>
@@ -228,13 +605,12 @@
 
 &lt;p&gt;We build controller with &lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'&gt;ControllerBuilder&lt;/a&gt;&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='c1'&gt;// a home controller builder&lt;/span&gt;
-&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;cb&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ControllerBuilder&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;cb&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ControllerBuilder&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 &lt;span class='c1'&gt;// add a &amp;quot;index&amp;quot; action to &amp;quot;home&amp;quot; controller for http get&lt;/span&gt;
-&lt;span class='n'&gt;cb&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;cb&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 &lt;span class='p'&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Use &lt;code&gt;goku.Controller(&amp;quot;controller-name&amp;quot;)&lt;/code&gt; to get a controller builder. If the controller &lt;code&gt;&amp;quot;controller-name&amp;quot;&lt;/code&gt; exist, it will just return the same controller builder.&lt;/p&gt;
 
 &lt;h2 id='action'&gt;Action&lt;/h2&gt;
@@ -244,31 +620,28 @@
 &lt;p&gt;When a user enters a URL into the browser, the MVC application uses routing rules to parse the URL and to determine the path of the controller. The controller then determines the appropriate action method to handle the request. By default, the URL of a request is treated as a sub-path that includes the controller name followed by the action name. For example, if a user enters the URL &lt;code&gt;http://abc.com/Products/Categories&lt;/code&gt;, the sub-path is &lt;code&gt;/Products/Categories&lt;/code&gt;. The default routing rule treats &amp;#8220;Products&amp;#8221; as the controller. It treats &amp;#8220;Categories&amp;#8221; as the name of the action. Therefore, the routing rule invokes the Categories action of the Products controller in order to process the request. If the URL ends with &lt;code&gt;/Products/Detail/5&lt;/code&gt;, the default routing rule treats &lt;code&gt;&amp;quot;Detail&amp;quot;&lt;/code&gt; as the name of the action, and the Detail action of the Products controller is invoked to process the request.&lt;/p&gt;
 
 &lt;p&gt;The following example shows a controller that has a &lt;code&gt;HelloWorld&lt;/code&gt; action for http GET method.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
-    &lt;span class='n'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;get&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='nx'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;get&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='p'&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ControllerBuilder'&gt;ControllerBuilder&lt;/a&gt; has some helper method: &lt;code&gt;Get&lt;/code&gt;, &lt;code&gt;Post&lt;/code&gt;, &lt;code&gt;Put&lt;/code&gt;. So you can do it the same by this code:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
-    &lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;my&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+    &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;HelloWorld&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='p'&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If you set http method to &lt;code&gt;all&lt;/code&gt;, the action will match all http method, but Priority is low. &lt;br /&gt;For example:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
     &lt;span class='c1'&gt;// action 1&lt;/span&gt;
-    &lt;span class='n'&gt;Post&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;Post&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='p'&gt;}).&lt;/span&gt;
     &lt;span class='c1'&gt;// action 2&lt;/span&gt;
-    &lt;span class='n'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;Action&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;edit&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='p'&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;A &lt;code&gt;Http POST /user/edit&lt;/code&gt; request will process by &lt;code&gt;Post(&amp;quot;edit&amp;quot;, ...)&lt;/code&gt;, &lt;br /&gt;but a &lt;code&gt;Http GET /user/edit&lt;/code&gt; request will process by &lt;code&gt;Action(&amp;quot;all&amp;quot;, &amp;quot;edit&amp;quot;, ...)&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h2 id='actionresult_return_type'&gt;ActionResult Return Type&lt;/h2&gt;
@@ -276,17 +649,20 @@
 &lt;p&gt;Action methods return an instance of a struct that implement the &lt;a href='http://go.pkgdoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt; interface. There are different action result types, depending on the task that the action method is performing. For example, the most common action is to call the &lt;code&gt;HttpContext.View&lt;/code&gt; method. The View method returns an instance of the ViewResult struct, which is implement the ActionResulter interface.&lt;/p&gt;
 
 &lt;p&gt;The following table shows the built-in action result types and the action helper methods that return them.&lt;/p&gt;
-&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Action Result&lt;/th&gt;&lt;th&gt;Helper Method&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;ViewResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;View&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a view as a Web page.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;PartialViewResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;PartialView&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a partial view, which defines a section of a view that can be rendered inside another view.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;RedirectResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirect&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method by using its URL.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;RedirectToRouteResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;RedirectToAction &lt;br /&gt; RedirectToRoute&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;ContentResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Content&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a user-defined content type.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;JsonResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;Json&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a serialized JSON object.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;JavaScriptResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;JavaScript&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a script that can be executed on the client.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;FileResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;File&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns binary output to write to the response.&lt;/td&gt;
-&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;EmptyResult&lt;/td&gt;&lt;td style='text-align: left;'&gt;(None)&lt;/td&gt;&lt;td style='text-align: left;'&gt;Represents a return value that is used if the action method must return a null result (void).&lt;/td&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Action Result&lt;/th&gt;&lt;th&gt;Helper Method&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ViewResult'&gt;ViewResult&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.View'&gt;ctx.View&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a view as a Web page.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ViewResult'&gt;ViewResult&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.RenderPartial'&gt;ctx.RenderPartial&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Renders a partial view, mean that not render the layout.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Redirect'&gt;ctx.Redirect&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method by using its URL.(&lt;code&gt;302&lt;/code&gt;)&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.RedirectPermanent'&gt;ctx.RedirectPermanent&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Redirects to another action method by using its URL.(&lt;code&gt;301&lt;/code&gt;)&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ContentResult'&gt;ContentResult&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;No&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns binary output to write to the response.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Json'&gt;ctx.Json&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns a serialized JSON object.&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Html'&gt;ctx.Html&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns string content, but set response Content-Type to text/html .&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Raw'&gt;ctx.Raw&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns string content, but set response Content-Type to text/plain .&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.NotModified'&gt;ctx.NotModified&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns 304 not modified .&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;&lt;a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.NotFound'&gt;ctx.NotFound&lt;/a&gt;&lt;/td&gt;&lt;td style='text-align: left;'&gt;Returns 404 page not found .&lt;/td&gt;
 &lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
-&lt;h2 id='custom_actionresult'&gt;Custom ActionResult&lt;/h2&gt;</content>
+&lt;h2 id='custom_actionresult'&gt;Custom ActionResult&lt;/h2&gt;
+
+&lt;p&gt;To implement your own action result, you just need to implement the &lt;a href='http://godoc.org/github.com/QLeelulu/goku#ActionResulter'&gt;ActionResulter&lt;/a&gt; interface, and return it in the action.&lt;/p&gt;</content>
  </entry>
  
  <entry>
@@ -323,55 +699,51 @@
 &lt;h3 id='route'&gt;Route&lt;/h3&gt;
 
 &lt;p&gt;An URL request like &amp;#8220;http://www.abc.com/home/index&amp;#8221; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action. &lt;br /&gt;This was rewrite by the routes:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/public/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;Routes&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/public/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/{controller}/{action}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;static&lt;/code&gt; route set &lt;code&gt;IsStatic&lt;/code&gt; to true, mean that if the url matched this route, will process the request as static file. &lt;br /&gt;The &lt;code&gt;default&lt;/code&gt; route mean that the url &lt;code&gt;/user/info&lt;/code&gt;, will map to &lt;code&gt;user&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;info&lt;/code&gt; action, and the url &lt;code&gt;/&lt;/code&gt; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action, because this is the default value.&lt;/p&gt;
 
 &lt;p&gt;We register the routes to goku server by this way (&lt;a href='http://github.com/QLeelulu/goku-demo/app.go'&gt;app.go&lt;/a&gt;) :&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='n'&gt;middlewares&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Middlewarer&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
-    &lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;middlewares&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Middlewarer&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;
+    &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;middlewares&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id='controller__action'&gt;Controller &amp;amp; Action&lt;/h3&gt;
 
 &lt;p&gt;Add a controller like this code(&lt;a href='http://github.com/QLeelulu/goku-demo/controllers/home.go'&gt;controllers/home.go&lt;/a&gt;):&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;package&lt;/span&gt; &lt;span class='n'&gt;controllers&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kn'&gt;package&lt;/span&gt; &lt;span class='nx'&gt;controllers&lt;/span&gt;
 
-&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
+&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/span&gt;
 &lt;span class='p'&gt;)&lt;/span&gt;
 
 &lt;span class='c1'&gt;// home controller&lt;/span&gt;
-&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
 &lt;span class='c1'&gt;// index action&lt;/span&gt;
-&lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Message&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;
-    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ViewData&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Message&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;View&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 &lt;span class='p'&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This code register a &lt;code&gt;home&lt;/code&gt; controller, with a action named &lt;code&gt;index&lt;/code&gt; for http &lt;code&gt;GET&lt;/code&gt; methed, and add a viewdate &lt;code&gt;Message&lt;/code&gt; can be use in the view.&lt;/p&gt;
 
 &lt;p&gt;If the controllers register in the other packages, we must import it:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;gokudemo/gokudemo/controllers&amp;quot;&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;gokudemo/gokudemo/controllers&amp;quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;we just import it but ignore it by &lt;code&gt;_&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h3 id='view'&gt;View&lt;/h3&gt;
@@ -403,8 +775,7 @@
 2012/11/23 23:06:51 Server start on :8080
 2012/11/23 23:07:13 D 200 GET / 
 2012/11/23 23:07:13 N 404 GET /favicon.ico
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now you can open a web-browser with the URL &lt;code&gt;http://127.0.0.1:8080&lt;/code&gt; to see what happen.&lt;/p&gt;</content>
  </entry>
  
@@ -448,9 +819,9 @@
 &lt;h2 id='example'&gt;Example&lt;/h2&gt;
 
 &lt;p&gt;Here is a simple example, or you can check &lt;a href='/doc/intro'&gt;Intro&lt;/a&gt; for more detail.&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='k'&gt;package&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kn'&gt;package&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;
 
-&lt;span class='k'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
+&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;github.com/QLeelulu/goku&amp;quot;&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;log&amp;quot;&lt;/span&gt;
     &lt;span class='s'&gt;&amp;quot;path&amp;quot;&lt;/span&gt;
@@ -459,66 +830,64 @@
 &lt;span class='p'&gt;)&lt;/span&gt;
 
 &lt;span class='c1'&gt;// routes&lt;/span&gt;
-&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;routes&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;routes&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
     &lt;span class='c1'&gt;// static file route&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/static/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;     &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;IsStatic&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;  &lt;span class='s'&gt;&amp;quot;/static/(.*)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='c1'&gt;// default controller and action route&lt;/span&gt;
-    &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='n'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;/{controller}/{action}/{id}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-        &lt;span class='n'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
-        &lt;span class='n'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='k'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='nb'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+    &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Route&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='nx'&gt;Name&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;       &lt;span class='s'&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Pattern&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;/{controller}/{action}/{id}&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='nx'&gt;Default&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;controller&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;action&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
+        &lt;span class='nx'&gt;Constraint&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='kd'&gt;map&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='kt'&gt;string&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;\\d+&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;},&lt;/span&gt;
     &lt;span class='p'&gt;},&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
 
 &lt;span class='c1'&gt;// server config&lt;/span&gt;
-&lt;span class='k'&gt;var&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ServerConfig&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ServerConfig&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;           &lt;span class='s'&gt;&amp;quot;:8888&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='n'&gt;ReadTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='n'&gt;WriteTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='n'&gt;MaxHeaderBytes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt; &lt;span class='p'&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class='mi'&gt;20&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+&lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;config&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ServerConfig&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ServerConfig&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;           &lt;span class='s'&gt;&amp;quot;:8888&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;ReadTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;    &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='nx'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;WriteTimeout&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='nx'&gt;time&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Second&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;MaxHeaderBytes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class='mi'&gt;20&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
     &lt;span class='c1'&gt;//RootDir:        os.Getwd(),&lt;/span&gt;
-    &lt;span class='n'&gt;StaticPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='n'&gt;ViewPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='s'&gt;&amp;quot;views&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
-    &lt;span class='n'&gt;Debug&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;      &lt;span class='n'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;StaticPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;static&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;ViewPath&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;   &lt;span class='s'&gt;&amp;quot;views&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+    &lt;span class='nx'&gt;Debug&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;      &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
 
-&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;init&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;init&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
     &lt;span class='cm'&gt;/**&lt;/span&gt;
 &lt;span class='cm'&gt;     * project root dir&lt;/span&gt;
 &lt;span class='cm'&gt;     */&lt;/span&gt;
-    &lt;span class='n'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;_&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;runtime&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Caller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RootDir&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Dir&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;_&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;runtime&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Caller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;config&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RootDir&lt;/span&gt; &lt;span class='p'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;path&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Dir&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;filename&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
 
     &lt;span class='cm'&gt;/**&lt;/span&gt;
 &lt;span class='cm'&gt;     * Controller &amp;amp; Action&lt;/span&gt;
 &lt;span class='cm'&gt;     */&lt;/span&gt;
-    &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
-        &lt;span class='n'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='k'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ctx&lt;/span&gt; &lt;span class='p'&gt;*&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Controller&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;home&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;).&lt;/span&gt;
+        &lt;span class='nx'&gt;Get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;func&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;ctx&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;HttpContext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ActionResulter&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;ctx&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Html&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='p'&gt;})&lt;/span&gt;
 
 &lt;span class='p'&gt;}&lt;/span&gt;
 
-&lt;span class='k'&gt;func&lt;/span&gt; &lt;span class='n'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
-    &lt;span class='n'&gt;rt&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;&amp;amp;&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='n'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
-    &lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='p'&gt;:=&lt;/span&gt; &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Logger&lt;/span&gt;&lt;span class='p'&gt;().&lt;/span&gt;&lt;span class='n'&gt;Logln&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Server start on&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
-    &lt;span class='n'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
+&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+    &lt;span class='nx'&gt;s&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;CreateServer&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;rt&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kc'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;config&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Logger&lt;/span&gt;&lt;span class='p'&gt;().&lt;/span&gt;&lt;span class='nx'&gt;Logln&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Server start on&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Addr&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='nx'&gt;log&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Fatal&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;s&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;ListenAndServe&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;
 &lt;span class='p'&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id='examples'&gt;Examples&lt;/h2&gt;
 
 &lt;p&gt;You can found some examples in the &lt;code&gt;github.com/QLeelulu/goku/examples&lt;/code&gt; folder. &lt;br /&gt;To run example &amp;#8220;todo&amp;#8221; app, just:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='err'&gt;$&lt;/span&gt; &lt;span class='n'&gt;cd&lt;/span&gt; &lt;span class='err'&gt;$&lt;/span&gt;&lt;span class='n'&gt;GOROOT&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;src&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;pkg&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;github&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='n'&gt;com&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;QLeelulu&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;examples&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;&lt;span class='n'&gt;todo&lt;/span&gt;&lt;span class='p'&gt;/&lt;/span&gt;
-&lt;span class='err'&gt;$&lt;/span&gt; &lt;span class='k'&gt;go&lt;/span&gt; &lt;span class='n'&gt;run&lt;/span&gt; &lt;span class='n'&gt;app&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='k'&gt;go&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='err'&gt;$&lt;/span&gt; &lt;span class='nx'&gt;cd&lt;/span&gt; &lt;span class='err'&gt;$&lt;/span&gt;&lt;span class='nx'&gt;GOROOT&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;src&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;pkg&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;github&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;com&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;QLeelulu&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;examples&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='nx'&gt;todo&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;
+&lt;span class='err'&gt;$&lt;/span&gt; &lt;span class='k'&gt;go&lt;/span&gt; &lt;span class='nx'&gt;run&lt;/span&gt; &lt;span class='nx'&gt;app&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='k'&gt;go&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;maybe you need run &lt;code&gt;todo.sql&lt;/code&gt; first.&lt;/p&gt;
 
 &lt;h2 id='authors'&gt;Authors&lt;/h2&gt;

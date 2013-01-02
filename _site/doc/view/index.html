@@ -1,0 +1,138 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>
+      
+        View & ViewEngine - 
+      
+      Goku
+    </title>
+    <meta name="description" content="">
+    <meta name="author" content="QLeelulu">
+
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/styles.css">
+    <link rel="stylesheet" href="/assets/themes/modernist/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="outer">
+    <div class="sidebar">
+      <ul class="posts">
+        <li><a href="/">About</a></li>
+        <li><a href="/doc/intro">Intro</a></li>
+        <li><a href="/doc/router">Router</a></li>
+        <li><a href="/doc/controller--action">Controller & Action</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
+        <li><a href="/doc/form-validation">Form Validation</a></li>
+        <li><a href="/doc/filter">Filter</a></li>
+        <li><a href="/doc/middleware">Middleware</a></li>
+        <li><a href="/doc/db">DB</a></li>
+        <li><a href="/doc/httpcontext">HttpContext</a></li>
+        <li><a href="/doc/log">Log</a></li>
+      </ul>
+    </div>
+
+    <div class="wrapper">
+      <header>
+        <h1><a class="brand" href="/">Goku</a></h1>
+        <p>Golang Web Mvc Framework</p>
+        <p class="view"><a href="http://github.com/qleelulu/goku">View the Project on GitHub <small>qleelulu/goku</small></a></p>
+        <ul>
+          <li><a href="https://github.com/qleelulu/goku/zipballmus/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/qleelulu/goku/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="http://github.com/qleelulu/goku">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        
+  <h1>
+    View & ViewEngine 
+    
+  </h1>
+
+<blockquote>
+<p>Views are the components that display the application&#8217;s user interface (UI)</p>
+</blockquote>
+
+<p>To render a view, you can just return a <code>ViewResut</code> which implement the <code>ActionResulter</code> interface. just like this:</p>
+<div class='highlight'><pre><code class='go'>    <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Controller</span><span class='p'>(</span><span class='s'>&quot;blog&quot;</span><span class='p'>).</span>
+        <span class='nx'>Get</span><span class='p'>(</span><span class='s'>&quot;page&quot;</span><span class='p'>,</span> <span class='kd'>func</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span> <span class='p'>{</span>
+        <span class='nx'>blog</span> <span class='o'>:=</span> <span class='nx'>GetBlogByid</span><span class='p'>(</span><span class='mi'>10</span><span class='p'>)</span>
+
+        <span class='c1'>// you can add any val to ViewData</span>
+        <span class='c1'>// then you can use it in template</span>
+        <span class='c1'>// like this: { { .Data.SiteName } }</span>
+        <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>ViewData</span><span class='p'>[</span><span class='s'>&quot;SiteName&quot;</span><span class='p'>]</span> <span class='p'>=</span> <span class='s'>&quot;My Blog&quot;</span>
+
+        <span class='c1'>// or you can pass a struct to ViewModel</span>
+        <span class='c1'>// then you can use it in template</span>
+        <span class='c1'>// like this: { { .Model.Title } }</span>
+        <span class='c1'>// that same as blog.Title</span>
+        <span class='k'>return</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>View</span><span class='p'>(</span><span class='nx'>blog</span><span class='p'>)</span>
+    <span class='p'>})</span>
+</code></pre></div>
+<p><code>ctx.View()</code> will find the view in these rules:</p>
+<div class='highlight'><pre><code class='go'><span class='mf'>1.</span> <span class='o'>/</span><span class='p'>{</span><span class='nx'>ViewPath</span><span class='p'>}</span><span class='o'>/</span><span class='p'>{</span><span class='nx'>Controller</span><span class='p'>}</span><span class='o'>/</span><span class='p'>{</span><span class='nx'>action</span><span class='p'>}</span>
+<span class='mf'>2.</span> <span class='o'>/</span><span class='p'>{</span><span class='nx'>ViewPath</span><span class='p'>}</span><span class='o'>/</span><span class='nx'>shared</span><span class='o'>/</span><span class='p'>{</span><span class='nx'>action</span><span class='p'>}</span>
+</code></pre></div>
+<p>for example, <code>ServerConfig.ViewPath</code> is set to <code>&quot;views&quot;</code>, and return ctx.View() in <code>home</code> controller&#8217;s <code>about</code> action, it will find the view file in this rule:</p>
+<div class='highlight'><pre><code class='go'><span class='mf'>1.</span> <span class='p'>{</span><span class='nx'>ProjectDir</span><span class='p'>}</span><span class='o'>/</span><span class='nx'>views</span><span class='o'>/</span><span class='nx'>home</span><span class='o'>/</span><span class='nx'>about</span><span class='p'>.</span><span class='nx'>html</span>
+<span class='mf'>2.</span> <span class='p'>{</span><span class='nx'>ProjectDir</span><span class='p'>}</span><span class='o'>/</span><span class='nx'>views</span><span class='o'>/</span><span class='nx'>shared</span><span class='o'>/</span><span class='nx'>about</span><span class='p'>.</span><span class='nx'>html</span>
+</code></pre></div>
+<p>if you want to return a view that specified view name, you can use <a href='http://godoc.org/github.com/QLeelulu/goku#HttpContext.Render'>ctx.Render</a>:</p>
+<div class='highlight'><pre><code class='go'>    <span class='c1'>// it will find the view in these rules:</span>
+    <span class='c1'>//      1. /{ViewPath}/{Controller}/{viewName}</span>
+    <span class='c1'>//      2. /{ViewPath}/shared/{viewName}</span>
+    <span class='c1'>// if viewName start with &#39;/&#39;,</span>
+    <span class='c1'>// it will find the view direct by viewpath:</span>
+    <span class='c1'>//      1. /{ViewPath}/{viewName}</span>
+    <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Render</span><span class='p'>(</span><span class='s'>&quot;viewName&quot;</span><span class='p'>,</span> <span class='nx'>ViewModel</span><span class='p'>)</span>
+</code></pre></div>
+<h2 id='custom_viewengine'>Custom ViewEngine</h2>
+
+<p>ViewEngine is for how to find the view file. To Custom a ViewEngine, just implement the <code>ViewEnginer</code> interface.</p>
+<div class='highlight'><pre><code class='go'><span class='c1'>// ViewEnginer interface.</span>
+<span class='c1'>// For how to find the view file.</span>
+<span class='kd'>type</span> <span class='nx'>ViewEnginer</span> <span class='kd'>interface</span> <span class='p'>{</span>
+    <span class='c1'>// find the view and layout</span>
+    <span class='c1'>// if template engine not suppot layout, just return empty string</span>
+    <span class='nx'>FindView</span><span class='p'>(</span><span class='nx'>vi</span> <span class='o'>*</span><span class='nx'>ViewInfo</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>viewPath</span> <span class='kt'>string</span><span class='p'>,</span> <span class='nx'>layoutPath</span> <span class='kt'>string</span><span class='p'>)</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>And then set it to the <a href='http://godoc.org/github.com/QLeelulu/goku#ServerConfig'>ServerConfig.ViewEnginer</a></p>
+<div class='highlight'><pre><code class='go'><span class='c1'>// server config</span>
+<span class='kd'>var</span> <span class='nx'>config</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ServerConfig</span> <span class='p'>=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ServerConfig</span><span class='p'>{</span>
+    <span class='nx'>Addr</span><span class='p'>:</span>           <span class='s'>&quot;:8888&quot;</span><span class='p'>,</span>
+    <span class='nx'>ViewEnginer</span><span class='p'>:</span>    <span class='o'>&amp;</span><span class='nx'>YourViewEngine</span><span class='p'>{},</span> <span class='c1'>// set here</span>
+<span class='p'>}</span>
+
+<span class='kd'>func</span> <span class='nx'>main</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='nx'>rt</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>{</span><span class='nx'>Routes</span><span class='p'>:</span> <span class='nx'>routes</span><span class='p'>}</span>
+    <span class='nx'>s</span> <span class='o'>:=</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>CreateServer</span><span class='p'>(</span><span class='nx'>rt</span><span class='p'>,</span> <span class='kc'>nil</span><span class='p'>,</span> <span class='nx'>config</span><span class='p'>)</span>
+    <span class='nx'>log</span><span class='p'>.</span><span class='nx'>Fatal</span><span class='p'>(</span><span class='nx'>s</span><span class='p'>.</span><span class='nx'>ListenAndServe</span><span class='p'>())</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>A simple <a href='https://github.com/QLeelulu/goku-demo/tree/master/custom_viewengine'>ThemeViewEngine</a> is show how to do this, just check it.</p>
+
+
+      </section>
+    </div>
+
+  </div>
+
+    <footer>
+      <p>Project maintained by <a href="https://www.github.com/QLeelulu">QLeelulu</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <script src="/assets/themes/modernist/javascripts/scale.fix.js"></script>
+  </body>
+</html>

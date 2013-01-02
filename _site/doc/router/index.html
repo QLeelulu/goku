@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -64,46 +64,44 @@
 <h2 id='map_route'>Map Route</h2>
 
 <p>You can map route by this two ways:</p>
-<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-        <span class='n'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
-        <span class='n'>IsStatic</span><span class='p'>:</span> <span class='n'>true</span><span class='p'>,</span>
-        <span class='n'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/public/(.*)&quot;</span><span class='p'>,</span>
+<div class='highlight'><pre><code class='go'><span class='kd'>var</span> <span class='nx'>Routes</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span> <span class='p'>=</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+    <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+        <span class='nx'>Name</span><span class='p'>:</span>     <span class='s'>&quot;static&quot;</span><span class='p'>,</span>
+        <span class='nx'>IsStatic</span><span class='p'>:</span> <span class='kc'>true</span><span class='p'>,</span>
+        <span class='nx'>Pattern</span><span class='p'>:</span>  <span class='s'>&quot;/public/(.*)&quot;</span><span class='p'>,</span>
     <span class='p'>},</span>
-    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;edit&quot;</span><span class='p'>,</span>
-        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;/{controller}/{id}/{action}&quot;</span><span class='p'>,</span>
-        <span class='n'>Default</span><span class='p'>:</span>    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;edit&quot;</span><span class='p'>},</span>
-        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>},</span>
+    <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+        <span class='nx'>Name</span><span class='p'>:</span>       <span class='s'>&quot;edit&quot;</span><span class='p'>,</span>
+        <span class='nx'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;/{controller}/{id}/{action}&quot;</span><span class='p'>,</span>
+        <span class='nx'>Default</span><span class='p'>:</span>    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;edit&quot;</span><span class='p'>},</span>
+        <span class='nx'>Constraint</span><span class='p'>:</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;id&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>},</span>
     <span class='p'>},</span>
-    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-        <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
-        <span class='n'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span>
-        <span class='n'>Default</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;todo&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span>
+    <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+        <span class='nx'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='nx'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span>
+        <span class='nx'>Default</span><span class='p'>:</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;todo&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span>
     <span class='p'>},</span>
 <span class='p'>}</span>
 <span class='c1'>// create server with the rules</span>
-<span class='n'>rt</span> <span class='p'>:=</span> <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>{</span><span class='n'>Routes</span><span class='p'>:</span> <span class='n'>todo</span><span class='p'>.</span><span class='n'>Routes</span><span class='p'>}</span>
-<span class='n'>s</span> <span class='p'>:=</span> <span class='n'>goku</span><span class='p'>.</span><span class='n'>CreateServer</span><span class='p'>(</span><span class='n'>rt</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>,</span> <span class='n'>nil</span><span class='p'>)</span>
-<span class='n'>log</span><span class='p'>.</span><span class='n'>Fatal</span><span class='p'>(</span><span class='n'>s</span><span class='p'>.</span><span class='n'>ListenAndServe</span><span class='p'>())</span>
-</code></pre>
-</div>
+<span class='nx'>rt</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>{</span><span class='nx'>Routes</span><span class='p'>:</span> <span class='nx'>todo</span><span class='p'>.</span><span class='nx'>Routes</span><span class='p'>}</span>
+<span class='nx'>s</span> <span class='o'>:=</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>CreateServer</span><span class='p'>(</span><span class='nx'>rt</span><span class='p'>,</span> <span class='kc'>nil</span><span class='p'>,</span> <span class='kc'>nil</span><span class='p'>)</span>
+<span class='nx'>log</span><span class='p'>.</span><span class='nx'>Fatal</span><span class='p'>(</span><span class='nx'>s</span><span class='p'>.</span><span class='nx'>ListenAndServe</span><span class='p'>())</span>
+</code></pre></div>
 <p>or</p>
-<div class='highlight'><pre><code class='go'><span class='n'>rt</span> <span class='p'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>)</span>
-<span class='n'>rt</span><span class='p'>.</span><span class='n'>Static</span><span class='p'>(</span><span class='s'>&quot;staticFile&quot;</span><span class='p'>,</span> <span class='s'>&quot;/static/(.*)&quot;</span><span class='p'>)</span>
-<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+<div class='highlight'><pre><code class='go'><span class='nx'>rt</span> <span class='o'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>)</span>
+<span class='nx'>rt</span><span class='p'>.</span><span class='nx'>Static</span><span class='p'>(</span><span class='s'>&quot;staticFile&quot;</span><span class='p'>,</span> <span class='s'>&quot;/static/(.*)&quot;</span><span class='p'>)</span>
+<span class='nx'>rt</span><span class='p'>.</span><span class='nx'>Map</span><span class='p'>(</span>
     <span class='s'>&quot;blog-page&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
     <span class='s'>&quot;/blog/p/{page}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
-    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;blog&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;page&quot;</span><span class='p'>,</span> <span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;0&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
-    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>}</span> <span class='c1'>// constraint</span>
+    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;blog&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;page&quot;</span><span class='p'>,</span> <span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;0&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;page&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d+&quot;</span><span class='p'>}</span> <span class='c1'>// constraint</span>
 <span class='p'>)</span>
-<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+<span class='nx'>rt</span><span class='p'>.</span><span class='nx'>Map</span><span class='p'>(</span>
     <span class='s'>&quot;default&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
     <span class='s'>&quot;/{controller}/{action}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
-    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;home&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;index&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
 <span class='p'>)</span>
-</code></pre>
-</div>
+</code></pre></div>
 <h2 id='static_file_route'>Static File Route</h2>
 
 <p>When a route set <code>IsStatic</code> to <code>true</code>, if a url matched this route, the request will process as static file. Such as JS, CSS file.</p>
@@ -129,17 +127,16 @@
 <h2 id='setting_default_values_for_url_parameters'>Setting Default Values for URL Parameters</h2>
 
 <p>When you define a route, you can assign a default value for a parameter. The default value is used if a value for that parameter is not included in the URL. You set default values for a route by assigning a map to the <code>Defaults</code> property of the <code>Route</code> struct. The following example shows how to add a route that has default values, by using the MapPageRoute(String, String, String, Boolean, RouteValueDictionary) method.</p>
-<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-        <span class='n'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
-        <span class='n'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;Category/{action}/{categoryName}&quot;</span><span class='p'>,</span>
-        <span class='n'>Default</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span>
+<div class='highlight'><pre><code class='go'><span class='kd'>var</span> <span class='nx'>Routes</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span> <span class='p'>=</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+    <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+        <span class='nx'>Name</span><span class='p'>:</span>    <span class='s'>&quot;default&quot;</span><span class='p'>,</span>
+        <span class='nx'>Pattern</span><span class='p'>:</span> <span class='s'>&quot;Category/{action}/{categoryName}&quot;</span><span class='p'>,</span>
+        <span class='nx'>Default</span><span class='p'>:</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span>
             <span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;category&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;show&quot;</span><span class='p'>,</span> <span class='s'>&quot;categoryName&quot;</span><span class='p'>:</span><span class='s'>&quot;food&quot;</span>
         <span class='p'>},</span>
     <span class='p'>}</span>
 <span class='p'>}</span>
-</code></pre>
-</div>
+</code></pre></div>
 <p>When goku routing handles a URL request, the route definition shown in the example (with default values of food for categoryName and show for action) produces the results that are listed in the following table.</p>
 <table><thead><tr><th>URL</th><th>Parameter values</th></tr></thead><tbody><tr><td style='text-align: left;'>/Category</td><td style='text-align: left;'>action = &#8220;show&#8221; (default value) <br /> categoryName = &#8220;food&#8221; (default value)</td>
 </tr><tr><td style='text-align: left;'>/Category/add</td><td style='text-align: left;'>action = &#8220;add&#8221; <br /> categoryName = &#8220;food&#8221; (default value)</td>
@@ -150,11 +147,11 @@
 <p>In addition to matching a URL request to a route definition by the number of parameters in the URL, you can specify that values in the parameters meet certain constraints. If a URL contains values that are outside the constraints for a route, that route is not used to handle the request. You add constraints to make sure that the URL parameters contain values that will work in your application.</p>
 
 <p>Constraints are defined by using regular expressions. You add constraints for a route by assigning a map to the <code>Constraint</code> property of the <code>Route</code> struct, or add by <code>RouteTable.Map()</code></p>
-<div class='highlight'><pre><code class='go'><span class='k'>var</span> <span class='n'>Routes</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span> <span class='p'>=</span> <span class='p'>[]*</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-    <span class='p'>&amp;</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>Route</span><span class='p'>{</span>
-        <span class='n'>Name</span><span class='p'>:</span>       <span class='s'>&quot;post-list&quot;</span><span class='p'>,</span>
-        <span class='n'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;whatever/{locale}/{year}&quot;</span><span class='p'>,</span>
-        <span class='n'>Constraint</span><span class='p'>:</span> <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span>
+<div class='highlight'><pre><code class='go'><span class='kd'>var</span> <span class='nx'>Routes</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span> <span class='p'>=</span> <span class='p'>[]</span><span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+    <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Route</span><span class='p'>{</span>
+        <span class='nx'>Name</span><span class='p'>:</span>       <span class='s'>&quot;post-list&quot;</span><span class='p'>,</span>
+        <span class='nx'>Pattern</span><span class='p'>:</span>    <span class='s'>&quot;whatever/{locale}/{year}&quot;</span><span class='p'>,</span>
+        <span class='nx'>Constraint</span><span class='p'>:</span> <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span>
             <span class='s'>&quot;locale&quot;</span><span class='p'>:</span> <span class='s'>&quot;[a-z]{2}-[a-z]{2}&quot;</span><span class='p'>,</span> <span class='s'>&quot;year&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d{4}&quot;</span>
         <span class='p'>},</span>
     <span class='p'>},</span>
@@ -162,17 +159,16 @@
 
 <span class='c1'>// or</span>
 
-<span class='n'>rt</span> <span class='p'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='n'>goku</span><span class='p'>.</span><span class='n'>RouteTable</span><span class='p'>)</span>
-<span class='n'>rt</span><span class='p'>.</span><span class='n'>Map</span><span class='p'>(</span>
+<span class='nx'>rt</span> <span class='o'>:=</span> <span class='nb'>new</span><span class='p'>(</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>)</span>
+<span class='nx'>rt</span><span class='p'>.</span><span class='nx'>Map</span><span class='p'>(</span>
     <span class='s'>&quot;post-list&quot;</span><span class='p'>,</span> <span class='c1'>// route name</span>
     <span class='s'>&quot;whatever/{locale}/{year}&quot;</span><span class='p'>,</span> <span class='c1'>// pattern</span>
-    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;post&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;show&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
-    <span class='k'>map</span><span class='p'>[</span><span class='nb'>string</span><span class='p'>]</span><span class='nb'>string</span><span class='p'>{</span> <span class='c1'>// constraint</span>
+    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span><span class='s'>&quot;controller&quot;</span><span class='p'>:</span> <span class='s'>&quot;post&quot;</span><span class='p'>,</span> <span class='s'>&quot;action&quot;</span><span class='p'>:</span> <span class='s'>&quot;show&quot;</span><span class='p'>},</span> <span class='c1'>// default</span>
+    <span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kt'>string</span><span class='p'>{</span> <span class='c1'>// constraint</span>
         <span class='s'>&quot;locale&quot;</span><span class='p'>:</span> <span class='s'>&quot;[a-z]{2}-[a-z]{2}&quot;</span><span class='p'>,</span> <span class='s'>&quot;year&quot;</span><span class='p'>:</span> <span class='s'>&quot;\\d{4}&quot;</span>
     <span class='p'>}</span>
 <span class='p'>)</span>
-</code></pre>
-</div>
+</code></pre></div>
 <p>When routing handles a URL request, the route definition shown in the previous example produces the results that are listed in the following table.</p>
 <table><thead><tr><th>URL</th><th>Result</th></tr></thead><tbody><tr><td style='text-align: left;'>/en-us</td><td style='text-align: left;'>No match. <br /> Both locale and year are required.</td>
 </tr><tr><td style='text-align: left;'>/en-us/08</td><td style='text-align: left;'>No match. <br /> The constraint on year requires 4 digits.</td>
@@ -184,10 +180,9 @@
 
 <p>For the Pattern <code>Category/{action}/{categoryName}</code>, and a URL <code>/Category/add/beverages</code>, you can get the <code>categoryName</code> parameter in the controller action by HttpContext:</p>
 <div class='highlight'><pre><code class='go'><span class='c1'>// ctx is HttpContext</span>
-<span class='n'>categoryName</span> <span class='p'>:=</span> <span class='n'>ctx</span><span class='p'>.</span><span class='n'>RouteData</span><span class='p'>.</span><span class='n'>Params</span><span class='p'>[</span><span class='s'>&quot;categoryName&quot;</span><span class='p'>]</span>
+<span class='nx'>categoryName</span> <span class='o'>:=</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>RouteData</span><span class='p'>.</span><span class='nx'>Params</span><span class='p'>[</span><span class='s'>&quot;categoryName&quot;</span><span class='p'>]</span>
 <span class='c1'>// categoryName == beverages</span>
-</code></pre>
-</div>
+</code></pre></div>
 <h2 id='todo'>TODO</h2>
 
 <ul>

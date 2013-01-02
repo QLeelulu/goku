@@ -30,8 +30,8 @@
         <li><a href="/doc/intro">Intro</a></li>
         <li><a href="/doc/router">Router</a></li>
         <li><a href="/doc/controller--action">Controller & Action</a></li>
-        <li><a href="/doc/view--viewdata">View & ViewData</a></li>
-        <li><a href="/doc/viewengine--template">ViewEngine & Template</a></li>
+        <li><a href="/doc/view">View & ViewEngine</a></li>
+        <li><a href="/doc/template">Template</a></li>
         <li><a href="/doc/form-validation">Form Validation</a></li>
         <li><a href="/doc/filter">Filter</a></li>
         <li><a href="/doc/middleware">Middleware</a></li>
@@ -59,7 +59,89 @@
     
   </h1>
 
+<p>Controllers define action methods that usually have a one-to-one relationship with possible user interactions, such as clicking a link or submitting a form. For example, when the user clicks a link, a request is routed to the designated controller, and the corresponding action method is called.</p>
 
+<p>Sometimes you want to perform logic either before an action method is called or after an action method runs. To support this, Goku provides filters. Filters are custom stuct that provide both a declarative and programmatic means to add pre-action and post-action behavior to controller action methods.</p>
+
+<h2 id='how_to_create_filter'>How To Create Filter</h2>
+
+<p>To create a filter, just implement the <a href='http://godoc.org/github.com/QLeelulu/goku#Filter'>Filter</a> interface.</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>type</span> <span class='nx'>Filter</span> <span class='kd'>interface</span> <span class='p'>{</span>
+    <span class='nx'>OnActionExecuting</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnActionExecuted</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnResultExecuting</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+    <span class='nx'>OnResultExecuted</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>Order of the filters execution is:</p>
+
+<pre><code>1. OnActionExecuting
+2. -&gt; Execute Action -&gt; return ActionResulter
+3. OnActionExecuted
+4. OnResultExecuting
+5. -&gt; ActionResulter.ExecuteResult
+6. OnResultExecuted</code></pre>
+
+<p>If you want cancel the request(end the request) in the filter, you can return an <code>ActionResulter</code> or return <code>error</code>.</p>
+
+<p>Here is a example show how to create a Auth filter.</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>type</span> <span class='nx'>RequireLoginFilter</span> <span class='kd'>struct</span> <span class='p'>{</span>
+<span class='p'>}</span>
+
+<span class='kd'>func</span> <span class='p'>(</span><span class='nx'>f</span> <span class='o'>*</span><span class='nx'>RequireLoginFilter</span><span class='p'>)</span> <span class='nx'>OnActionExecuting</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>ar</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='nx'>err</span> <span class='kt'>error</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>c</span><span class='p'>,</span> <span class='nx'>err</span> <span class='o'>:=</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Request</span><span class='p'>.</span><span class='nx'>Cookie</span><span class='p'>(</span><span class='s'>&quot;user&quot;</span><span class='p'>)</span>
+    <span class='k'>if</span> <span class='nx'>err</span> <span class='o'>==</span> <span class='kc'>nil</span> <span class='p'>{</span>
+        <span class='nx'>user</span><span class='p'>,</span> <span class='nx'>_</span> <span class='o'>:=</span> <span class='nx'>users</span><span class='p'>.</span><span class='nx'>GetByTicket</span><span class='p'>(</span><span class='nx'>c</span><span class='p'>.</span><span class='nx'>Value</span><span class='p'>)</span>
+        <span class='k'>if</span> <span class='nx'>user</span> <span class='o'>!=</span> <span class='kc'>nil</span> <span class='p'>{</span>
+            <span class='c1'>// we can set data to ctx.Data,</span>
+            <span class='c1'>// then we can get it any where.</span>
+            <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Data</span><span class='p'>[</span><span class='s'>&quot;user&quot;</span><span class='p'>]</span> <span class='p'>=</span> <span class='nx'>user</span>
+            <span class='k'>return</span>
+        <span class='p'>}</span>
+    <span class='p'>}</span>
+    <span class='k'>if</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>IsAjax</span><span class='p'>()</span> <span class='p'>{</span>
+        <span class='nx'>ar</span> <span class='p'>=</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Json</span><span class='p'>(</span><span class='kd'>map</span><span class='p'>[</span><span class='kt'>string</span><span class='p'>]</span><span class='kd'>interface</span><span class='p'>{}{</span>
+            <span class='s'>&quot;success&quot;</span><span class='p'>:</span>   <span class='kc'>false</span><span class='p'>,</span>
+            <span class='s'>&quot;needLogin&quot;</span><span class='p'>:</span> <span class='kc'>true</span><span class='p'>,</span>
+            <span class='s'>&quot;errors&quot;</span><span class='p'>:</span>    <span class='s'>&quot;Please Login&quot;</span><span class='p'>,</span>
+        <span class='p'>})</span>
+    <span class='p'>}</span> <span class='k'>else</span> <span class='p'>{</span>
+        <span class='nx'>ar</span> <span class='p'>=</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Redirect</span><span class='p'>(</span><span class='s'>&quot;/user/login?returnurl=&quot;</span> <span class='o'>+</span> <span class='nx'>url</span><span class='p'>.</span><span class='nx'>QueryEscape</span><span class='p'>(</span><span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>Request</span><span class='p'>.</span><span class='nx'>RequestURI</span><span class='p'>))</span>
+    <span class='p'>}</span>
+    <span class='k'>return</span>
+<span class='p'>}</span>
+
+<span class='kd'>func</span> <span class='p'>(</span><span class='nx'>f</span> <span class='o'>*</span><span class='nx'>RequireLoginFilter</span><span class='p'>)</span> <span class='nx'>OnActionExecuted</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='k'>return</span> <span class='kc'>nil</span><span class='p'>,</span> <span class='kc'>nil</span>
+<span class='p'>}</span>
+
+<span class='kd'>func</span> <span class='p'>(</span><span class='nx'>f</span> <span class='o'>*</span><span class='nx'>RequireLoginFilter</span><span class='p'>)</span> <span class='nx'>OnResultExecuting</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='k'>return</span> <span class='kc'>nil</span><span class='p'>,</span> <span class='kc'>nil</span>
+<span class='p'>}</span>
+
+<span class='kd'>func</span> <span class='p'>(</span><span class='nx'>f</span> <span class='o'>*</span><span class='nx'>RequireLoginFilter</span><span class='p'>)</span> <span class='nx'>OnResultExecuted</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='p'>(</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span><span class='p'>,</span> <span class='kt'>error</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='k'>return</span> <span class='kc'>nil</span><span class='p'>,</span> <span class='kc'>nil</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>And then we can apply this filter to controller:</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>var</span> <span class='nx'>_</span> <span class='p'>=</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>).</span>
+    <span class='c1'>// apply filter to controller,</span>
+    <span class='c1'>// all this controller&#39;s actions.</span>
+    <span class='nx'>Filters</span><span class='p'>(</span><span class='o'>&amp;</span><span class='nx'>RequireLoginFilter</span><span class='p'>{}).</span>
+    <span class='c1'>// index action</span>
+    <span class='nx'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='p'>,</span> <span class='kd'>func</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>View</span><span class='p'>(</span><span class='kc'>nil</span><span class='p'>)</span>
+    <span class='p'>})</span>
+</code></pre></div>
+<p>Or we can only apply the filter to the specified action.</p>
+<div class='highlight'><pre><code class='go'><span class='kd'>var</span> <span class='nx'>_</span> <span class='p'>=</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Controller</span><span class='p'>(</span><span class='s'>&quot;home&quot;</span><span class='p'>).</span>
+    <span class='c1'>// index action</span>
+    <span class='nx'>Get</span><span class='p'>(</span><span class='s'>&quot;index&quot;</span><span class='p'>,</span> <span class='p'>,</span> <span class='kd'>func</span><span class='p'>(</span><span class='nx'>ctx</span> <span class='o'>*</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>HttpContext</span><span class='p'>)</span> <span class='nx'>goku</span><span class='p'>.</span><span class='nx'>ActionResulter</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='nx'>ctx</span><span class='p'>.</span><span class='nx'>View</span><span class='p'>(</span><span class='kc'>nil</span><span class='p'>)</span>
+    <span class='p'>}).</span>
+    <span class='c1'>// only apply filter to index action</span>
+    <span class='nx'>Filters</span><span class='p'>(</span><span class='o'>&amp;</span><span class='nx'>RequireLoginFilter</span><span class='p'>{})</span>
+</code></pre></div>
 
 
       </section>
