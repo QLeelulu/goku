@@ -17,11 +17,11 @@ func createTodoForm() *form.Form {
     id := form.NewIntegerField("id", "Id", false).Range(1, 10).
         // {0} will replace with the min range value,
         // {1} will replace with the max range value,
-        Error("range", "值必须在{0}到{1}之间").Field()
+        Error("range", "Value must between {0} and {1}").Field()
     // title
-    title := form.NewTextField("title", "待办事项", true).Min(8).Max(200).
-        Error("required", "必须填写事项内容").
-        Error("range", "字数必须在{0}到{1}之间").Field()
+    title := form.NewTextField("title", "todo", true).Min(8).Max(200).
+        Error("required", "Must write what to do").
+        Error("range", "Words must between {0} and {1}").Field()
 
     // add the fields to a form
     form := form.NewForm(id, title)
@@ -160,7 +160,7 @@ var _ = goku.Controller("todo").
         errorMsgs = "Database error"
         goku.Logger().Errorln(err)
     } else {
-        errorMsgs = "错误的请求"
+        errorMsgs = "Wrong Request"
     }
     ctx.ViewData["errorMsg"] = errorMsgs
     return ctx.Render("error", nil)
@@ -181,7 +181,7 @@ var _ = goku.Controller("todo").
         errorMsg = "Database error"
         goku.Logger().Errorln(err)
     } else {
-        errorMsg = "错误的请求"
+        errorMsg = "Wrong Request"
     }
     ctx.ViewData["errorMsg"] = errorMsg
     return ctx.Render("error", nil)

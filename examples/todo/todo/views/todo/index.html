@@ -4,7 +4,7 @@
 <div class="box">
 
   <div class="box todos">
-    <h2 class="box">待办事项</h2>
+    <h2 class="box">Todo</h2>
     <ul>
       {{range .Model}}
       {{ $class := "" }}
@@ -14,25 +14,25 @@
           {{if .Finished }}
             <del>{{ .Title }}</del>
             &nbsp;
-            <a href="/todo/{{ .Id }}/finish?status=no">恢复</a>,
+            <a href="/todo/{{ .Id }}/finish?status=no">Restore</a>,
           {{else}}
             {{ .Title }}
             &nbsp;
-            <a href="/todo/{{ .Id }}/finish?status=yes">完成</a>,
+            <a href="/todo/{{ .Id }}/finish?status=yes">Done</a>,
           {{end}}
-          <a href="/todo/{{ .Id }}/edit">修改</a>,
-          <a href="/todo/{{ .Id }}/delete" onclick="return confirm('删除以后不能恢复的，确定？')">删除</a>
+          <a href="/todo/{{ .Id }}/edit">Edit</a>,
+          <a href="/todo/{{ .Id }}/delete" onclick="return confirm('Are you sure to delete？')">Del</a>
         </li>
       {{end}}
     </ul>
   </div>
 
   <div class="box post">
-    <h2>新增</h2>
+    <h2>New</h2>
     <form action="/todo/new" method="post" id="post_new">
       <input type="hidden" name="_csrf" value="<%- _csrf %>" />
       <p><input type="text" name="title" class="long_txt" /></p>
-      <p><input type="submit" class="submit" value="添加" /></p>
+      <p><input type="submit" class="submit" value="Add" /></p>
     </form>
   </div>
 
