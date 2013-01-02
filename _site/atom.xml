@@ -4,7 +4,7 @@
  <title>Goku</title>
  <link href="http://qleelulu.github.com/goku/atom.xml" rel="self"/>
  <link href="http://qleelulu.github.com/goku"/>
- <updated>2013-01-03T02:21:14+08:00</updated>
+ <updated>2013-01-03T02:23:52+08:00</updated>
  <id>http://qleelulu.github.com/goku</id>
  <author>
    <name>QLeelulu</name>
@@ -714,7 +714,7 @@ goku.Logger().Errorln(&amp;quot;oh&amp;quot;, &amp;quot;no!&amp;quot;, &amp;quot
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;static&lt;/code&gt; route set &lt;code&gt;IsStatic&lt;/code&gt; to true, mean that if the url matched this route, will process the request as static file. &lt;br /&gt;The &lt;code&gt;default&lt;/code&gt; route mean that the url &lt;code&gt;/user/info&lt;/code&gt;, will map to &lt;code&gt;user&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;info&lt;/code&gt; action, and the url &lt;code&gt;/&lt;/code&gt; will map to &lt;code&gt;home&lt;/code&gt; controller&amp;#8217;s &lt;code&gt;index&lt;/code&gt; action, because this is the default value.&lt;/p&gt;
 
-&lt;p&gt;We register the routes to goku server by this way (&lt;a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/app.go'&gt;app.go&lt;/a&gt;) :&lt;/p&gt;
+&lt;p&gt;We register the routes to goku server by this way (&lt;a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/bin/app.go'&gt;app.go&lt;/a&gt;) :&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='go'&gt;&lt;span class='kd'&gt;func&lt;/span&gt; &lt;span class='nx'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
     &lt;span class='nx'&gt;rt&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;RouteTable&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;gokudemo&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Routes&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
     &lt;span class='nx'&gt;middlewares&lt;/span&gt; &lt;span class='o'&gt;:=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;&lt;span class='nx'&gt;goku&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;Middlewarer&lt;/span&gt;&lt;span class='p'&gt;{}&lt;/span&gt;

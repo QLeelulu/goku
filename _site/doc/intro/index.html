@@ -103,7 +103,7 @@
 </code></pre></div>
 <p>The <code>static</code> route set <code>IsStatic</code> to true, mean that if the url matched this route, will process the request as static file. <br />The <code>default</code> route mean that the url <code>/user/info</code>, will map to <code>user</code> controller&#8217;s <code>info</code> action, and the url <code>/</code> will map to <code>home</code> controller&#8217;s <code>index</code> action, because this is the default value.</p>
 
-<p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/app.go'>app.go</a>) :</p>
+<p>We register the routes to goku server by this way (<a href='http://github.com/QLeelulu/goku-demo/tree/master/simple_intro/bin/app.go'>app.go</a>) :</p>
 <div class='highlight'><pre><code class='go'><span class='kd'>func</span> <span class='nx'>main</span><span class='p'>()</span> <span class='p'>{</span>
     <span class='nx'>rt</span> <span class='o'>:=</span> <span class='o'>&amp;</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>RouteTable</span><span class='p'>{</span><span class='nx'>Routes</span><span class='p'>:</span> <span class='nx'>gokudemo</span><span class='p'>.</span><span class='nx'>Routes</span><span class='p'>}</span>
     <span class='nx'>middlewares</span> <span class='o'>:=</span> <span class='p'>[]</span><span class='nx'>goku</span><span class='p'>.</span><span class='nx'>Middlewarer</span><span class='p'>{}</span>
