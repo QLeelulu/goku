@@ -513,10 +513,10 @@ this will log like this:
 
 ## Authors
 
- - [@QLeelulu](http://weibo.com/qleelulu)
+ - [QLeelulu](https://github.com/QLeelulu)
  - waiting for you
 
 
 ## License
 
-View the [LICENSE](https://github.com/senchalabs/connect/blob/master/LICENSE) file.
+View the [LICENSE](https://github.com/QLeelulu/goku/blob/master/LICENSE) file.
