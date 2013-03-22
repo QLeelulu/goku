@@ -113,7 +113,8 @@ var _ = goku.Controller("todo").
     if f.Valid() {
         // after valid, we can get the clean values
         m := f.CleanValues()
-        id := m["id"].(int)
+        // id := m["id"].(int)//  cannot use id (type interface {}) as type int in function argument: need type assertion
+        id, _ := strconv.Atoi(ctx.RouteData.Params["id"])// can use this one
         delete(m, "id")
         // update the value to db, see models/todo.go
         _, err := models.UpdateTodo(id, m)
