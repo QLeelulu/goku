@@ -59,7 +59,8 @@ var _ = goku.Controller("todo").
         // after valid, we can get the clean values
         m := f.CleanValues()
         delete(m, "id")
-        m["post_date"] = time.Now()
+        //m["post_date"] = time.Now()
+        m["post_date"] = time.Now().Format("2006-01-02 15:04:05")
         // save the value to db, see models/todo.go
         _, err := models.SaveTodo(m)
         if err == nil {
