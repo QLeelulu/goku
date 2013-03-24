@@ -24,6 +24,7 @@ type HttpContext struct {
     Canceled  bool                   // cancel continue process the request and return
 
     // private fileds
+    session              Session
     requestHandler       *RequestHandler
     responseContentCache *bytes.Buffer // cache response content, will write at end request
     responseStatusCode   int           // cache response status code, will write at end request
@@ -59,6 +60,15 @@ func (ctx *HttpContext) StaticPath() string {
 
 func (ctx *HttpContext) ViewPath() string {
     return path.Join(ctx.RootDir(), ctx.requestHandler.ServerConfig.ViewPath)
+}
+
+// get session instance.
+// to enable session, you need add session middleware to goku server.
+func (ctx *HttpContext) Session() Session {
+    if ctx.session == nil {
+        panic("Goku: can not start session, check your server config or session provider.")
+    }
+    return ctx.session
 }
 
 // get the requert param, 

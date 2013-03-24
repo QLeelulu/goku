@@ -46,6 +46,13 @@ func init() {
     goku.Controller("home").
         //Filters(new(TestControllerFilter)). // this filter is fot controller(all the actions)
         Get("index", func(ctx *goku.HttpContext) goku.ActionResulter {
+
+        name := ctx.Session().Get("name")
+        goku.Logger().Logln("name:", name)
+        if name == nil {
+            ctx.Session().Set("name", "Goku")
+        }
+
         return ctx.Html("Hello World")
     })
 

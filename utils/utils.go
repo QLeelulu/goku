@@ -1,9 +1,12 @@
 package utils
 
 import (
+    cryptoRand "crypto/rand"
+    "encoding/base64"
     "encoding/json"
     "errors"
     "fmt"
+    "io"
     "io/ioutil"
     "os"
     "reflect"
@@ -148,4 +151,22 @@ func LoadJsonFile(filePath string) (map[string]interface{}, error) {
         return nil, err
     }
     return conf, nil
+}
+
+// a more randomized method to generate random string
+func GenerateRandomString(bufferSize uint32) (string, error) {
+    buf := make([]byte, bufferSize)
+    n, err := io.ReadFull(cryptoRand.Reader, buf)
+    if n != len(buf) || err != nil {
+        return "", err
+    }
+
+    str := ConvertByteArrayToBase64String(buf)
+    return str, nil
+}
+
+func ConvertByteArrayToBase64String(buf []byte) string {
+    encoding := base64.StdEncoding
+    str := encoding.EncodeToString(buf)
+    return str
 }

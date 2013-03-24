@@ -23,15 +23,13 @@ type ServerConfig struct {
     WriteTimeout   time.Duration // maximum duration before timing out write of the response
     MaxHeaderBytes int           // maximum size of request headers, DefaultMaxHeaderBytes if 0
 
+    Session string // session provider name
+
     RootDir    string // project root dir
     StaticPath string // static file dir, "static" if empty
     ViewPath   string // view file dir, "views" if empty
     Layout     string // template layout, "layout" if empty
 
-    ViewEnginer     ViewEnginer
-    TemplateEnginer TemplateEnginer
-
-    Logger   *log.Logger
     LogLevel int
 
     Debug bool
@@ -40,6 +38,7 @@ type ServerConfig struct {
 // server inherit from http.Server
 type Server struct {
     http.Server
+    handler *RequestHandler
 }
 
 // request handler, the main handler for all the requests
@@ -49,6 +48,8 @@ type RequestHandler struct {
     ServerConfig      *ServerConfig
     ViewEnginer       ViewEnginer
     TemplateEnginer   TemplateEnginer
+
+    sessionProvider SessionProvider
 }
 
 // implement the http.Handler interface
@@ -222,7 +223,10 @@ func (rh *RequestHandler) executeController(ctx *HttpContext, controller, action
 }
 
 func (rh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *HttpContext {
-    //r.ParseForm()
+    session, err := OpenSession(rh.sessionProvider, w, r)
+    if err != nil {
+        Logger().Errorln(err.Error())
+    }
     return &HttpContext{
         Request:              r,
         responseWriter:       w,
@@ -231,6 +235,7 @@ func (rh *RequestHandler) buildContext(w http.ResponseWriter, r *http.Request) *
         ViewData:             make(map[string]interface{}),
         Data:                 make(map[string]interface{}),
         responseContentCache: new(bytes.Buffer),
+        session:              session,
         //responseHeaderCache: make(map[string]string),
     }
 }
@@ -265,6 +270,16 @@ func logRequestInfo(ctx *HttpContext) {
 //     return ar
 // }
 
+// set ViewEnginer
+func (s *Server) SetViewEnginer(ve ViewEnginer) {
+    s.handler.ViewEnginer = ve
+}
+
+// set TemplateEnginer
+func (s *Server) SetTemplateEnginer(te TemplateEnginer) {
+    s.handler.TemplateEnginer = te
+}
+
 // create a server to handle the request
 // routeTable is about the rule map a url to a controller action
 // middlewares are the way you can process request during handle request
@@ -283,27 +298,24 @@ func CreateServer(routeTable *RouteTable, middlewares []Middlewarer, sc *ServerC
     // load conf file
     loadCmdLineConfFile(sc, routeTable)
 
-    // log
-    _log := &DefaultLogger{
-        LOG_LEVEL: sc.LogLevel,
-    }
-    if sc.Logger != nil {
-        _log.Logger = sc.Logger
-    } else {
-        _log.Logger = log.New(os.Stdout, "", log.LstdFlags)
-    }
-    SetLogger(_log)
+    SetLogLevel(sc.LogLevel)
 
     mh := &DefaultMiddlewareHandle{
         Middlewares: middlewares,
     }
 
+    if sc.Session == "" {
+        sc.Session = "memory"
+    }
+    sessionProvider := GetSessionProvider(sc.Session)
+
     handler := &RequestHandler{
         RouteTable:        routeTable,
         MiddlewareHandler: mh,
         ServerConfig:      sc,
-        ViewEnginer:       sc.ViewEnginer,
+        sessionProvider:   sessionProvider,
     }
+
     if sc.ViewPath == "" {
         sc.ViewPath = "views"
     }

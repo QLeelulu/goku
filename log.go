@@ -18,6 +18,7 @@ var loger *log.Logger = log.New(os.Stdout, "", log.LstdFlags)
 
 type logger interface {
     LogLevel() int
+    SetLogLevel(level int)
     Log(args ...interface{})
     Logln(args ...interface{})
     Logf(format string, args ...interface{})
@@ -39,6 +40,10 @@ type DefaultLogger struct {
 
 func (l *DefaultLogger) LogLevel() int {
     return l.LOG_LEVEL
+}
+
+func (l *DefaultLogger) SetLogLevel(level int) {
+    l.LOG_LEVEL = level
 }
 
 func (l *DefaultLogger) Log(args ...interface{}) {
@@ -142,4 +147,8 @@ func Logger() logger {
 
 func SetLogger(l logger) {
     __logger = l
+}
+
+func SetLogLevel(level int) {
+    __logger.SetLogLevel(level)
 }
