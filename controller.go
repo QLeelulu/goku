@@ -24,7 +24,7 @@ type ActionInfo struct {
     Filters    []Filter
 }
 
-// add filters to the action
+// AddFilters adds filters to the action
 func (ai *ActionInfo) AddFilters(filters ...Filter) {
     for _, ft := range filters {
         if ft != nil {
@@ -45,7 +45,7 @@ func (ci *ControllerInfo) Init() *ControllerInfo {
     return ci
 }
 
-// get a action
+// GetAction gets a action
 // e.g. ci.GetAction("get", "index"), 
 // will found the registered action "index" for 
 // http method "get" in this controller,
@@ -82,7 +82,7 @@ func (ci *ControllerInfo) RegAction(httpMethod string, actionName string,
     return ai
 }
 
-// add filters for the controller
+// AddFilters adds filters for the controller
 func (ci *ControllerInfo) AddFilters(filters ...Filter) {
     for _, ft := range filters {
         if ft != nil {
@@ -91,7 +91,7 @@ func (ci *ControllerInfo) AddFilters(filters ...Filter) {
     }
 }
 
-// add filters for the controller
+// AddActionFilters adds filters for the controller
 func (ci *ControllerInfo) AddActionFilters(httpMethod string, actionName string, filters ...Filter) {
     ai := ci.GetAction(httpMethod, actionName)
     if ai == nil {
@@ -174,7 +174,7 @@ func (cb *ControllerBuilder) Filters(filters ...Filter) *ControllerBuilder {
     return cb
 }
 
-// get a controller builder that the controller named "name"
+// Controller gets a controller builder that the controller named "name"
 // for reg actions and filters
 func Controller(name string) *ControllerBuilder {
     name = strings.ToLower(name)

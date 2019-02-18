@@ -41,7 +41,7 @@ func (te *DefaultTemplateEngine) Ext() string {
     return te.ExtName
 }
 
-// return whether the tempalte support layout
+// SupportLayout returns whether the tempalte support layout
 func (te *DefaultTemplateEngine) SupportLayout() bool {
     return true
 }
@@ -167,7 +167,7 @@ func (ve *DefaultViewEngine) lookup(vi *ViewInfo, isLayout bool) string {
     return ""
 }
 
-// create a default ViewEnginer. 
+// create a default ViewEnginer.
 // some default value:
 // 		+ Layout: "layout"
 //      + ExtName: ".html"
@@ -214,7 +214,7 @@ func CreateDefaultTemplateEngine(useCache bool) *DefaultTemplateEngine {
 
 var globalViewData map[string]interface{} = make(map[string]interface{})
 
-// add a view data to the global,
+// SetGlobalViewData adds a view data to the global,
 // that all the view can use it
 // by {{.Global.key}}
 func SetGlobalViewData(key string, val interface{}) {
