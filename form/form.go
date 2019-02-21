@@ -15,7 +15,7 @@ type Form struct {
     //hasValid     bool
 }
 
-// check all the values on the field are validated,
+// Valid checks all the values on the field are validated,
 // if validated, set the clean value
 func (fm *Form) Valid() bool {
     isValid := true
@@ -33,7 +33,7 @@ func (fm *Form) Valid() bool {
     return isValid
 }
 
-// get the source values
+// Values gets the source values
 // the values are the same as the submit on the request
 func (fm *Form) Values() map[string]string {
     r := make(map[string]string)
@@ -43,7 +43,7 @@ func (fm *Form) Values() map[string]string {
     return r
 }
 
-// get the clean value after validated
+// CleanValues gets the clean value after validated
 // before you get fm.ClentValues(),
 // you must call fm.Valid() first.
 func (fm *Form) CleanValues() map[string]interface{} {

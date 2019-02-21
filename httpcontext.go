@@ -72,7 +72,7 @@ func (ctx *HttpContext) Get(name string) string {
     return ctx.Request.FormValue(name)
 }
 
-// get the response header
+// Header gets the response header
 func (ctx *HttpContext) Header() http.Header {
     return ctx.responseWriter.Header()
 }
@@ -83,7 +83,7 @@ func (ctx *HttpContext) SetHeader(key string, value string) {
     //ctx.responseHeaderCache.Set(key, value)
 }
 
-// add response header
+// AddHeader adds response header
 func (ctx *HttpContext) AddHeader(key string, value string) {
     ctx.responseWriter.Header().Add(key, value)
 }
@@ -127,7 +127,7 @@ func (ctx *HttpContext) WriteHeader(code int) {
     ctx.responseStatusCode = code
 }
 
-// get whether the request is by ajax
+// IsAjax gets whether the request is by ajax
 func (ctx *HttpContext) IsAjax() bool {
     return ctx.GetHeader("X-Requested-With") == "XMLHttpRequest"
 }
@@ -143,7 +143,7 @@ func (ctx *HttpContext) Render(viewName string, viewModel interface{}) *ViewResu
     return ctx.rederView(viewName, "", viewModel, false)
 }
 
-// render the view and return a *ViewResult
+// RenderWithLayout renders the view and return a *ViewResult
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
 //      2. /{ViewPath}/shared/{viewName}
@@ -151,7 +151,7 @@ func (ctx *HttpContext) RenderWithLayout(viewName, layout string, viewModel inte
     return ctx.rederView(viewName, layout, viewModel, false)
 }
 
-// render a Partial view and return a *ViewResult.
+// RenderPartial renders a Partial view and return a *ViewResult.
 // this is not use layout.
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{viewName}
@@ -175,7 +175,7 @@ func (ctx *HttpContext) rederView(viewName, layout string, viewModel interface{}
     return vr
 }
 
-// render the view and return a *ViewResult
+// View renders the view and return a *ViewResult
 // it will find the view in these rules:
 //      1. /{ViewPath}/{Controller}/{action}
 //      2. /{ViewPath}/shared/{action}
@@ -244,7 +244,7 @@ func (ctx *HttpContext) Html(data string) ActionResulter {
     }
 }
 
-// return json string result
+// Json returns json string result
 // ctx.Json(obj) or ctx.Json(obj, "text/html")
 func (ctx *HttpContext) Json(data interface{}, contentType ...string) ActionResulter {
     var ct string

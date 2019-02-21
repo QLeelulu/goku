@@ -39,7 +39,7 @@ func NamedRegexpGroup(str string, reg *regexp.Regexp) (ng map[string]string, mat
     return
 }
 
-// check if that the file exists
+// FileExists checks if that the file exists
 func FileExists(path_ string) (bool, error) {
     _, err := os.Stat(path_)
     if err == nil {
@@ -119,7 +119,7 @@ func StructToSnakeKeyMap(s interface{}) map[string]interface{} {
     return rawStructToMap(s, true)
 }
 
-// get the Struct's name
+// StructName gets the Struct's name
 func StructName(s interface{}) string {
     v := reflect.TypeOf(s)
     for v.Kind() == reflect.Ptr {

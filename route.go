@@ -192,7 +192,7 @@ func (rt *RouteTable) AddRoute(route *Route) {
     rt.Routes = append(rt.Routes, route)
 }
 
-// add a new route
+// Map adds a new route
 // params:
 //	+ name: route name
 //  + url:  url pattern
