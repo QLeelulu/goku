@@ -3,7 +3,7 @@ package goku
 import (
     "testing"
     // "fmt"
-    "github.com/sdegutis/go.assert"
+    "github.com/couchbaselabs/go.assert"
     _ "github.com/ziutek/mymysql/godrv"
     "time"
 )
@@ -52,7 +52,7 @@ func TestMysqlDB(t *testing.T) {
         Order:  "id desc",
     })
     if err != nil {
-        t.Fatalf("select got err: ", err.Error())
+        t.Fatalf("select got err: %s", err.Error())
     }
 
     var id int
@@ -148,7 +148,7 @@ func TestMysqlUpdate(t *testing.T) {
     }
     r, err2 := db.Update("test_blog", vals, "id=?", blog.Id)
     if err2 != nil {
-        t.Fatalf("update got err: ", err2.Error())
+        t.Fatalf("update got err: %s", err2.Error())
     }
     assert.Equals(t, err2, nil)
     var i int64

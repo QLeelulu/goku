@@ -3,7 +3,7 @@ package form
 import (
     "testing"
     //"fmt"
-    "github.com/sdegutis/go.assert"
+    "github.com/couchbaselabs/go.assert"
 )
 
 func TestNumberValidater(t *testing.T) {
