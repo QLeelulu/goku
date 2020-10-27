@@ -3,7 +3,7 @@ package goku
 import (
     "testing"
     //"fmt"
-    "github.com/sdegutis/go.assert"
+    "github.com/couchbaselabs/go.assert"
 )
 
 var r1 = &Route{

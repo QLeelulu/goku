@@ -3,7 +3,7 @@ package utils
 import (
     "testing"
     "regexp"
-    "github.com/sdegutis/go.assert"
+    "github.com/couchbaselabs/go.assert"
 )
 
 func TestNamedRegexpGroup(t *testing.T) {
