@@ -1,0 +1,4 @@
+github.com/couchbaselabs/go.assert v0.0.0-20130325201400-cfb33e3a0dac h1:E8RCOlhM2LnVvZmt08UjaLiMPKPWfH++y6//Z3Crm8E=
+github.com/couchbaselabs/go.assert v0.0.0-20130325201400-cfb33e3a0dac/go.mod h1:W+vnruoWHtjv613DcpJ9AMLGey7evBt35OU0CKxd1JE=
+github.com/ziutek/mymysql v1.5.4 h1:GB0qdRGsTwQSBVYuVShFBKaXSnSnYYC2d9knnE1LHFs=
+github.com/ziutek/mymysql v1.5.4/go.mod h1:LMSpPZ6DbqWFxNCHW77HeMg9I646SAhApZ/wKdgO/C0=
