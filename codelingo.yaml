@@ -1,0 +1,11 @@
+tenets:
+  - import: codelingo/effective-go/comment-first-word-as-subject
+  - import: codelingo/effective-go/single-method-interface-name
+  - import: codelingo/effective-go/underscores-in-name
+  - import: codelingo/go/tested
+  - import: codelingo/go/empty-slice
+  - import: codelingo/go/global-var
+  - import: codelingo/go/bool-param
+  - import: codelingo/go/goto
+  - import: codelingo/go/todo
+  - import: codelingo/lightning-network-daemon/exported-package-is-tested
